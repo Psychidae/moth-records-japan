@@ -69,3 +69,20 @@ stagingではManagement APIのSQLサイズ制限とCLI seedの事前prepareの�
 list.htmlのspeciesブロックも6,626件で、XLSXのspecies6,628件より2件少ない。全ブロックを原文・和名・順序で照合し、Excel2871行目（ウスイロトリバ）の表示がないことを確認した。Westermanniaの5961/5962行目は表示テキストが同一でHTMLが1ブロックなので、前の行を対応させる順序規則を明示する。これは分類学的な同一性の判断ではない。欠けた2行をレポートに残す。4重複組の8行には原典注釈がないため、この曖昧さから注釈を推定して作らない。
 
 注釈の本文とは別にHTMLハッシュ・項目番号・原HTMLを保持する列を追記migrationで追加する。一意の出典項目で再投入を判定し、同じ本文の複数項目を統合しない。文献のauthorは原文文字列で分解結果を保持し、姓名の推測分割は行わない。文献はpendingで取り込み、自動公開しない。一般利用者は出典用の新列を書き込めず、従来の投稿項目とRLSは維持する。
+
+## 2026-11-06 T07: 地域の出典と隣接の定義
+
+既存prefectures.csvの47県のID・原文は変更しない。GADMは名前ではなくIDで照合し、長崎のNaoasakiという入力表記を警告へ残す。主要島嶼の初期範囲は90島（伊豆11、小笠原22を含む）として、公的資料の島名・所属を参照し自作する。島嶼の外部ID・座標は推測せず未設定にする。南千島OT01はotherとし、都道府県の子へ混ぜない。英語名は識別用のローマ字表記を含み、公式英語地名の完全な統一表ではない。全国の微小島・岩礁を網羅した島台帳ではない。
+
+島名・所属の参照先（各島のCSVにもURLを残す）:
+
+- [国土交通省の対象離島一覧](https://smartisland.mlit.go.jp/field/)と[離島の概要](https://www.mlit.go.jp/kokudoseisaku/chirit/kokudoseisaku_chirit_tk_000264.html)
+- [西ノ島町の隠岐4島の説明](https://www.town.nishinoshima.shimane.jp/profile/gaiyou)、[長崎県の有人国境離島一覧](https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/)
+- [鹿児島県の離島一覧](https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf)、[十島村の概要](https://www.tokara.jp/profile/gaiyou/)、[鹿児島県大島支庁](https://www.pref.kagoshima.jp/aq01/chiiki/oshima/)
+- [沖縄県の離島関係資料](https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html)、[大東の沿岸域区分](https://www.pref.okinawa.jp/okinawa_kankyo/shizen_hogo/hozen_chiiki/shishin/syuuhen_umi_karte/index.html)
+- [東京都の島一覧](https://www.islandaccess.metro.tokyo.lg.jp/)、[八丈小島の自然保護](https://www.soumu.metro.tokyo.lg.jp/09hatijou/kakuka_top/c-doboku/naturalparkprotection)、[東京都の火山](https://www.bousai.metro.tokyo.lg.jp/taisaku/torikumi/1023240/1023241/index.html)
+- [小笠原のルールブック](https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf)、[小笠原支庁の管内概要](https://www.soumu.metro.tokyo.lg.jp/07ogasawara/guidance/summary)
+
+隣接は都府県間の陸域境界（河川・湖沼上の県境と、島内の共有陸境界を含む）を手入力した174方向辺・87組とする。県コードPR間だけを扱い、IS島コード・OT01は県の隣接へ加えない。海峡や海上境界、橋・トンネルだけを理由に隣接とはしない。[玉野市の石島の説明](https://www.city.tamano.lg.jp/soshiki/1/1367.html)で岡山−香川、[愛媛県の瓢箪島の説明](https://www.pref.ehime.jp/ehimenotakara/780.html)で広島−愛媛の島内県境を確認して含める。一般の境界図の参照先は[国土地理院の日本全図](https://www.gsi.go.jp/chizuhensyu/chizuhensyu41009.html)。精密な行政区ポリゴンの取込・計算は行わず、G3の未確認状態を保つ。
+
+regionsへseed_source/seed_keyを追記し、元のコード・種類・和名・親・外部IDのハッシュで出典上の識別を保つ。既存コードが無関係の地域や異なる入力の識別に使われていたら全体を停止する。正当な再投入ではDB内部IDと管理者の表示編集を保持する。隣接は新しい公開DB表へ入れず、正本CSVと生成JSONで後続の公開データ生成へ渡す。各入力のSHA-256と件数をレポートへ出す。

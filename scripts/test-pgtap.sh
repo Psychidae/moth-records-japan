@@ -18,4 +18,6 @@ psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/lis
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/import.sql
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/annotations.sql
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/annotations.sql
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/regions/regions.sql
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/regions/regions.sql
 pg_prove --verbose --dbname "$database" supabase/tests/*.sql
