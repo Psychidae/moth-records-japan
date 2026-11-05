@@ -4,7 +4,7 @@
 
 ## P0 土台
 
-- [ ] **T01 リポジトリ初期化**: pnpm ワークスペース、`01_architecture.md` の構成、TypeScript strict、ESLint、Vitest、`.env.example`、`pnpm-workspace.yaml` の待機期間。
+- [x] **T01 リポジトリ初期化**: pnpm ワークスペース、`01_architecture.md` の構成、TypeScript strict、ESLint、Vitest、`.env.example`、`pnpm-workspace.yaml` の待機期間。
   - 受け入れ: `pnpm install --frozen-lockfile`, `lint`, `typecheck`, `test`, `build` が成功する。
 - [ ] **T02 CI と保護**: `ci.yml`、SHA固定、最小権限、Dependabot、`docs/decisions.md`、`docs/questions.md`。リポジトリの保護は `scripts/setup-github.sh` で設定済み。`.github/actions/require-env` と `recheck-env.yml` を作る。`ci.yml` の完成後、必須ステータスチェックの追加手順を `docs/handover_report.md` に書く。
   - 受け入れ: `pull_request_target` がない。全 `uses:` が40桁SHAである。鍵が未登録でも CI が失敗しない。鍵を登録して `recheck-env.yml` を実行すると、待機していた処理が動く。

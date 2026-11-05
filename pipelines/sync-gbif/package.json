@@ -1,0 +1,6 @@
+{
+  "name": "@moth/sync-gbif",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0"
+}
