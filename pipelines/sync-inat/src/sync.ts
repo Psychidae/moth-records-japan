@@ -25,9 +25,9 @@ export async function syncInat(taxa: TaxonRow[], regions: RegionRow[], userAgent
     else if (byId.length === 0 && ['species', 'subspecies'].includes(remote.rank)) {
       const candidates = taxa.filter(t => t.scientific_name === remote.name && t.rank === remote.rank);
       if (candidates.length === 1 && !candidates[0]?.is_name_collision && candidates[0]?.inat_taxon_id === null) {
-        const result = Taxa.parse(await request('taxa', { q: remote.name, rank: remote.rank, is_active: 'true', per_page: '500' }));
+        const result = Taxa.parse(await request('taxa', { q: remote.name, rank: remote.rank, is_active: 'true', per_page: '200' }));
         const exact = result.results.filter(t => t.name === remote.name && t.rank === remote.rank && t.is_active === true);
-        if (result.total_results <= 500 && exact.length === 1 && exact[0]?.id === remote.id) local = candidates[0];
+        if (result.total_results <= 200 && result.results.length === result.total_results && exact.length === 1 && exact[0]?.id === remote.id) local = candidates[0];
       }
     } else reason = byId.length ? 'ambiguous_existing_mapping' : 'unsupported_leaf_rank';
     if (local && [...matched.entries()].some(([code, id]) => code === local?.taxon_code && id !== remote.id)) {

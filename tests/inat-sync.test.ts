@@ -75,6 +75,21 @@ describe('iNaturalist aggregate import', () => {
     await expect(syncInat([taxon], regions, 'Project', fakeApi(async () => json({ total_results: 501, results: [{ count: 1, taxon: { id: 10, name: 'Unknown', rank: 'genus' } }] })), undefined, false)).rejects.toThrow('Incomplete');
     await expect(syncInat([taxon], regions, 'Project', fakeApi(async () => json({ total_results: 2, results: [1, 2].map(() => ({ count: 1, taxon: { id: 10, name: 'Unknown', rank: 'genus' } })) })), undefined, false)).rejects.toThrow('Duplicate');
   });
+  it('keeps a capped or incomplete taxon lookup unresolved', async () => {
+    let lookupLimit: string | null = null;
+    const result = await syncInat([taxon], regions, 'Project', fakeApi(async url => {
+      const request = new URL(url);
+      if (request.pathname.endsWith('/taxa')) {
+        lookupLimit = request.searchParams.get('per_page');
+        return json({ total_results: 201, results: Array.from({ length: 200 }, (_, i) => ({ id: i + 10, name: i === 0 ? taxon.scientific_name : `Other ${i}`, rank: 'species', is_active: true })) });
+      }
+      return json({ total_results: 1, results: [{ count: 1, taxon: { id: 10, name: taxon.scientific_name, rank: 'species' } }] });
+    }), undefined, false);
+    expect(lookupLimit).toBe('200');
+    expect(result.snapshot.mappings).toEqual([]);
+    expect(result.snapshot.summaries).toEqual([]);
+    expect(result.unmatched).toHaveLength(1);
+  });
   it('caps valid photos at six and uses one scheduler for all photo requests', async () => {
     const api = fakeApi(async url => new URL(url).pathname.endsWith('/observations') ? json({ results: [{ id: 123, uri: 'https://www.inaturalist.org/observations/123', photos: Array.from({ length: 10 }, (_, i) => ({ url: `https://static.inaturalist.org/photos/${i}/medium.jpg`, license_code: 'cc-by', attribution: 'Author' })) }] }) : json({ total_results: 1, results: [{ count: 1, taxon: { id: 10, name: taxon.scientific_name, rank: 'species' } }] }));
     const result = await syncInat([{ ...taxon, inat_taxon_id: 10 }], regions, 'Project', api);

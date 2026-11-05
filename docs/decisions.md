@@ -89,7 +89,7 @@ regionsへseed_source/seed_keyを追記し、元のコード・種類・和名�
 
 ## 2026-11-06 T08: iNaturalistの集計と安全な実行
 
-[公式Swagger](https://github.com/inaturalist/iNaturalistAPI/blob/main/lib/views/swagger_v1.yml.ejs)のspecies_countsは末端分類群を返し、speciesだけを保証しない。既存IDを優先し、未対応は学名・階級が完全一致するローカル分類群1件とactiveな外部分類群1件のときだけ対応する。重複4組を先頭一致で解消しない。外側のcountを使い、taxon.observations_countと混同しない。ページ総数の変化・重複・欠落は全処理を失敗させ、前のsnapshotを維持する。
+[公式Swagger](https://github.com/inaturalist/iNaturalistAPI/blob/main/lib/views/swagger_v1.yml.ejs)のspecies_countsは末端分類群を返し、speciesだけを保証しない。既存IDを優先し、未対応は学名・階級が完全一致するローカル分類群1件とactiveな外部分類群1件のときだけ対応する。重複4組を先頭一致で解消しない。taxa検索は通常上限200件以内の完全な応答だけを採用し、切れた一覧から一意性を推定しない。外側のcountを使い、taxon.observations_countと混同しない。ページ総数の変化・重複・欠落は全処理を失敗させ、前のsnapshotを維持する。
 
 県・quality_grade別の集計、学名検索、写真の取得と429再試行を単一の直列スケジューラへ通す。[推奨利用方法](https://www.inaturalist.org/pages/api+recommended+practices)より厳しい2秒間隔と9,500リクエスト上限を設ける。429は秒数/HTTP-dateのRetry-After、なければ60秒で3回まで再試行する。User-Agentにサイト英語名・版・連絡先を入れる。
 
