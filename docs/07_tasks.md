@@ -15,7 +15,7 @@
 
 ## P1 閲覧サイト
 
-- [ ] **T05 List-MJ 取込**: `03_data_pipeline.md` 1節。
+- [x] **T05 List-MJ 取込**: `03_data_pipeline.md` 1節。
   - 受け入れ: 受け入れ数値の表と完全一致。再実行で `taxon_code` が変わらない。`import_report.json` を出力する。
 - [ ] **T06 List-MJ 注釈と文献**: 975件の注釈、282件の文献。
   - 受け入れ: 件数が一致する。分解できない文献の一覧を出す。

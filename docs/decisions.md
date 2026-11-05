@@ -45,3 +45,15 @@ pg_trgmはextensionsスキーマへ移す。拡張の再作成や既存GIN索引
 CIはUbuntu 24.04のOSパッケージからPostgreSQL 16、pgTAP、pg_proveを導入し、使い捨てのローカルDBへ全migrationとseedを適用する。npmの実行時依存は増やさない。Supabaseが提供するauth.uid/auth.jwtと3ロールだけをCI用SQLで模し、ホスト側の広い既定ACLも再現する。アプリの権限・トリガー・関数は実際のmigrationを検証する。
 
 既存PGliteの56観点は正本と全migrationに対して維持し、CIでも実行する。同じ56観点をpgTAPへ移植し、原文の観点名の欠落をCIで検出する。pgTAPはBEGIN/ROLLBACKで囲み、stagingでもfixture行や機能フラグ変更を残さない。IDシーケンスの通常の欠番は許容する。stagingのPostgreSQL 17でも別途実行し、CIのauth模倣との差を確認する。本番接続は行わない。
+
+## 2026-11-06 T05: 検証済みのオフライン分類基盤
+
+List-MJの同梱XLSXとJSONLのハッシュ・XLSXサイズを検査してから、Zodで行を検証する。実行時のネットワーク取得やExcel読込依存は追加しない。データ行の7,465個の永久コードを元の行順で先に割り当て、上位階級はその後に初出順で採番する。SQLの挿入順は親が先となるよう調整し、コード順と挿入順を分ける。
+
+重複4組は異なるコードで保持し、未定属は上位へ直結する。statusの受け入れ内訳はspeciesのみの6,628件で計算する。全raw行と著者・年・原文名称の出典を保持し、集計ページとの差もレポートへ残す。
+
+取込SQLは単一トランザクションとし、既存コードが異なる由来・行・階級に使われていたら停止する。正当な再投入はコード・DB内部IDを保ち、管理者の和名・機微設定などの編集を上書きしない。新しい版への再割当を自動で推測せず、今回の固定版を再現する。
+
+Node 24の型除去で複数のTypeScriptファイルを直接実行できるよう、相対.ts importを使い、TypeScriptのrewriteRelativeImportExtensionsでビルド時の.js参照へ変換する。実行時依存は増やさない。生成SQLとimport_report.jsonはgenerated/listmjへ置き、入力正本と分けてGit管理対象外にする。
+
+stagingではManagement APIのSQLサイズ制限とCLI seedの事前prepareの制約があった。正本SQLを保ち、専用adapterで単一DO/EXECUTEへ包む。Supabase CLIの直接DB接続で実行し、通常のpsql/CIでは元のSQLを使う。adapterも実DBエンジンで検証し、同じ原文からの取込と再投入を実証する。
