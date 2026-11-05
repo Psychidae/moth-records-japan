@@ -18,6 +18,9 @@
 | サイト改ざん | 公開サイトは承認済みビルドのみ。問題があれば前の版へ戻す |
 | マルウェア混入 | 依存パッケージの待機期間とロックファイルで混入を防ぐ。外部スクリプトを読み込まない |
 | 悪意あるスキャンファイル | ログイン利用者のみ投稿可。隔離領域に受け、検査後に画像から再生成したファイルだけを保管する。元ファイルは残さない。詳細は `09_literature_repository.md` |
+| 悪意ある画像 | JPEG のみ受付。隔離領域で検査し、全メタデータを除いて再生成する。元ファイルは残さない。`12_photos.md` |
+| 写真の位置情報の漏えい | ブラウザの縮小と再生成の2回で EXIF を除く。座標を本サイトへ送らない |
+| iNaturalist のトークンの漏えい | サーバーへ送らず保存しない。OAuth トークンはすぐ失効させ、JWT はメモリにだけ置く |
 | 著作権の問題 | 権利の根拠の申告がないファイルは受け付けない。公開停止の申し出で即時停止する |
 | 悪意あるリンク | `https` のみ、審査必須、短縮URL拒否 |
 | アカウント乗っ取り | パスワードを持たない。編集者以上はMFA。管理サイトは Cloudflare Access でさらに保護 |
@@ -41,6 +44,8 @@ Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
 ```
 
 投稿、管理サイトは `connect-src` に Supabase のURLと Turnstile を追加する。インラインスクリプトは使わない。
+
+写真のため、公開サイトの `img-src` と `connect-src` に `files.<domain>` を追加する。投稿サイトは `connect-src` と `img-src` に R2 の署名URLのホストを追加し、`connect-src` に `https://www.inaturalist.org` と `https://api.inaturalist.org` を追加する。管理サイトには iNaturalist への接続を追加しない。
 
 ### データベース
 
