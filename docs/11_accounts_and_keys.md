@@ -4,7 +4,7 @@ Codex を全タスクまで止めずに動かすための準備表。鍵の値�
 
 ## 登録が不要なもの
 
-iNaturalist API、J-STAGE WebAPI、doi.org、GBIF の検索API、NDLサーチ（非営利）。
+iNaturalist API の読み取り、J-STAGE WebAPI、doi.org、GBIF の検索API、NDLサーチ（非営利）。
 
 ## A. サイトを動かすのに必須
 
@@ -50,6 +50,8 @@ age-keygen -o moth-backup.key
 | Anthropic | 月額上限を設定 | https://platform.claude.com/settings/limits | - | P3 |
 | Anthropic | APIキーを作成 | https://platform.claude.com/settings/keys | `ANTHROPIC_API_KEY` | P3 |
 | Cloudflare Access | 管理サイトの許可リスト | https://one.dash.cloudflare.com/ | - | P3 |
+| iNaturalist | アプリ所有者を申請する。条件はアカウント作成から2か月以上、直近1か月に他の人の観察へ「improving」同定10件以上。手動審査で、断られる場合がある | https://www.inaturalist.org/oauth/app_owner_application | - | P2P 段階3 |
+| iNaturalist | 承認後にアプリを登録する。Confidential は付けない。戻り先は `https://<投稿サイト>/inat/callback` | https://www.inaturalist.org/oauth/applications/new | `VITE_INAT_CLIENT_ID`。公開可能な値で、秘密鍵は使わない | P2P 段階3 |
 
 ## C. 後回しでよいもの
 

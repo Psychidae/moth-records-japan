@@ -121,9 +121,10 @@ species 6,628 は List-MJ の集計ページの総計（種 6,149、未同定 33
 毎月、Occurrence Download API で取得する。ダウンロードには引用DOIが発行されるので `external_snapshots.doi` へ保存し、公開サイトに表示する。
 
 - 条件: `country=JP`、`taxonKey=797`（鱗翅目）、`datasetKey != 50c9509d-22c7-4a22-a47d-8c48425ef4a7`（iNaturalist は重複するため除外）、`basisOfRecord` は `PRESERVED_SPECIMEN` と `MATERIAL_SAMPLE`
-- 形式: `SIMPLE_CSV`。ストリームで処理し全件をメモリへ載せない
+- 形式: `DWCA`。SIMPLE_CSVにはlevel1Gidがないため変更した（T09のdecisions.md参照）。ZIP中のoccurrence.txtだけをストリームで処理し全件をメモリへ載せない。一時ZIPは成功・失敗とも削除する
 - 県の判定: `level1Gid` が `JPN.` で始まる行のみ採用し、`regions.gadm_gid` と照合する
 - 学名の照合: `taxa.gbif_usage_key`、なければ `GET https://api.gbif.org/v1/species/match` の `matchType = EXACT` のみ
+- 分類基盤: legacy GBIF Backbone `d7dddbf4-2cf0-4f39-9b2a-bb099caae36c` を出力とTAXON_KEY条件の両方に指定し、整数keyを保持する
 - 蝶は `taxa` に一致しないため自然に除外される
 - 2026-11-06 時点の参考値: 鱗翅目全体で標本 715,288 件
 

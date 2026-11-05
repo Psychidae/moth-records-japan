@@ -4,26 +4,28 @@
 
 ## P0 土台
 
-- [ ] **T01 リポジトリ初期化**: pnpm ワークスペース、`01_architecture.md` の構成、TypeScript strict、ESLint、Vitest、`.env.example`、`pnpm-workspace.yaml` の待機期間。
+- [x] **T01 リポジトリ初期化**: pnpm ワークスペース、`01_architecture.md` の構成、TypeScript strict、ESLint、Vitest、`.env.example`、`pnpm-workspace.yaml` の待機期間。
   - 受け入れ: `pnpm install --frozen-lockfile`, `lint`, `typecheck`, `test`, `build` が成功する。
-- [ ] **T02 CI と保護**: `ci.yml`、SHA固定、最小権限、Dependabot、`docs/decisions.md`、`docs/questions.md`。リポジトリの保護は `scripts/setup-github.sh` で設定済み。`.github/actions/require-env` と `recheck-env.yml` を作る。`ci.yml` の完成後、必須ステータスチェックの追加手順を `docs/handover_report.md` に書く。
-  - 受け入れ: `pull_request_target` がない。全 `uses:` が40桁SHAである。鍵が未登録でも CI が失敗しない。鍵を登録して `recheck-env.yml` を実行すると、待機していた処理が動く。
-- [ ] **T03 DBスキーマ**: `docs/02_schema.sql` を `supabase/migrations/0001_init.sql` へ移す。`seed/feature_flags.csv` と `seed/external_resources.csv` を投入。
+- [x] **T02 CI と保護**: `ci.yml`、SHA固定、最小権限、Dependabot、`docs/decisions.md`、`docs/questions.md`。リポジトリの保護は `scripts/setup-github.sh` で設定済み。`ci.yml` の完成後、必須ステータスチェックの追加手順を `docs/handover_report.md` に書く。
+  - 受け入れ: `pull_request_target` がない。全 `uses:` が40桁SHAである。
+- [ ] **T02a 鍵の待機と再開**: `.github/actions/require-env` と `recheck-env.yml` を作る。`01_architecture.md` の「鍵が未登録のときの動作」に従う。既存の `sync-inat.yml`, `sync-gbif.yml` にも適用する。`docs/handover_report.md` の「PR #1 は未統合」の記述を更新する。
+  - 受け入れ: 鍵が未登録でも CI が失敗しない。鍵を登録して `recheck-env.yml` を実行すると、待機していた処理が動く。
+- [x] **T03 DBスキーマ**: `docs/02_schema.sql` を `supabase/migrations/0001_init.sql` へ移す。`seed/feature_flags.csv` と `seed/external_resources.csv` を投入。
   - 受け入れ: 空のDBで適用できる。
-- [ ] **T04 権限テスト**: `tests/schema_smoke.mjs` の全観点を pgTAP へ移植し CI に入れる。
+- [x] **T04 権限テスト**: `tests/schema_smoke.mjs` の全観点を pgTAP へ移植し CI に入れる。
   - 受け入れ: `tests/schema_smoke.mjs` の全観点が成功する。観点を削らない。
 
 ## P1 閲覧サイト
 
-- [ ] **T05 List-MJ 取込**: `03_data_pipeline.md` 1節。
+- [x] **T05 List-MJ 取込**: `03_data_pipeline.md` 1節。
   - 受け入れ: 受け入れ数値の表と完全一致。再実行で `taxon_code` が変わらない。`import_report.json` を出力する。
-- [ ] **T06 List-MJ 注釈と文献**: 975件の注釈、282件の文献。
+- [ ] **T06 List-MJ 注釈と文献**: 975件の注釈、282件の文献。実装済み・受入保留: 同梱原本は281文献、仕様は282文献。独立検証済み。`decisions.md` と `handover_report.md` 参照。連続実行規則の例外として、以後はこの保留を除く最上位の未完了タスクへ進む。
   - 受け入れ: 件数が一致する。分解できない文献の一覧を出す。
-- [ ] **T07 地域データ**: `seed/prefectures.csv`、南千島、`seed/islands.csv`、`seed/adjacency.csv`。
+- [x] **T07 地域データ**: `seed/prefectures.csv`、南千島、`seed/islands.csv`、`seed/adjacency.csv`。
   - 受け入れ: 47都道府県に iNaturalist と GADM のIDがある。隣接関係が対称である。
-- [ ] **T08 iNaturalist 集計**: `sync-inat.yml`。学名の対応づけと未対応一覧。
+- [x] **T08 iNaturalist 集計**: `sync-inat.yml`。学名の対応づけと未対応一覧。
   - 受け入れ: 間隔2秒以上。429で再試行する。観察の座標を保存しない。
-- [ ] **T09 GBIF 集計**: `sync-gbif.yml`。
+- [x] **T09 GBIF 集計**: `sync-gbif.yml`。
   - 受け入れ: iNaturalist のデータセットを除外する。DOIを保存する。
 - [ ] **T10 公開データ生成**: `03_data_pipeline.md` 6, 7節と `verify.ts`。
   - 受け入れ: 機微種の詳細、未公開記録、メール、UUID を混入させたテストで必ず失敗する。
@@ -91,12 +93,36 @@
   - 受け入れ: 検証用スキャンを別サービスから復元し、SHA-256 が一致する。
 - [ ] **G 権利確認**: 実装は続ける。G8 の完了まで本番の `scan_uploads_open` を有効にしない。
 
+## P2P 写真
+
+`12_photos.md` に従う。段階3は iNaturalist の承認がなくても、モックで実装して次へ進む。
+
+- [ ] **PH01 写真のスキーマ**: `docs/12_photos_schema.sql` を新しい migration へ移す。`seed/feature_flags.csv` に5件を加え、件数のテストを更新する。`tests/photos_schema_smoke.mjs` の全観点を pgTAP へ移植する。
+  - 受け入れ: 全観点が成功する。観点を削らない。新しいフラグの初期値がすべて偽である。
+- [ ] **PH02 URL取込**: `/photos/import`, `photo-import-inat`, 回数制限。
+  - 受け入れ: 許可外のURLへ接続しない。座標を保存しない。許可外のライセンス、国外、未対応の種、重複を拒否する。
+- [ ] **PH03 写真の公開**: `publish-photos.yml`、`files.` の JSON、種ページの写真、`/photo/`、地図の写真層。
+  - 受け入れ: 機微種の出力が表のとおりである。メール、UUID、未公開の写真を混入させたテストで必ず失敗する。`apps/public` に Supabase の依存がない。ビルドのファイル数が写真の数で増えない。
+- [ ] **PH04 審査と移動**: `/review` の写真、一括承認、移動の画面、同定の履歴、「別の種では？」の提案。T33 の学名変更で写真が追随する処理を含める。
+  - 受け入れ: 自分の投稿を承認できない。信頼度0の本人移動が再審査へ戻る。移動しても写真のURLが変わらない。
+- [ ] **PH05 写真の投稿**: `/photos/new`, `photo-start`, EXIF の読み取り、縮小、1日の上限。`photo_uploads_open` は偽のまま実装する。
+  - 受け入れ: 申告なしで提出できない。アップロードするファイルに EXIF が残らない。座標が本サイトへの通信に含まれない。署名URLが15分で切れる。
+- [ ] **PH06 写真の検査と再生成**: `process-photo.yml`、`vips`、重複の確認。処理は L05 の隔離構成を使う。
+  - 受け入れ: EICAR テストファイルが拒否される。JPEG に見せかけた他形式を拒否する。GPS つきの画像から再生成した全サイズに EXIF、XMP、IPTC が残らない。処理ジョブから本番DBの鍵が読めない。
+- [ ] **PH07 取り下げと公開停止**: `/me` の取り下げ、`/takedown/` の写真対応、保全の複製。
+  - 受け入れ: 公開停止の申し出から1分以内に画像の配信が止まる。取り下げが24時間以内に反映される。検証用の写真を複製先から復元し、SHA-256 が一致する。
+- [ ] **PH08 iNaturalist 連携と同時投稿**: PKCE、JWT、投稿、再送。`12_photos.md` の「実装の前に試すこと」は G11 の後に行う。それまではモックで実装し、`docs/handover_report.md` に未確認と書く。`inat_cross_post` は偽のまま実装する。
+  - 受け入れ: OAuth トークンと JWT が本サイトへの通信とブラウザの保存領域に含まれない。`sensitivity` 1 が `obscured` で送られ、2 が送信できない。送信失敗で本サイトの投稿が失われない。
+- [ ] **PH09 連携の確認と同定の追加**: `sync-inat-photos.yml`、本人の同定の追加、不一致の提案、取込の写真の更新。
+  - 受け入れ: 申告された観察IDを信用せず UUID で確認する。間隔2秒以上。不一致で種が自動で変わらない。定期処理から iNaturalist へ書き込まない。
+- [ ] **G 写真の受付**: 実装は続ける。G10 の完了まで本番の `photo_uploads_open`、G11 の完了まで本番の `inat_cross_post` を有効にしない。
+
 ## P2A 自動化
 
 `10_automation.md` に従う。
 
-- [ ] **A01 自動公開の規則**: 判定関数と機能フラグ。初期はすべて偽。
-  - 受け入れ: 規則の全条件をテストする。新記録候補と機微種は必ず人へ回る。
+- [ ] **A01 自動公開の規則**: 判定関数と機能フラグ。初期はすべて偽。写真の自動公開と信頼度の昇格を含める。
+  - 受け入れ: 規則の全条件をテストする。新記録候補と機微種は必ず人へ回る。その種と県で最初の写真は必ず人へ回る。
 - [ ] **A02 信頼度の自動昇格**: 投稿実績による昇格、降格、抜き取り審査。
 - [ ] **A03 週次の自動公開**: `publish-data.yml` の定期実行と停止条件。
   - 受け入れ: 記録が1%以上減る変更で公開が止まりオーナーへ通知される。
@@ -129,7 +155,7 @@
 - [ ] **T40 形質入力と文献入力の分担**: 投稿サイトに形質入力、雑誌巻号の担当表、貢献者表示。
 - [ ] **T41 定期監視**: 自動確認と AI 文献監視。
   - 受け入れ: データを直接変更しない。
-- [ ] **T42 標本画像の受付**: 審査制。ファイル検証と保管の設計は実装前に `docs/questions.md` で確認する。
+- [ ] **T42 標本画像の受付**: 審査制。ファイル検証と保管は PH06 の仕組みを使い、差分だけを実装前に `docs/questions.md` で確認する。
 
 ## P5 外部公開の拡張
 

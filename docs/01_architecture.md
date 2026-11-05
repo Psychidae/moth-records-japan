@@ -40,7 +40,7 @@ GitHub Actions ── 定期取込 (iNaturalist, GBIF) ───────┤
 | 地図データ変換 | mapshaper | 0.7.101 |
 | テスト | vitest, @playwright/test, @electric-sql/pglite | 5.1.0, 1.64.1, 0.5.15 |
 
-選定理由、上限、撤退方法は `08_tool_decisions.md` に記載する。一覧にない依存を追加しない。地図は自前のSVG部品で描き、地図ライブラリを入れない。Excel読込の依存も入れず、変換済みの `seed/source/listmj3_210603_rows.jsonl` を読む。
+選定理由、上限、撤退方法は `08_tool_decisions.md` に記載する。一覧にない依存を追加しない。写真の再生成に使う `vips` はコンテナ内のコマンドであり、npm の依存には入れない。地図は自前のSVG部品で描き、地図ライブラリを入れない。Excel読込の依存も入れず、変換済みの `seed/source/listmj3_210603_rows.jsonl` を読む。
 
 TypeScript 7 がツールと非互換の場合のみ、動作する最新の版へ下げて `docs/decisions.md` に記録する。CSSは素のCSS（CSS変数）とし、CSSフレームワークは導入しない。
 
@@ -99,6 +99,7 @@ Docker を使えない開発環境では staging を開発用DBに使う。produ
 | `VITE_SUPABASE_URL` | portal, admin のビルド | 公開可能 |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | portal, admin のビルド | 公開可能。RLSで保護 |
 | `VITE_TURNSTILE_SITE_KEY` | portal | 公開可能 |
+| `VITE_INAT_CLIENT_ID` | portal | 公開可能。iNaturalist の PKCE 連携。未設定なら同時投稿を表示しない |
 | `SUPABASE_SERVICE_ROLE_KEY` | GitHub Environments, Edge Functions | 秘密 |
 | `SUPABASE_DB_URL` | GitHub Environments | 秘密 |
 | `ANTHROPIC_API_KEY` | Supabase Edge Function secrets, GitHub Environments | 秘密 |
@@ -135,6 +136,9 @@ Cloudflare Workers の静的配信は Free で1版あたり20,000ファイル、
 | `harvest-archives.yml` | 毎月4日 04:00 JST | 発行元の公開PDF一覧の取込 |
 | `find-copies.yml` | 毎週水曜 04:00 JST | 公開コピーの探索 |
 | `process-scan.yml` | アップロード時、1時間ごと | スキャンの検査と再生成 |
+| `process-photo.yml` | アップロード時、1時間ごと | 写真の検査と再生成 |
+| `publish-photos.yml` | 毎日 04:30 JST、公開停止時 | 写真のJSONと画像の公開 |
+| `sync-inat-photos.yml` | 毎日 03:30 JST | iNaturalist の連携状態と種の不一致の確認 |
 | `replicate-archive.yml` | 毎週日曜 03:00 JST | 文献保管庫の複製 |
 | `sync-inat.yml` | 毎週月曜 03:00 JST | iNaturalist 集計 |
 | `sync-gbif.yml` | 毎月1日 04:00 JST | GBIF 集計 |
