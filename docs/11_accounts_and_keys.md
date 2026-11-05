@@ -70,13 +70,43 @@ age-keygen -o moth-backup.key
 | Docker 互換環境 | 未導入。ローカルでDBを動かす場合に必要 | https://orbstack.dev/ |
 | Codex | 設定フォルダは確認。実行コマンドは未確認 | https://developers.openai.com/codex/ |
 
-## 鍵の登録先
+## 鍵の入れ方
 
-| 値 | 登録先 |
-|---|---|
-| CI、取込、配信の鍵 | GitHub リポジトリの Settings → Environments（`staging`, `production`） |
-| Edge Function の鍵 | Supabase の Edge Functions → Secrets |
-| SMTP | Supabase の Authentication → SMTP Settings |
+鍵はすべて空のままで Codex を進められる。未登録の処理は待機し、登録すると動く。鍵を取得したら次を実行する。
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/set-secrets.sh
+```
+
+未登録の鍵が順に表示される。値を貼り付けてEnterを押す。まだ持っていない鍵は空Enterで飛ばす。入力中の値は画面に表示されない。次回は残りだけが表示される。
+
+登録状況の確認:
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/set-secrets.sh status
+```
+
+1つだけ登録する:
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/set-secrets.sh GBIF_PASSWORD
+```
+
+本番の鍵を登録する:
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/set-secrets.sh --env production
+```
+
+Supabase に格納する鍵（Resend、Turnstile、Anthropic など）を扱う前に1回だけ実行する:
+
+```bash
+supabase login
+```
+
+鍵の一覧は `scripts/secrets-manifest.tsv` にある。格納先は GitHub Environments と Supabase の Edge Function Secrets である。
+
+Resend を Supabase Auth のメール送信に使う設定は、Supabase の Authentication → SMTP Settings で行う。
 
 `production` Environment には必須レビュアーとしてオーナーを設定する。
 

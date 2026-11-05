@@ -145,5 +145,18 @@ Cloudflare Workers の静的配信は Free で1版あたり20,000ファイル、
 | `uptime.yml` | 1時間ごと | 公開サイトの死活確認 |
 | `ai-sweep.yml` | 1時間ごと | 未処理の修正提案の再処理 |
 | `ai-extract.yml` | 手動、審査画面から起動 | PDFからの記録候補抽出 |
+| `recheck-env.yml` | 手動、`set-secrets.sh` から起動 | 鍵の登録後に待機中の処理を実行 |
 
 全ワークフローの共通規則は `06_security_ops.md` に従う。
+
+## 鍵が未登録のときの動作
+
+鍵は後から登録する前提で作る。
+
+- 外部サービスを使うジョブの先頭で `.github/actions/require-env` を実行する。必要な鍵の有無を判定し、`ready` を出力する
+- `ready` が偽なら後続の手順を飛ばし、ジョブは成功のまま「待機: 鍵名」を要約に表示する
+- `secrets` はジョブの `if` で直接判定できないので、手順の環境変数に渡して判定する
+- `recheck-env.yml` は `workflow_dispatch` で `environment` を受け取り、DB定義の適用、配信、データ取込など待機中の処理を順に実行する
+- `scripts/set-secrets.sh` は鍵の格納後に `recheck-env.yml` を起動する
+- 本番の `environment=production` は通常どおりオーナーの承認を待つ
+- 投稿サイトなど鍵が必要な機能は、鍵が揃うまで機能フラグを偽のままにする
