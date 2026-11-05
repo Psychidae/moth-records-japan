@@ -1,0 +1,42 @@
+{
+  "sources": [
+    {
+      "key": "jhs_tsushin",
+      "journal": "蛾類通信",
+      "list_url": "https://www.moth.jp/pubs/jhj",
+      "pdf_host": "publ.moth.jp",
+      "pdf_path_prefix": "/tsushin/",
+      "issue_pattern": "No\\.(\\d+)(?:\\((\\d+)\\))?(?:-(\\d+))?",
+      "public_through": {
+        "volume": "309"
+      },
+      "purchase_note": "No.310以降は日本蛾類学会が頒布",
+      "purchase_url": "https://www.moth.jp/pubs/backissues"
+    },
+    {
+      "key": "jhs_tinea",
+      "journal": "TINEA",
+      "list_url": "https://www.moth.jp/pubs/tinea",
+      "pdf_host": "publ.moth.jp",
+      "pdf_path_prefix": "/tinea/",
+      "issue_pattern": "(\\d+)巻(\\d+)号",
+      "public_through": {
+        "volume": "27",
+        "issue": "2"
+      },
+      "purchase_note": "第27巻3号以降は日本蛾類学会が頒布",
+      "purchase_url": "https://www.moth.jp/pubs/backissues"
+    },
+    {
+      "key": "jhs_special",
+      "journal": "日本蛾類学会 特別刊行物",
+      "list_url": "https://www.moth.jp/pubs/special",
+      "pdf_host": "publ.moth.jp",
+      "pdf_path_prefix": "/special/",
+      "issue_pattern": null,
+      "public_through": null,
+      "purchase_note": "一部は日本蛾類学会が頒布",
+      "purchase_url": "https://www.moth.jp/pubs/backissues"
+    }
+  ]
+}

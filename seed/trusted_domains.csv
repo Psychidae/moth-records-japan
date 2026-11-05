@@ -1,0 +1,11 @@
+domain,provider,enabled
+doi.org,DOI,true
+www.jstage.jst.go.jp,J-STAGE,true
+dl.ndl.go.jp,NDLデジタルコレクション,true
+ndlsearch.ndl.go.jp,NDLサーチ,true
+cir.nii.ac.jp,CiNii Research,true
+www.biodiversitylibrary.org,Biodiversity Heritage Library,true
+zenodo.org,Zenodo,true
+archive.org,Internet Archive,true
+publ.moth.jp,日本蛾類学会,true
+www.moth.jp,日本蛾類学会,true

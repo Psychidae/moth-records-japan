@@ -1,0 +1,529 @@
+<title>日本産蛾類DB 見取り図</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 配置: 図を主役にした縦長の設計図。本文幅は読みやすく抑え、図だけ広げる */
+:root {
+  --bg: #eaefec; --fg: #17211e; --soft: #47564f; --muted: #5d6c65; --panel: #f7f9f7; --line: #b3c0b9;
+  --green: #22694a; --green-bg: #dcecE3; --blue: #235a8e; --blue-bg: #dfe9f3; --amber: #9a5b04; --amber-bg: #f7e8cd;
+  --display: "Shippori Mincho", "Hiragino Mincho ProN", serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121815; --fg: #e5ece8; --soft: #b4c2bb; --muted: #9aa9a2; --panel: #1b2420; --line: #41504a;
+  --green: #6cc79c; --green-bg: #1c3329; --blue: #8dbcea; --blue-bg: #1c2d3f; --amber: #e8b45c; --amber-bg: #3a2c12; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121815; --fg: #e5ece8; --soft: #b4c2bb; --muted: #9aa9a2; --panel: #1b2420; --line: #41504a;
+  --green: #6cc79c; --green-bg: #1c3329; --blue: #8dbcea; --blue-bg: #1c2d3f; --amber: #e8b45c; --amber-bg: #3a2c12; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15.5px; line-height: 1.75; }
+.page { max-width: 1080px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+h1, h2 { font-family: var(--display); font-weight: 700; text-wrap: balance; line-height: 1.35; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); }
+h2 { font-size: clamp(22px, 3vw, 28px); }
+h3 { font-size: 16.5px; margin: 0; line-height: 1.4; }
+p { margin: 0; max-width: 42em; }
+section { display: grid; gap: 18px; min-width: 0; }
+header { display: grid; gap: 12px; }
+figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+.scroll { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); padding: 14px; }
+.scroll svg { display: block; width: 100%; min-width: 780px; height: auto; }
+figcaption { color: var(--soft); font-size: 14px; max-width: 46em; }
+svg text { fill: var(--fg); font-family: var(--body); font-size: 13.5px; }
+svg .t { font-weight: 700; font-size: 14.5px; }
+svg .s { fill: var(--muted); font-size: 11.5px; }
+svg .l { font-size: 11.5px; fill: var(--soft); }
+svg .la { font-size: 12.5px; font-weight: 700; fill: var(--green); }
+svg .c { text-anchor: middle; }
+svg .b { fill: var(--bg); stroke: var(--line); stroke-width: 1.2; }
+svg .pub { fill: var(--green-bg); stroke: var(--green); stroke-width: 1.5; }
+svg .sec { fill: var(--blue-bg); stroke: var(--blue); stroke-width: 1.5; }
+svg .gate { fill: var(--amber-bg); stroke: var(--amber); stroke-width: 2.2; }
+svg .ai { fill: var(--bg); stroke: var(--amber); stroke-width: 1.4; stroke-dasharray: 5 3; }
+svg .zone { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 6 4; }
+svg .a { fill: none; stroke: var(--soft); stroke-width: 1.4; }
+svg .ag { fill: none; stroke: var(--green); stroke-width: 2.4; }
+svg .mk { fill: var(--soft); }
+svg .mg { fill: var(--green); }
+.benches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.bench { background: var(--panel); border: 1px solid var(--line); padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.bench.pub { border-top: 3px solid var(--green); }
+.bench.sec { border-top: 3px solid var(--blue); }
+.bench.gate { border-top: 3px solid var(--amber); }
+.bench.auto { border-top: 3px solid var(--soft); }
+.who { color: var(--muted); font-size: 13px; }
+ul.f { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 14px; }
+ul.f li { display: flex; justify-content: space-between; gap: 10px; }
+.p { font-family: var(--mono); font-size: 11.5px; color: var(--muted); flex: none; }
+.map { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 14px; }
+.site { background: var(--panel); border: 1px solid var(--line); padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.dom { font-family: var(--mono); font-size: 13px; color: var(--soft); overflow-wrap: anywhere; }
+.tree { list-style: none; margin: 0; padding: 0; font-size: 14px; display: grid; gap: 3px; }
+.tree li { display: grid; grid-template-columns: minmax(0, 10.5em) minmax(0, 1fr); gap: 10px; }
+.tree code { font-family: var(--mono); font-size: 12.5px; color: var(--soft); overflow-wrap: anywhere; }
+.tree .g { grid-column: 1 / -1; font-weight: 700; margin-top: 8px; color: var(--fg); }
+.road { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.road > div { display: grid; grid-template-columns: 3.2em minmax(0, 15em) minmax(0, 1fr); gap: 14px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.road b { font-family: var(--mono); font-weight: 500; }
+.road small { color: var(--muted); font-size: 13px; display: block; font-family: var(--mono); }
+.road span.d { font-size: 14px; }
+.gatev { color: var(--amber); font-weight: 700; font-size: 13.5px; display: block; margin-top: 2px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tw { overflow-x: auto; }
+th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 700; white-space: nowrap; }
+td:first-child { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+@media (max-width: 860px) {
+  .benches, .map { grid-template-columns: minmax(0, 1fr); }
+  .road > div { grid-template-columns: 3.2em minmax(0, 1fr); }
+  .road span.d { grid-column: 2; }
+}
+</style>
+
+<main class="page">
+<header>
+  <h1>日本産蛾類DB 見取り図</h1>
+  <p>文献の根拠つきで、蛾の記録を都道府県ごとに見渡せるデータベースの全体設計です。図の中の W1〜W6 は作業場（ワークベンチ）の番号で、仕様書 <code>docs/05_portal_admin.md</code> と対応しています。</p>
+</header>
+
+<section>
+  <h2>全体の構造</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 535" role="img" aria-label="公開サイトはデータベースに接続せず、検査を通った静的ファイルだけが自動運用から配信される構造の図">
+      <defs>
+        <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+        <marker id="g1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path class="mg" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <text class="l" x="196" y="24">公開側　データベースなし</text>
+      <rect class="zone" x="190" y="32" width="270" height="104"/>
+      <text class="l" x="196" y="162">保護側　審査を通るまで公開されない</text>
+      <rect class="zone" x="190" y="170" width="270" height="282"/>
+
+      <rect class="b" x="20" y="62" width="130" height="44"/><text class="c" x="85" y="89">訪問者</text>
+      <rect class="b" x="20" y="190" width="130" height="44"/><text class="c" x="85" y="217">投稿者</text>
+      <rect class="b" x="20" y="256" width="130" height="44"/><text class="c" x="85" y="283">審査者</text>
+      <rect class="b" x="20" y="322" width="130" height="44"/><text class="c" x="85" y="349">編集者</text>
+      <rect class="b" x="20" y="388" width="130" height="44"/><text class="c" x="85" y="415">管理者</text>
+
+      <rect class="pub" x="205" y="48" width="240" height="72"/>
+      <text class="t c" x="325" y="79">W1 閲覧</text><text class="s c" x="325" y="100">公開サイト　静的ファイルのみ</text>
+      <rect class="sec" x="205" y="184" width="240" height="56"/>
+      <text class="t c" x="325" y="208">W2 投稿</text><text class="s c" x="325" y="227">投稿サイト</text>
+      <rect class="sec" x="205" y="250" width="240" height="56"/>
+      <text class="t c" x="325" y="274">W3 審査</text><text class="s c" x="325" y="293">投稿サイト /review</text>
+      <rect class="sec" x="205" y="316" width="240" height="56"/>
+      <text class="t c" x="325" y="340">W4 編集</text><text class="s c" x="325" y="359">管理サイト　二段階認証</text>
+      <rect class="sec" x="205" y="382" width="240" height="56"/>
+      <text class="t c" x="325" y="406">W5 管理</text><text class="s c" x="325" y="425">管理サイト　二段階認証</text>
+
+      <path class="a" d="M150 84H203" marker-end="url(#a1)"/>
+      <path class="a" d="M150 212H203" marker-end="url(#a1)"/>
+      <path class="a" d="M150 278H203" marker-end="url(#a1)"/>
+      <path class="a" d="M150 344H203" marker-end="url(#a1)"/>
+      <path class="a" d="M150 410H203" marker-end="url(#a1)"/>
+      <path class="a" d="M420 120V182" marker-end="url(#a1)"/>
+      <text class="l" x="428" y="156">修正を提案</text>
+
+      <rect class="sec" x="530" y="184" width="170" height="254"/>
+      <text class="t c" x="615" y="240">Supabase</text>
+      <text class="s c" x="615" y="262">東京リージョン</text>
+      <text class="s c" x="615" y="300">PostgreSQL</text>
+      <text class="s c" x="615" y="320">全テーブルに権限制御</text>
+      <text class="s c" x="615" y="340">ログイン管理</text>
+      <text class="s c" x="615" y="360">サーバー処理</text>
+      <path class="a" d="M445 212H528" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <path class="a" d="M445 278H528" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <path class="a" d="M445 344H528" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <path class="a" d="M445 410H528" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <text class="l c" x="487" y="249">権限を検証</text>
+
+      <rect class="b" x="770" y="184" width="210" height="110"/>
+      <text class="t c" x="875" y="222">W6 自動運用</text>
+      <text class="s c" x="875" y="243">GitHub Actions</text>
+      <text class="s c" x="875" y="263">取込　生成　検査　見守り</text>
+      <path class="a" d="M700 240H768" marker-end="url(#a1)"/>
+      <text class="l c" x="735" y="231">公開分のみ</text>
+
+      <path class="ag" d="M875 184V84H449" marker-end="url(#g1)"/>
+      <text class="la c" x="660" y="72">検査を通った静的ファイルだけを配信（公開側へ入る唯一の経路）</text>
+
+      <rect class="b" x="770" y="330" width="210" height="52"/>
+      <text class="c" x="875" y="361">iNaturalist　GBIF</text>
+      <path class="a" d="M875 330V296" marker-end="url(#a1)"/>
+      <text class="l" x="884" y="318">週次・月次の集計</text>
+
+      <rect class="b" x="770" y="405" width="210" height="52"/>
+      <text class="c" x="875" y="436">Claude API</text>
+      <path class="a" d="M700 431H768" marker-end="url(#a1)" marker-start="url(#a1)"/>
+      <text class="l c" x="735" y="422">下処理</text>
+
+      <rect class="b" x="530" y="472" width="170" height="52"/>
+      <text class="c" x="615" y="495">暗号化バックアップ</text>
+      <text class="s c" x="615" y="513">別サービスに保持ロック</text>
+      <path class="a" d="M615 438V470" marker-end="url(#a1)"/>
+      <text class="l" x="624" y="459">毎日</text>
+    </svg>
+    </div>
+    <figcaption>公開サイトからデータベースへの線はありません。投稿側が止まったり侵害されたりしても、公開サイトは直前の版を配信し続けます。太線が公開サイトへ入る唯一の経路です。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>データが公開されるまで</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 395" role="img" aria-label="文献投稿、修正提案、AI候補の三つの入口はすべて人の審査を通り、外部の集計だけは別の層として公開データ生成へ入る流れの図">
+      <defs>
+        <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <rect class="b" x="20" y="30" width="150" height="62"/><text class="t c" x="95" y="57">投稿者</text><text class="s c" x="95" y="77">文献と記録</text>
+      <rect class="b" x="205" y="30" width="150" height="62"/><text class="t c" x="280" y="57">入力検査</text><text class="s c" x="280" y="77">必須項目　重複警告</text>
+      <path class="a" d="M170 61H203" marker-end="url(#a2)"/>
+      <path class="a" d="M355 61H543" marker-end="url(#a2)"/>
+
+      <rect class="b" x="20" y="118" width="150" height="62"/><text class="t c" x="95" y="145">訪問者</text><text class="s c" x="95" y="165">修正提案と根拠</text>
+      <rect class="b" x="205" y="118" width="150" height="62"/><text class="t c" x="280" y="145">不正対策</text><text class="s c" x="280" y="165">ボット判定　回数制限</text>
+      <rect class="ai" x="390" y="118" width="125" height="62"/><text class="t c" x="452" y="145">AI下処理</text><text class="s c" x="452" y="165">要約　差分案</text>
+      <path class="a" d="M170 149H203" marker-end="url(#a2)"/>
+      <path class="a" d="M355 149H388" marker-end="url(#a2)"/>
+      <path class="a" d="M515 149H543" marker-end="url(#a2)"/>
+
+      <rect class="b" x="20" y="206" width="150" height="62"/><text class="t c" x="95" y="233">文献PDF</text><text class="s c" x="95" y="253">新着文献の監視</text>
+      <rect class="ai" x="390" y="206" width="125" height="62"/><text class="t c" x="452" y="233">AI候補</text><text class="s c" x="452" y="253">記録候補とページ</text>
+      <path class="a" d="M170 237H388" marker-end="url(#a2)"/>
+      <path class="a" d="M515 237H543" marker-end="url(#a2)"/>
+      <text class="l c" x="452" y="288">AIは提案のみ　書き込み権限なし</text>
+
+      <rect class="gate" x="545" y="30" width="120" height="238"/>
+      <text class="t c" x="605" y="140">W3 審査</text>
+      <text class="c" x="605" y="162">人が承認</text>
+      <path class="a" d="M665 149H713" marker-end="url(#a2)"/>
+      <text class="l c" x="689" y="140">公開分</text>
+
+      <rect class="b" x="20" y="315" width="150" height="62"/><text class="t c" x="95" y="342">iNaturalist　GBIF</text><text class="s c" x="95" y="362">県別の件数</text>
+      <rect class="b" x="205" y="315" width="150" height="62"/><text class="t c" x="280" y="342">集計を保存</text><text class="s c" x="280" y="362">観察の座標は持たない</text>
+      <path class="a" d="M170 346H203" marker-end="url(#a2)"/>
+      <path class="a" d="M355 346H713" marker-end="url(#a2)"/>
+      <text class="l c" x="535" y="336">審査は通さず、文献とは別の層として表示</text>
+
+      <rect class="sec" x="715" y="100" width="130" height="277"/>
+      <text class="t c" x="780" y="205">公開データ生成</text>
+      <text class="s c" x="780" y="230">希少種の産地を除外</text>
+      <text class="s c" x="780" y="250">漏えいの自動検査</text>
+      <text class="s c" x="780" y="270">版番号の付与</text>
+      <path class="a" d="M845 238H878" marker-end="url(#a2)"/>
+      <rect class="pub" x="880" y="198" width="100" height="80"/>
+      <text class="t c" x="930" y="243">W1 閲覧</text>
+    </svg>
+    </div>
+    <figcaption>点線の枠がAIの担当です。AIは差分案を作るだけで、データは人の承認なしに変わりません。承認されると、学名の変更は現行学名の対応だけを更新し、文献上の学名はそのまま残ります。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>文献リポジトリ</h2>
+  <p>公開済みのPDFにはリンクで到達できるようにします。たとえば蛾類通信 No.1〜309 と TINEA 第1巻〜第27巻2号は学会サイトへのリンクで読めます。それでも取りこぼしている文献は、著者本人や、著作権の保護期間の満了に気づいた人が登録し、本サイトが保持します。学会が頒布中の号は入手案内を出し、登録は受け付けません。</p>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="自動収集した書誌のうち外部公開があるものはリンクで公開し、目録のみの文献は人のスキャン提供を経て検査と権利判定の後に公開される流れの図">
+      <defs>
+        <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <rect class="b" x="20" y="30" width="150" height="62"/><text class="t c" x="95" y="57">書誌の自動収集</text><text class="s c" x="95" y="77">J-STAGE　NDL　学会サイト</text>
+      <rect class="b" x="205" y="30" width="140" height="62"/><text class="t c" x="275" y="57">重複の統合</text><text class="s c" x="275" y="77">DOI　巻号　頁</text>
+      <rect class="b" x="380" y="30" width="150" height="62"/><text class="t c" x="455" y="57">公開コピーの探索</text><text class="s c" x="455" y="77">OpenAlex　NDL　BHL</text>
+      <path class="a" d="M170 61H203" marker-end="url(#a4)"/>
+      <path class="a" d="M345 61H378" marker-end="url(#a4)"/>
+      <path class="a" d="M530 61H798" marker-end="url(#a4)"/>
+      <text class="l c" x="665" y="51">外部公開あり　信頼ドメインなら自動でリンク</text>
+      <rect class="pub" x="800" y="30" width="180" height="62"/><text class="t c" x="890" y="57">W1 文献ページ</text><text class="s c" x="890" y="77">読める場所を表示</text>
+
+      <path class="a" d="M455 92V130" marker-end="url(#a4)"/>
+      <text class="l" x="464" y="115">外部公開なし</text>
+      <rect class="b" x="380" y="132" width="150" height="56"/><text class="t c" x="455" y="156">目録のみ</text><text class="s c" x="455" y="175">登録を募集</text>
+      <path class="a" d="M455 188V214H95V238" marker-end="url(#a4)"/>
+      <text class="l" x="464" y="207">権利を持つ人が登録</text>
+
+      <rect class="gate" x="20" y="240" width="150" height="66"/><text class="t c" x="95" y="267">PDFの登録</text><text class="s c" x="95" y="288">著者本人　満了に気づいた人</text>
+      <rect class="b" x="205" y="240" width="130" height="66"/><text class="t c" x="270" y="267">隔離</text><text class="s c" x="270" y="288">別の保管領域</text>
+      <rect class="b" x="370" y="240" width="150" height="66"/><text class="t c" x="445" y="267">検査と再生成</text><text class="s c" x="445" y="288">ウイルス検査　OCR</text>
+      <rect class="gate" x="555" y="240" width="150" height="66"/><text class="t c" x="630" y="267">権利の申告を確認</text><text class="s c" x="630" y="288">規則に合えば自動</text>
+      <path class="a" d="M170 273H203" marker-end="url(#a4)"/>
+      <path class="a" d="M335 273H368" marker-end="url(#a4)"/>
+      <path class="a" d="M520 273H553" marker-end="url(#a4)"/>
+      <path class="a" d="M705 273H890V94" marker-end="url(#a4)"/>
+      <text class="l c" x="798" y="263">公開</text>
+      <path class="a" d="M630 306V338" marker-end="url(#a4)"/>
+      <text class="l" x="639" y="326">根拠が足りない</text>
+      <rect class="sec" x="555" y="340" width="150" height="50"/><text class="c" x="630" y="361">公開しない</text><text class="s c" x="630" y="379">登録者へ確認</text>
+    </svg>
+    </div>
+    <figcaption>色の付いた2か所だけが人の作業です。登録時に権利の根拠を申告するので、根拠がないファイルは受け付けません。没年などが規則に合えば確認も自動です。元ファイルは残さず、画像から作り直したファイルだけを保管するので、仕込まれた不正なコードは取り除かれます。</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>人の工程</h2>
+  <p>機械で確かめられることは機械が処理し、人は例外だけを判断します。自動公開はAIの判断ではなく、説明できる規則で行います。</p>
+  <div class="tw"><table>
+    <thead><tr><th>処理</th><th>自動で進む条件</th><th>必ず人が見るもの</th></tr></thead>
+    <tbody>
+      <tr><td>書誌</td><td>DOIで確定、または収集元が信頼でき重複がない</td><td>題名だけ一致する重複候補</td></tr>
+      <tr><td>リンク</td><td>信頼ドメインで応答が正常</td><td>それ以外のドメイン</td></tr>
+      <tr><td>記録</td><td>信頼済み投稿者で、既に記録のある県の通常の記録。5%を抜き取り確認</td><td>県初記録、日本初記録、希少種、学名未対応</td></tr>
+      <tr><td>PDF登録</td><td>検査が正常で、権利の申告が規則を満たす</td><td>規則に合わない申告、公開停止の判断</td></tr>
+      <tr><td>公開</td><td>毎週自動。記録が1%以上減るときは停止</td><td>停止の通知</td></tr>
+    </tbody>
+  </table></div>
+  <p>記録の審査は文献単位の一括承認を基本にします。審査の待ち件数と自動処理の割合は管理画面で確認できます。</p>
+</section>
+
+<section>
+  <h2>機能の配置</h2>
+  <p>1つの機能は1か所にだけ置きます。右端の記号は実装の段階です。</p>
+  <div class="benches">
+    <article class="bench pub">
+      <h3>W1 閲覧</h3><div class="who">全員　ログイン不要</div>
+      <ul class="f">
+        <li>学名、和名、異名で検索<span class="p">P1</span></li>
+        <li>種ページ、分類ツリー<span class="p">P1</span></li>
+        <li>全国地図、県と島のページ<span class="p">P1</span></li>
+        <li>発見候補、未記録候補<span class="p">P1</span></li>
+        <li>CSV出力、版つき引用<span class="p">P1</span></li>
+        <li>文献ページ、地域比較<span class="p">P2</span></li>
+        <li>収蔵状況、入手案内、登録の募集<span class="p">P2</span></li>
+        <li>公開停止の申し出<span class="p">P2</span></li>
+        <li>タイプ産地、寄主植物<span class="p">P3</span></li>
+        <li>見た目から探す、はじめての蛾<span class="p">P4</span></li>
+        <li>記録の空白、探してほしい種<span class="p">P4</span></li>
+      </ul>
+    </article>
+    <article class="bench sec">
+      <h3>W2 投稿</h3><div class="who">訪問者、投稿者</div>
+      <ul class="f">
+        <li>修正提案（ログイン不要）<span class="p">P2</span></li>
+        <li>DOIから文献を登録<span class="p">P2</span></li>
+        <li>記録の入力、一括取込<span class="p">P2</span></li>
+        <li>PDFの登録と権利の申告<span class="p">P2</span></li>
+        <li>自分の投稿の確認<span class="p">P2</span></li>
+        <li>形質の入力<span class="p">P4</span></li>
+        <li>文献入力の分担<span class="p">P4</span></li>
+        <li>標本画像の投稿<span class="p">P4</span></li>
+      </ul>
+    </article>
+    <article class="bench gate">
+      <h3>W3 審査</h3><div class="who">審査者以上</div>
+      <ul class="f">
+        <li>文献単位の一括承認<span class="p">P2</span></li>
+        <li>修正提案の受信箱<span class="p">P2</span></li>
+        <li>リンクの安全確認<span class="p">P2</span></li>
+        <li>AIの差分案を適用<span class="p">P3</span></li>
+        <li>PDFからの抽出と候補確認<span class="p">P3</span></li>
+      </ul>
+    </article>
+    <article class="bench sec">
+      <h3>W4 編集</h3><div class="who">編集者以上　二段階認証</div>
+      <ul class="f">
+        <li>種の解説、和名、機微レベル<span class="p">P3</span></li>
+        <li>学名変更、分割、統合<span class="p">P3</span></li>
+        <li>公開済み記録の訂正<span class="p">P3</span></li>
+        <li>タイプ情報、寄主植物<span class="p">P3</span></li>
+        <li>外部リンクの管理<span class="p">P3</span></li>
+        <li>雑誌と巻号の管理<span class="p">P3</span></li>
+        <li>固定ページ、お知らせ<span class="p">P3</span></li>
+      </ul>
+    </article>
+    <article class="bench sec">
+      <h3>W5 管理</h3><div class="who">管理者以上　二段階認証</div>
+      <ul class="f">
+        <li>権限の付与と取消<span class="p">P3</span></li>
+        <li>機能のオンオフ<span class="p">P3</span></li>
+        <li>公開停止の判断、一括許諾の登録<span class="p">P3</span></li>
+        <li>信頼ドメインの管理<span class="p">P3</span></li>
+        <li>サイト設定<span class="p">P3</span></li>
+        <li>版の公開、前の版へ戻す<span class="p">P3</span></li>
+        <li>運用状況、AI費用<span class="p">P3</span></li>
+        <li>監査ログ<span class="p">P3</span></li>
+      </ul>
+    </article>
+    <article class="bench auto">
+      <h3>W6 自動運用</h3><div class="who">人の操作なし</div>
+      <ul class="f">
+        <li>iNaturalist、GBIFの集計<span class="p">P1</span></li>
+        <li>書誌の収集、公開コピーの探索<span class="p">P2</span></li>
+        <li>スキャンの検査と再生成<span class="p">P2</span></li>
+        <li>規則による自動公開<span class="p">P2</span></li>
+        <li>保管庫の複製、Zenodo登録<span class="p">P2</span></li>
+        <li>公開データの生成と検査<span class="p">P1</span></li>
+        <li>毎日のバックアップ、復元確認<span class="p">P1</span></li>
+        <li>週次の健康診断メール<span class="p">P1</span></li>
+        <li>リンク切れの確認<span class="p">P1</span></li>
+        <li>修正提案のAI下処理<span class="p">P3</span></li>
+        <li>新着文献の監視<span class="p">P4</span></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>サイトの地図</h2>
+  <div class="map">
+    <article class="site">
+      <h3>公開サイト</h3><div class="dom">www.（独自ドメイン）</div>
+      <ul class="tree">
+        <li class="g">種をさがす</li>
+        <li><code>/search/</code>検索結果</li>
+        <li><code>/species/</code>分類ツリー</li>
+        <li><code>/species/M000123/</code>種ページ</li>
+        <li><code>/look/</code>見た目から探す</li>
+        <li><code>/start/</code>はじめての蛾</li>
+        <li class="g">地域から見る</li>
+        <li><code>/regions/</code>全国地図</li>
+        <li><code>/regions/PR47/</code>県、島ページ</li>
+        <li><code>/compare/</code>地域比較</li>
+        <li class="g">文献と分類の情報</li>
+        <li><code>/references/</code>文献一覧</li>
+        <li><code>/references/R000123/</code>文献ページ</li>
+        <li><code>/library/</code>収蔵状況</li>
+        <li><code>/types/</code>タイプ産地</li>
+        <li><code>/hosts/</code>寄主植物</li>
+        <li class="g">データと参加</li>
+        <li><code>/data/</code>ダウンロード、引用</li>
+        <li><code>/changes/</code>更新履歴</li>
+        <li><code>/gaps/</code>記録の空白</li>
+        <li><code>/join/</code>参加方法</li>
+        <li><code>/about/</code>目的、出典、謝辞</li>
+        <li><code>/takedown/</code>公開停止の申し出</li>
+      </ul>
+    </article>
+    <article class="site">
+      <h3>投稿サイト</h3><div class="dom">submit.（独自ドメイン）</div>
+      <ul class="tree">
+        <li class="g">W2 投稿</li>
+        <li><code>/suggest</code>修正提案</li>
+        <li><code>/references/new</code>文献登録</li>
+        <li><code>/records/new</code>記録入力</li>
+        <li><code>/records/bulk</code>一括入力</li>
+        <li><code>/upload</code>PDFの登録</li>
+        <li><code>/me</code>自分の投稿</li>
+        <li class="g">W3 審査</li>
+        <li><code>/review</code>受信箱</li>
+      </ul>
+    </article>
+    <article class="site">
+      <h3>管理サイト</h3><div class="dom">admin.（独自ドメイン）</div>
+      <ul class="tree">
+        <li class="g">W4 編集</li>
+        <li><code>/taxa</code>種と学名</li>
+        <li><code>/records</code>記録の訂正</li>
+        <li><code>/links</code>外部リンク</li>
+        <li><code>/journals</code>雑誌と巻号</li>
+        <li><code>/pages</code>固定ページ</li>
+        <li class="g">W5 管理</li>
+        <li><code>/users</code>利用者と権限</li>
+        <li><code>/features</code>機能</li>
+        <li><code>/rights</code>一括許諾</li>
+        <li><code>/releases</code>版の公開</li>
+        <li><code>/status</code>運用状況</li>
+        <li><code>/audit</code>監査ログ</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>開発の進め方</h2>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 190" role="img" aria-label="仕様からCodexがタスクごとに実装し、自動検査とオーナー承認を経て本番へ配信される流れの図">
+      <defs>
+        <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+      <rect class="b" x="20" y="60" width="130" height="66"/><text class="t c" x="85" y="88">仕様とタスク</text><text class="s c" x="85" y="108">docs/07_tasks</text>
+      <rect class="b" x="180" y="60" width="130" height="66"/><text class="t c" x="245" y="88">Codex</text><text class="s c" x="245" y="108">1タスク1PR</text>
+      <rect class="b" x="340" y="60" width="130" height="66"/><text class="t c" x="405" y="88">自動検査</text><text class="s c" x="405" y="108">権限　依存　ビルド</text>
+      <rect class="b" x="500" y="60" width="130" height="66"/><text class="t c" x="565" y="88">自動マージ</text><text class="s c" x="565" y="108">検査の成功が条件</text>
+      <rect class="b" x="660" y="60" width="130" height="66"/><text class="t c" x="725" y="88">staging</text><text class="s c" x="725" y="108">動作確認</text>
+      <rect class="gate" x="840" y="60" width="140" height="66"/><text class="t c" x="910" y="88">本番</text><text class="s c" x="910" y="108">オーナーが最後に承認</text>
+      <path class="a" d="M150 93H178" marker-end="url(#a3)"/>
+      <path class="a" d="M310 93H338" marker-end="url(#a3)"/>
+      <path class="a" d="M470 93H498" marker-end="url(#a3)"/>
+      <path class="a" d="M630 93H658" marker-end="url(#a3)"/>
+      <path class="a" d="M790 93H838" marker-end="url(#a3)"/>
+      <path class="a" d="M405 126V158H245V128" marker-end="url(#a3)"/>
+      <text class="l c" x="325" y="176">失敗なら修正</text>
+      <path class="zone" d="M815 40V150"/>
+      <text class="l c" x="815" y="30">本番の鍵はこの線の右だけ</text>
+    </svg>
+    </div>
+    <figcaption>Codexはタスクを止まらず順に進め、stagingまで自動で反映します。オーナーの操作は最後の本番承認だけです。Codexには本番の鍵を渡しません。万一開発環境が汚染されても、本番のデータと配信には届きません。</figcaption>
+  </figure>
+  <div class="road">
+    <div><b>P0</b><span>土台<small>T01〜T04</small></span><span class="d">リポジトリ、自動検査、DBと権限テスト</span></div>
+    <div><b>P1</b><span>閲覧サイト<small>T05〜T21</small></span><span class="d">List-MJ取込、外部集計、種と地域のページ、バックアップ、見守り、公開<span class="gatev">一般公開前: G1 神保さんへ相談、G4 名称とドメイン、G7 費用上限</span></span></div>
+    <div><b>P2</b><span>文献と投稿<small>T22〜T28</small></span><span class="d">ログイン、文献登録、記録入力、審査、修正提案の受付</span></div>
+    <div><b>P2L</b><span>文献リポジトリ<small>L01〜L08</small></span><span class="d">書誌と学会公開PDFの収集、公開コピー探索、収蔵状況、スキャンの受付と検査、権利、公開停止、複製<span class="gatev">受付開始前: G8 権利申告と規約の確認、G9 NDLとCiNiiの利用手続き</span></span></div>
+    <div><b>P2A</b><span>自動化<small>A01〜A05</small></span><span class="d">自動公開の規則、信頼度の昇格、週次公開、Zenodo登録</span></div>
+    <div><b>P3</b><span>管理とAI<small>T29〜T36</small></span><span class="d">編集、管理、AI下処理、タイプ産地、寄主、PDF抽出<span class="gatev">本番で任命する前: G5 2人目のオーナー</span></span></div>
+    <div><b>P4</b><span>市民科学<small>T37〜T42</small></span><span class="d">記録の空白、見た目検索、形質入力、文献監視、標本画像</span></div>
+    <div><b>P5</b><span>外部公開の拡張<small>T43〜T44</small></span><span class="d">英語表示、Darwin Core Archive</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>使うツールと運用耐性</h2>
+  <p>判断基準は、1人で運用できること、やめても移せること、資金が止まっても公開サイトを残せることの3点です。料金と上限は2026年11月時点の確認結果です。</p>
+  <div class="tw"><table>
+    <thead><tr><th>役割</th><th>採用</th><th>確認した上限</th><th>撤退方法</th></tr></thead>
+    <tbody>
+      <tr><td>公開配信</td><td>Cloudflare Workers Static Assets</td><td>静的要求は無料で無制限、Free 2万ファイル</td><td>静的ファイルを他社へ移す</td></tr>
+      <tr><td>サイト生成</td><td>Astro（静的出力のみ）</td><td>15,628ページを5.5秒で生成（簡略な雛形で実測）</td><td>出力はHTML</td></tr>
+      <tr><td>投稿、管理</td><td>Vite + React</td><td>静的SPAとして配信</td><td>標準的なReact</td></tr>
+      <tr><td>DB、認証</td><td>Supabase 東京</td><td>Pro $25/月〜、8GB、10万MAU</td><td>pg_dump で移行</td></tr>
+      <tr><td>軽い処理</td><td>Edge Functions</td><td>200万回/月、CPU 2秒</td><td>他の実行環境へ移す</td></tr>
+      <tr><td>定期処理</td><td>GitHub Actions</td><td>公開リポジトリは無料</td><td>他のCIへ移す</td></tr>
+      <tr><td>メール</td><td>Resend</td><td>無料 100通/日</td><td>SMTP設定の変更</td></tr>
+      <tr><td>保護</td><td>Turnstile、Cloudflare Access</td><td>Accessは50人まで無料。Turnstileの無料枠は未確認</td><td>外してもMFAとRLSは残る</td></tr>
+      <tr><td>バックアップ</td><td>R2 + age</td><td>10GBまで無料、転送無料</td><td>S3互換の別サービス</td></tr>
+      <tr><td>停止検知</td><td>Healthchecks.io</td><td>無料 20件</td><td>同種のサービス</td></tr>
+      <tr><td>文献保管庫</td><td>Cloudflare R2</td><td>容量無制限、$0.015/GB、転送無料</td><td>S3互換でそのまま移す</td></tr>
+      <tr><td>スキャン処理</td><td>ClamAV、OCRmyPDF</td><td>どちらも2026年10月に更新あり</td><td>他の検査ツールへ差替</td></tr>
+      <tr><td>保管庫の複製</td><td>Supabase Storage</td><td>Pro 100GB込み、超過 $0.0213/GB</td><td>別事業者へ移す</td></tr>
+      <tr><td>書誌の収集</td><td>J-STAGE、NDL、CiNii、OpenAlex、学会サイト</td><td>NDLは非営利なら申請不要、継続利用は連絡。CiNiiとOpenAlexは未確認</td><td>書誌は本DBに残る</td></tr>
+      <tr><td>長期保存</td><td>Zenodo</td><td>50GB/件、CERN運営</td><td>データは公開済み</td></tr>
+      <tr><td>AI</td><td>Claude API</td><td>提案1件 約0.04ドルの試算</td><td>機能を切る。サイトは動く</td></tr>
+    </tbody>
+  </table></div>
+  <h3>費用の見通し（月額の目安）</h3>
+  <div class="tw"><table>
+    <thead><tr><th>段階</th><th>内容</th><th>目安</th></tr></thead>
+    <tbody>
+      <tr><td>P0〜P1</td><td>閲覧サイトのみ。ドメイン代が中心</td><td>ほぼ0ドル</td></tr>
+      <tr><td>P2</td><td>投稿開始。Supabase Pro</td><td>25ドル〜</td></tr>
+      <tr><td>P3</td><td>AI開始</td><td>30〜45ドル</td></tr>
+      <tr><td>成長時</td><td>必要に応じて配信とメールを増強</td><td>55〜70ドル</td></tr>
+      <tr><td>スキャン追加</td><td>300GBの保管と複製</td><td>約9ドル加算</td></tr>
+      <tr><td>縮退時</td><td>投稿を止めて静的サイトだけ残す</td><td>ほぼ0ドル</td></tr>
+    </tbody>
+  </table></div>
+  <h3>運用で注意する点</h3>
+  <p>公開リポジトリの定期処理は、60日間活動がないと自動で止まります。週次の状態更新で活動を保ち、止まった場合は外部の停止検知からメールが届く設計です。バックアップのロックはCloudflareの管理者なら解除できるため、公開データは GitHub と Zenodo にも置いて提供元を分散します。</p>
+</section>
+
+<section>
+  <h2>オーナーの運用</h2>
+  <div class="tw"><table>
+    <thead><tr><th>頻度</th><th>やること</th><th>目安</th></tr></thead>
+    <tbody>
+      <tr><td>毎週</td><td>健康診断メールの先頭を読む。「対応不要」なら終わり</td><td>1分</td></tr>
+      <tr><td>随時</td><td>例外だけの通知を見て、承認か却下を選ぶ</td><td>件数次第</td></tr>
+      <tr><td>毎月</td><td>本番に影響する依存更新のPRを承認する</td><td>5分</td></tr>
+      <tr><td>毎年</td><td>管理者一覧とAPIキーを見直す</td><td>30分</td></tr>
+    </tbody>
+  </table></div>
+  <p>異常時は管理画面から前の版へ戻せます。主な事故の手順は、仕様書から作る <code>docs/runbook.md</code> に番号付きでまとめます。</p>
+</section>
+</main>

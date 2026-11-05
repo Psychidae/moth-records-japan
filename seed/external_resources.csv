@@ -1,0 +1,11 @@
+key,name,kind,home_url,taxon_url_template,owner_note,license_note,permission,enabled
+listmj,List-MJ 日本産蛾類総目録,checklist,http://listmj.mothprog.com/,,神保宇嗣,CC0 1.0,data_ok,true
+jpmoth,みんなで作る日本産蛾類図鑑,guide,http://www.jpmoth.org/,,ニワカガマニア・神保宇嗣・蛾LOVE,画像の著作権は撮影者。二次利用不可。部分リンクは保証なし,home_link_only,true
+jpmoth_bbs,新・蛾像掲示板,board,http://www.jpmoth.org/fbbsw/index.html,,みんなで作る日本産蛾類図鑑,本文と画像の転載不可,home_link_only,true
+inaturalist,iNaturalist,observation,https://www.inaturalist.org/,https://www.inaturalist.org/taxa/{inat_taxon_id},,観察と写真ごとのライセンスに従う,data_ok,true
+gbif,GBIF,specimen,https://www.gbif.org/,https://www.gbif.org/species/{gbif_usage_key},,データセットごとのライセンスと引用DOIに従う,data_ok,true
+jstage,J-STAGE,literature,https://www.jstage.jst.go.jp/,,,商用利用は事前許可。J-STAGEの表示が必要,data_ok,true
+ndl_search,国立国会図書館サーチ,literature,https://ndlsearch.ndl.go.jp/,,,提供機関ごとの利用条件に従う。継続利用は連絡が必要,not_requested,false
+cinii,CiNii Research,literature,https://cir.nii.ac.jp/,,,appid が必要,not_requested,false
+bhl,Biodiversity Heritage Library,literature,https://www.biodiversitylibrary.org/,,,資料ごとの権利に従う,not_requested,false
+jhs,日本蛾類学会,literature,https://www.moth.jp/,,,PDF公開分へのリンクのみ。頒布中の号はスキャンを受け付けない,home_link_only,true

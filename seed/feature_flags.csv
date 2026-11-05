@@ -1,0 +1,17 @@
+key,enabled,description
+suggestions_open,false,訪問者からの修正提案を受け付ける
+submissions_open,false,文献と記録の投稿を受け付ける
+ai_triage,false,修正提案のAI下処理を実行する
+ai_extraction,false,PDFからの記録候補抽出を実行する
+ai_literature_watch,false,新着文献の定期監視を実行する
+inat_layer,true,iNaturalistの集計を公開サイトに表示する
+gbif_layer,true,GBIFの集計を公開サイトに表示する
+look_search,false,見た目から探す機能を公開する
+gaps_page,false,記録の空白ページを公開する
+scan_uploads_open,false,PDFの登録を受け付ける
+auto_publish_doi_references,false,DOIで確定した書誌を自動公開する
+auto_publish_catalog_harvest,false,自動収集した書誌を目録として自動公開する
+auto_publish_trusted_links,false,信頼ドメインのリンクを自動公開する
+auto_publish_trusted_records,false,信頼済み投稿者の通常の記録を自動公開する
+auto_publish_declared_scans,false,権利の申告が規則を満たすPDFを自動公開する
+weekly_auto_release,false,公開データを毎週自動で公開する
