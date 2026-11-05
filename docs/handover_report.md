@@ -59,3 +59,4 @@
 2. テストのextension、関数、fixture行、機能フラグ変更はBEGIN/ROLLBACKの中だけ。stagingの成功後と意図的な失敗後に、public表34件、flags16件、resources10件、テスト利用者0件、pgTAPの永続インストール0件を確認した。
 3. `finish(true)` が失敗を例外に変える。1件だけ意図的に誤らせた一時SQLは「1 test failed of 57」でCLIが終了コード1となり、成功と誤判定しないことも確認した。一時SQLは成果物に含めない。
 4. CIは秘密情報・Environmentを使用せず、forkのPRでも同じ検証を実行する。GitHub上の成功を確認してからPRをマージする。
+5. このpgTAP一式は使い捨てDB、または既存オーナーがいない開発用stagingを対象とする。「2名未満にできない」は全体のオーナー数で判定するため、既存オーナーがいるDBで同じfixtureを加えると前提が変わる。実データのある環境へそのまま流さない。
