@@ -15,7 +15,8 @@
     "test:schema-smoke": "node scripts/test-schema-smoke.mjs",
     "import:listmj": "node --experimental-strip-types pipelines/import-listmj/src/cli.ts",
     "import:listmj-annotations": "node --experimental-strip-types pipelines/import-listmj/src/annotations-cli.ts",
-    "import:regions": "node --experimental-strip-types pipelines/regions/src/cli.ts"
+    "import:regions": "node --experimental-strip-types pipelines/regions/src/cli.ts",
+    "sync:inat": "node --experimental-strip-types pipelines/sync-inat/src/cli.ts"
   },
   "dependencies": {
     "zod": "4.6.7"

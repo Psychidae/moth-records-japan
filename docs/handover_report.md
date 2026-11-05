@@ -101,3 +101,12 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 - public表34、RLS無効0、分類群10,055（species6,628を含む）、全raw7,465行、名称18,046、注釈975、文献281（全pending）、地域138。
 - 文献上の主張であるrecordsは0件。文献や注釈を、生物の観察・標本・産地記録へ変換していない。
 - 機能フラグ16・外部資源10。初期状態から有効なのはinat_layerとgbif_layerだけ。機能の一般公開・本番接続・本番反映は行っていない。
+
+## T08の集計処理と未確認事項（2026-11-06）
+
+1. `pnpm sync:inat` は設定を要求せず待機する。stagingの接続・問い合わせ先が設定された環境で `pnpm sync:inat --run` を実行する。週次ジョブは月曜03:00 JST、stagingだけを対象とする。秘密情報を取得・表示していない。
+2. 47県×2品質区分の全ページを検証し、完全一致で一意な学名/階級だけを対応づける。未対応は `generated/inaturalist/unmatched.json`。座標・応答原文は出力しない。写真は観察URL・許諾・帰属が揃う各種最大6枚。全APIは2秒以上の間隔、429はRetry-Afterまたは60秒、再試行3回で停止する。
+3. 追記migration `20261105230719_external_snapshot_ingest.sql` のRPCはsecurity invoker・固定search_pathで、service_roleだけが実行できる。全検証と保存を1つの処理にまとめ、異常時には対応づけを含めて戻す。同一payload再投入はIDと監査を増やさない。公開権限・RLSは弱めていない。
+4. stagingへmigrationを適用し、実pgTAP追加12件が成功した。anon/authenticated実行不可、service_role実行可を別クエリでも確認。テストはROLLBACKされ、外部snapshot・集計・写真は各0件のまま。security advisors WARN以上0件。
+5. 必須5コマンド成功、単体61件、元の権限smoke56×2件成功。2秒間隔・429・未対応・写真許諾・ページ欠落・原子的保存はモック/ローカルDBと実pgTAPで確認した。
+6. GitHub stagingの秘密情報と問い合わせ先が未登録のため、全国API実収集・定期ジョブの実データ保存は未確認。待機は収集成功や0観察を意味しない。既存分類基盤・文献・記録・機能フラグを変更していない。
