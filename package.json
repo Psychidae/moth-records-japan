@@ -13,7 +13,8 @@
     "build": "tsc --outDir dist",
     "seed:generate": "node --experimental-strip-types supabase/seed.ts",
     "test:schema-smoke": "node scripts/test-schema-smoke.mjs",
-    "import:listmj": "node --experimental-strip-types pipelines/import-listmj/src/cli.ts"
+    "import:listmj": "node --experimental-strip-types pipelines/import-listmj/src/cli.ts",
+    "import:listmj-annotations": "node --experimental-strip-types pipelines/import-listmj/src/annotations-cli.ts"
   },
   "dependencies": {
     "zod": "4.6.7"

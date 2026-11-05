@@ -16,4 +16,6 @@ psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --single-transaction
 # The same source import must be safe to replay before permissions are exercised.
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/import.sql
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/import.sql
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/annotations.sql
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/annotations.sql
 pg_prove --verbose --dbname "$database" supabase/tests/*.sql
