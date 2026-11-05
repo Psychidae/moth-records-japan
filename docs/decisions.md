@@ -96,3 +96,13 @@ regionsへseed_source/seed_keyを追記し、元のコード・種類・和名�
 応答はZodで必要列だけへ変換し、観察の座標、raw応答、taxon.default_photoは保存しない。写真は別の観察検索から、許諾コード、帰属表記、観察URL、許可ホストの画像URLがそろうものを各分類群最大6枚に限る。全取得・検証後にservice_role専用の原子的RPCを呼ぶ。未登録の連絡先・staging秘密情報は要求せず、定期ジョブを「待機」で正常終了させる。未収集は生物学的不在や0観察の主張ではない。
 
 Supabase changelogの2026-11-04 CLI v3破壊的変更を確認し、既存2.90.0を維持した。実行前にCLI helpを確認し、stagingだけを対象とする。公開サイトへDB接続を追加しない。
+
+## 2026-11-06 T09: GBIFの形式と分類基盤の固定
+
+仕様のSIMPLE_CSVには県判定に必要なlevel1Gid列がない。[公式形式説明](https://techdocs.gbif.org/en/data-use/download-formats)と[実APIの列定義](https://api.gbif.org/v1/occurrence/download/describe/simpleCsv)を確認し、同列を含むDWCAへ変更する。ZIPのoccurrence.txtだけを列名でストリーム処理する。住所やstateProvinceから県を推測しない。level1Gidがなければ失敗させる。一時ZIPは成功・失敗とも削除し、座標・raw行を保存しない。
+
+taxonKey=797とbigintの既存gbif_usage_keyを保つため、[分類基盤移行の公式説明](https://techdocs.gbif.org/en/data-processing/taxonomy-interpretation)に従いlegacy GBIF Backbone `d7dddbf4-2cf0-4f39-9b2a-bb099caae36c` をrequest本体とTAXON_KEY条件に明示する。新しいCOL XRの英数字keyを整数へ変換しない。学名照合は仕様のv1/species/matchを使い、完全一致・階級・科・一意なローカル学名を検証し、推測一致を保存しない。legacy backboneが更新されないことは公開時の出典説明へ引き継ぐ。
+
+GBIFの[公式DWCA writer](https://github.com/gbif/occurrence/blob/dev/occurrence-download/src/main/java/org/gbif/occurrence/download/file/dwca/archive/DwcArchiveUtils.java)はfieldsEnclosedByをnull、区切りをタブ/改行に設定する。実archiveではquoteを通常文字として読み、CSV風の囲みを仮定しない。任意のquoted TSV用の別モードは、タブ・改行・chunk境界・二重quoteのテストを持つ。
+
+[公式Download API](https://techdocs.gbif.org/en/data-use/api-downloads)のAND条件で日本・鱗翅目・2標本区分を指定し、NOTのpredicateでiNaturalist datasetを除外する。通知メールを無効にし、usernameによるBasic認証を環境だけから使う。SUCCEEDED以外の終了状態・不正行・途中失敗では全体を保存せず、前のsnapshotを残す。DOI、資格情報を含まない正確なrequest JSON、取得日時をprivateなsnapshotへ保存する。秘密情報が未登録ならジョブは待機し、実ダウンロード成功とは扱わない。

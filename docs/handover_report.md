@@ -110,3 +110,12 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 4. stagingへmigrationを適用し、実pgTAP追加12件が成功した。anon/authenticated実行不可、service_role実行可を別クエリでも確認。テストはROLLBACKされ、外部snapshot・集計・写真は各0件のまま。security advisors WARN以上0件。
 5. 必須5コマンド成功、単体62件、元の権限smoke56×2件成功。2秒間隔・429・未対応・写真許諾・ページ欠落・原子的保存はモック/ローカルDBと実pgTAPで確認した。
 6. GitHub stagingの秘密情報と問い合わせ先が未登録のため、全国API実収集・定期ジョブの実データ保存は未確認。待機は収集成功や0観察を意味しない。既存分類基盤・文献・記録・機能フラグを変更していない。
+
+## T09のGBIF集計と未確認事項（2026-11-06）
+
+1. `pnpm sync:gbif` は待機。staging・GBIF username/passwordが設定されたジョブで `pnpm sync:gbif --run` を実行する。月初04:00 JSTの判定をUTC月末28〜31日のジョブ内で行う。未設定の秘密情報を要求・取得・表示していない。
+2. 実装前のdecisionsに従いDWCAとlegacy GBIF Backboneを明示する。iNaturalist datasetをAPI predicateと行の再検査で除外する。GADM IDだけで県を判定し、学名・科・階級の一意なEXACT対応だけを保存する。COL英数字keyの整数化や地名からの推測は行わない。
+3. Basic認証は固定のrequest endpointだけに送信し、リダイレクトを拒否する。ダウンロードは別の認証なしリクエストで許可HTTPSホストだけを追う。SUCCEEDEDとDOIを確認してからZIPをprivate一時領域へstream保存し、occurrence.txtだけをstream処理する。raw表全体をメモリへ載せず、archive/展開サイズ・1行の上限を持つ。CRCと全行の検証完了後にだけ集計を保存し、ZIPは例外・途中停止でも削除する。
+4. DOI、正確なrequest JSON（認証情報なし）、取得日時はprivate snapshotへ原子的に保存する。モックAPI/小型実ZIPで成功・失敗・除外・座標不保持・chunk境界・cleanupを検証する。stagingの追加pgTAP4件でモックDOIの保存とDOI欠落拒否が成功し、ROLLBACK後はsnapshot/集計0、分類群10,055、records0のまま。
+5. GBIF接続情報が未登録のため、実際のDownload API POST、全国ZIP取得、実データ由来DOI・定期保存は未確認。モックDOIを実取得の成果として扱わない。公開/課金/投稿のフラグ、本番環境は変更していない。
+6. 必須5コマンドと単体81件が成功。実ZIPのCRC失敗・未消費・consumer例外・経路逸脱・欠落GADM列・UTF-8/列幅の不正を拒否し、全経路で一時領域の削除を確認した。公式DWCAの囲みなし形式と実GADM term URIをテストし、quoteを含む無関係なlocality列でも誤って失敗させない。

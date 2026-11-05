@@ -1,0 +1,39 @@
+name: Sync GBIF
+on:
+  schedule:
+    # UTC dates 28..31 cover every month-end; the command checks day 1 in JST.
+    - cron: '0 19 28-31 * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: external-staging-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    environment: staging
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1
+        with:
+          version: 12.16.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch || "$(TZ=Asia/Tokyo date +%d)" == 01 ]]; then
+            pnpm sync:gbif --run
+          else
+            echo '対象日外: 毎月1日04:00 JSTに集計します。' >> "$GITHUB_STEP_SUMMARY"
+          fi
+        env:
+          SUPABASE_URL: https://zbbmvrmmxhrytwqrjyyk.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GBIF_USERNAME: ${{ secrets.GBIF_USERNAME }}
+          GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
