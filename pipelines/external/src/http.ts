@@ -20,8 +20,9 @@ export class SerialApi {
         await this.sleep(Math.max(0, this.lastStart + this.interval - this.now()));
         if (++this.requests > 9500) throw new Error('API daily request safety limit reached');
         this.lastStart = this.now();
-        const response = await this.transport(url, { ...init, signal: AbortSignal.timeout(45_000) });
+        const response = await this.transport(url, { ...init, signal: init.signal ?? AbortSignal.timeout(45_000) });
         if (response.status !== 429) {
+          if (init.redirect === 'manual' && response.status >= 300 && response.status < 400) return response;
           if (!response.ok) throw new Error(`External API HTTP ${response.status}`);
           return response;
         }

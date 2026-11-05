@@ -23,7 +23,7 @@
   - 受け入れ: 47都道府県に iNaturalist と GADM のIDがある。隣接関係が対称である。
 - [x] **T08 iNaturalist 集計**: `sync-inat.yml`。学名の対応づけと未対応一覧。
   - 受け入れ: 間隔2秒以上。429で再試行する。観察の座標を保存しない。
-- [ ] **T09 GBIF 集計**: `sync-gbif.yml`。
+- [x] **T09 GBIF 集計**: `sync-gbif.yml`。
   - 受け入れ: iNaturalist のデータセットを除外する。DOIを保存する。
 - [ ] **T10 公開データ生成**: `03_data_pipeline.md` 6, 7節と `verify.ts`。
   - 受け入れ: 機微種の詳細、未公開記録、メール、UUID を混入させたテストで必ず失敗する。
