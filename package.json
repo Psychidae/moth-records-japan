@@ -17,7 +17,9 @@
     "import:listmj-annotations": "node --experimental-strip-types pipelines/import-listmj/src/annotations-cli.ts",
     "import:regions": "node --experimental-strip-types pipelines/regions/src/cli.ts",
     "sync:inat": "node --experimental-strip-types pipelines/sync-inat/src/cli.ts",
-    "sync:gbif": "node --experimental-strip-types pipelines/sync-gbif/src/cli.ts"
+    "sync:gbif": "node --experimental-strip-types pipelines/sync-gbif/src/cli.ts",
+    "build:public-data": "node --experimental-strip-types pipelines/build-public-data/src/cli.ts",
+    "verify:public-data": "node --experimental-strip-types pipelines/build-public-data/src/verify-cli.ts"
   },
   "dependencies": {
     "zod": "4.6.7"

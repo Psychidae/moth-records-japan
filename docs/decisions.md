@@ -106,3 +106,14 @@ taxonKey=797とbigintの既存gbif_usage_keyを保つため、[分類基盤移�
 GBIFの[公式DWCA writer](https://github.com/gbif/occurrence/blob/dev/occurrence-download/src/main/java/org/gbif/occurrence/download/file/dwca/archive/DwcArchiveUtils.java)はfieldsEnclosedByをnull、区切りをタブ/改行に設定する。実archiveではquoteを通常文字として読み、CSV風の囲みを仮定しない。任意のquoted TSV用の別モードは、タブ・改行・chunk境界・二重quoteのテストを持つ。
 
 [公式Download API](https://techdocs.gbif.org/en/data-use/api-downloads)のAND条件で日本・鱗翅目・2標本区分を指定し、NOTのpredicateでiNaturalist datasetを除外する。通知メールを無効にし、usernameによるBasic認証を環境だけから使う。SUCCEEDED以外の終了状態・不正行・途中失敗では全体を保存せず、前のsnapshotを残す。DOI、資格情報を含まない正確なrequest JSON、取得日時をprivateなsnapshotへ保存する。秘密情報が未登録ならジョブは待機し、実ダウンロード成功とは扱わない。
+
+
+## 2026-11-06 T10: 公開列・機微情報・版の生成
+
+service_role専用の単一SQL projectionを読み、許可した列だけから公開JSONを新しく組み立てる。原典raw、審査・投稿者ID、private provenanceは公開へ複製しない。公開済み記録が非公開文献・未解決分類/地域を参照していたら生成を失敗させる。機微度1では自由文note、標本情報、数量なども含め詳細を一律nullへし、機微度2では記録行を出さず地域存在だけにする。公開wire値6をpresence_only専用とし、0=noneは疎行列から省略する。既存の優先順位表の6（none）とwire値を区別する。機微度2の証拠由来とdiscoveryは伏せ、national集計にも元の由来を残さない。機微度2だけに使われた文献は一覧からも外す。外部写真は機微度1/2とも出力せず、詳細観察へのリンク経由の漏えいを防ぐ。
+
+島の存在そのものが詳細産地になり得るため、機微度1/2のIS地域はprivateの地域親子関係を使って親都道府県まで粗くし、island欄もnullにする。otherのOT01はその区分のまま扱う。安全な県/otherの祖先がなければ失敗させる。これは「地域有無」の精度が未指定であることに対する保守的な既定で、private原記録は変更しない。検査ではprivateの機微map・地域mapと照合し、公開JSONの機微タグを消しても通過できない。
+
+全JSONの生構造・辞書と展開後CSVを再検査し、UUID（GBIF dataset UUIDも含む）、メール、非公開記録、機微詳細を拒否する。CSVの式に見える文字列はアポストロフィで中和し、原文はprivateに保持する。8MiBを超える記録は地域→科、属→種の順に分割し、それでも大きければ番号付きshardへ分ける。全ファイル18,000以下・各JSON/展開CSV8MiB以下を検査する。
+
+一時出力の全検査後に新しい版ディレクトリへatomic renameし、既存の版は上書きしない。版の年月はAsia/Tokyo。releasesのbuildingは生成済みを示すだけで配信・本番反映を意味しない。公開データはGit管理外の生成物で、同梱seedからの再生成は実DBの審査・機微設定を含まない開発用baselineと明示する。

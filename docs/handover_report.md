@@ -119,3 +119,15 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 4. DOI、正確なrequest JSON（認証情報なし）、取得日時はprivate snapshotへ原子的に保存する。モックAPI/小型実ZIPで成功・失敗・除外・座標不保持・chunk境界・cleanupを検証する。stagingの追加pgTAP4件でモックDOIの保存とDOI欠落拒否が成功し、ROLLBACK後はsnapshot/集計0、分類群10,055、records0のまま。
 5. GBIF接続情報が未登録のため、実際のDownload API POST、全国ZIP取得、実データ由来DOI・定期保存は未確認。モックDOIを実取得の成果として扱わない。公開/課金/投稿のフラグ、本番環境は変更していない。
 6. 必須5コマンドと単体81件が成功。実ZIPのCRC失敗・未消費・consumer例外・経路逸脱・欠落GADM列・UTF-8/列幅の不正を拒否し、全経路で一時領域の削除を確認した。公式DWCAの囲みなし形式と実GADM term URIをテストし、quoteを含む無関係なlocality列でも誤って失敗させない。
+
+## T10の公開データ生成（2026-11-06）
+
+1. `pnpm build:public-data --run` はstaging設定があればservice_role専用の単一SQL snapshotを読み、許可列から生成する。設定がなければ待機。公開サイトはDBへ接続しない。`--seed --output generated/public-ci` は同梱正本だけから作る開発用baselineで、実DBの審査・機微設定を反映した版とは区別する。
+2. 鍵なしの既存CLI認証でstagingの実sourceを `generated/private/public-source-envelope.json` へ保存し、`pnpm build:public-data --source generated/private/public-source-envelope.json` を実行した。公開版は `apps/public/public/data/2026.11.2/`。分類群10,055、species6,628、subspecies837、地域138、公開文献0、公開記録0。281文献はpendingのため公開しない。注釈を記録へ変換していない。
+3. 283ファイル、最大886,339バイト。辞書式JSON、地域別CSV.gz、全SHA-256のmanifestを生成し、`pnpm verify:public-data generated/private/public-source-envelope.json apps/public/public/data/2026.11.2` でも全件再検査した。manifestのSHA-256は `0b2dbfa2b4933370a312041ea9846dfbb2481eac5388107d4c996e84df578a28`。staging releasesに同hash・counts・status=building・published_at=nullで登録し、再読取でも確認した。配信・live化は行っていない。
+4. 機微度1の自由文noteを含む詳細はnull、機微度2は記録行なし・地域有無だけ（wire6=presence_only、discovery=false）。由来別national集計にも元の証拠区分を含めない。機微島はprivate親子mapから親県/otherへ粗くし、機微種の写真も省く。原記録は変更しない。生JSON・未使用辞書・展開CSVをprivate機微map/地域mapと照合し、メール、全UUID、未公開status、未知列/ファイル、機微詳細や島の混入で失敗する。CSVの式候補は中和する。
+5. 公開root外の一時領域で生成・全検査してからatomic renameする。失敗時には版を置かず、既存版は上書きしない。地域→科、属→種、必要時は番号付きshardで8MiB以下に分け、18,000ファイル上限を検査する。10版保持・配信先切替の実運用はT17へ引き継ぐ。
+6. 追記migration `20261105233617_public_source_export.sql` はinvoker・固定search_path、anon/authenticated実行不可、service_roleだけ実行可。staging実pgTAP追加6件とsecurity advisors WARN以上0件が成功。実REST経由の定期生成はstaging秘密情報未登録のため未確認。直接SQLによる実source生成、ローカル公開版検査、building登録とは区別する。
+7. 必須5コマンドと単体102件が成功。機微詳細・非公開記録・メール・UUID・辞書・CSV改ざん（hash更新込み）・島・写真・非公開文献への参照・atomic失敗・size sharding・JST月境界を検証した。CIは同梱baseline生成と全migrationの実PostgreSQL権限検証も実行する。
+
+8. 独立レビュー前の未公開2026.11.1は、新契約へ上書きせず generated/unpublished-builds/2026.11.1 へ移した。staging release1はfailed（公開前にsupersededの注記）、最終2だけがbuilding。過去版の物理削除・live切替はしていない。
