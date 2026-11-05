@@ -8,7 +8,7 @@
   - 受け入れ: `pnpm install --frozen-lockfile`, `lint`, `typecheck`, `test`, `build` が成功する。
 - [x] **T02 CI と保護**: `ci.yml`、SHA固定、最小権限、Dependabot、`docs/decisions.md`、`docs/questions.md`。リポジトリの保護は `scripts/setup-github.sh` で設定済み。`ci.yml` の完成後、必須ステータスチェックの追加手順を `docs/handover_report.md` に書く。
   - 受け入れ: `pull_request_target` がない。全 `uses:` が40桁SHAである。
-- [ ] **T03 DBスキーマ**: `docs/02_schema.sql` を `supabase/migrations/0001_init.sql` へ移す。`seed/feature_flags.csv` と `seed/external_resources.csv` を投入。
+- [x] **T03 DBスキーマ**: `docs/02_schema.sql` を `supabase/migrations/0001_init.sql` へ移す。`seed/feature_flags.csv` と `seed/external_resources.csv` を投入。
   - 受け入れ: 空のDBで適用できる。
 - [ ] **T04 権限テスト**: `tests/schema_smoke.mjs` の全観点を pgTAP へ移植し CI に入れる。
   - 受け入れ: `tests/schema_smoke.mjs` の全観点が成功する。観点を削らない。

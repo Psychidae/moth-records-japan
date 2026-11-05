@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build": "tsc --outDir dist"
+    "build": "tsc --outDir dist",
+    "seed:generate": "node --experimental-strip-types supabase/seed.ts",
+    "test:schema-smoke": "node scripts/test-schema-smoke.mjs"
   },
   "dependencies": {
     "zod": "4.6.7"
@@ -20,6 +22,7 @@
     "vitest": "5.0.5",
     "eslint": "10.13.0",
     "typescript-eslint": "8.72.1",
-    "@types/node": "24.19.2"
+    "@types/node": "24.19.2",
+    "@electric-sql/pglite": "0.5.13"
   }
 }
