@@ -10,3 +10,11 @@
 ## 2026-11-06 T01: TypeScript互換性
 
 TypeScript 7.0.2でESLintを実行するとtypescript-eslintが未対応として停止した。仕様の互換性例外に従い、待機期間を満たすTypeScript 6.0.3へ下げる。strict設定を維持する。
+
+## 2026-11-06 T02: CIの保護
+
+1. CIは外部サービスの秘密情報を受け取らず、forkからのPRでも同じ5コマンドを実行する。checkoutは資格情報をGit設定へ残さない。
+2. Actionの不変SHA、最小の既定権限、禁止トリガー、依存の完全固定と公開アプリのDB依存禁止を回帰検査する。YAML解析用の依存は増やさず、検査対象を明確にしたテキスト検査と不正変更のテストを使う。
+3. DependabotはnpmとGitHub Actionsを週次で提案する。自動マージの判定はA05の範囲なので、T02では有効化しない。必須チェック名はchecks、オーナー向けの追加・再確認手順はhandover_report.mdへ記載した。
+
+4. Vitestの対象をtests配下の単体テスト（.test.ts）に限定し、ビルド出力distのテストを二重実行しない。E2Eは後続タスクの専用実行へ分離する。Supabase CLIの一時メタデータはGit管理から除外する。

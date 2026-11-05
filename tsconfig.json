@@ -18,7 +18,8 @@
     "apps/**/*.ts",
     "packages/**/*.ts",
     "pipelines/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "vitest.config.ts"
   ],
   "exclude": [
     "node_modules",
