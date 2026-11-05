@@ -1,0 +1,91 @@
+code,name_ja,name_en,parent_code,area_group,sort_order,source_url
+IS0001,利尻島,Rishiri Island,PR01,hokkaido,1,https://smartisland.mlit.go.jp/field/
+IS0002,礼文島,Rebun Island,PR01,hokkaido,2,https://smartisland.mlit.go.jp/field/
+IS0003,奥尻島,Okushiri Island,PR01,hokkaido,3,https://smartisland.mlit.go.jp/field/
+IS0004,佐渡島,Sado Island,PR15,sado,4,https://smartisland.mlit.go.jp/field/
+IS0005,島後,Dogo,PR32,oki,5,https://www.town.nishinoshima.shimane.jp/profile/gaiyou
+IS0006,西ノ島,Nishinoshima (Oki),PR32,oki,6,https://www.town.nishinoshima.shimane.jp/profile/gaiyou
+IS0007,中ノ島,Nakanoshima (Oki),PR32,oki,7,https://www.town.nishinoshima.shimane.jp/profile/gaiyou
+IS0008,知夫里島,Chiburijima,PR32,oki,8,https://www.town.nishinoshima.shimane.jp/profile/gaiyou
+IS0009,壱岐島,Iki Island,PR42,iki_tsushima,9,https://smartisland.mlit.go.jp/field/
+IS0010,対馬,Tsushima,PR42,iki_tsushima,10,https://smartisland.mlit.go.jp/field/
+IS0011,福江島,Fukue Island,PR42,goto,11,https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/
+IS0012,久賀島,Hisaka Island,PR42,goto,12,https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/
+IS0013,奈留島,Naru Island,PR42,goto,13,https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/
+IS0014,若松島,Wakamatsu Island,PR42,goto,14,https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/
+IS0015,中通島,Nakadori Island,PR42,goto,15,https://www.pref.nagasaki.lg.jp/bunrui/kurashi-kankyo/chiikidukuri/rito-hanto-kaso/kokkyoritou/kokkyo-law/
+IS0016,上甑島,Kamikoshikishima,PR46,koshiki,16,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0017,中甑島,Nakakoshikishima,PR46,koshiki,17,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0018,下甑島,Shimokoshikishima,PR46,koshiki,18,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0019,種子島,Tanegashima,PR46,osumi,19,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0020,屋久島,Yakushima,PR46,osumi,20,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0021,口永良部島,Kuchinoerabu Island,PR46,osumi,21,https://www.pref.kagoshima.jp/af08/syukuhakuwari/documents/127490_20260402141842-1.pdf
+IS0022,口之島,Kuchinoshima,PR46,tokara,22,https://www.tokara.jp/profile/gaiyou/
+IS0023,中之島,Nakanoshima (Tokara),PR46,tokara,23,https://www.tokara.jp/profile/gaiyou/
+IS0024,諏訪之瀬島,Suwanosejima,PR46,tokara,24,https://www.tokara.jp/profile/gaiyou/
+IS0025,平島,Tairajima,PR46,tokara,25,https://www.tokara.jp/profile/gaiyou/
+IS0026,悪石島,Akusekijima,PR46,tokara,26,https://www.tokara.jp/profile/gaiyou/
+IS0027,小宝島,Kodakarajima,PR46,tokara,27,https://www.tokara.jp/profile/gaiyou/
+IS0028,宝島,Takarajima,PR46,tokara,28,https://www.tokara.jp/profile/gaiyou/
+IS0029,臥蛇島,Gajajima,PR46,tokara,29,https://www.tokara.jp/profile/gaiyou/
+IS0030,小臥蛇島,Kogajajima,PR46,tokara,30,https://www.tokara.jp/profile/gaiyou/
+IS0031,小島,Kojima (Tokara),PR46,tokara,31,https://www.tokara.jp/profile/gaiyou/
+IS0032,上ノ根島,Kaminonejima,PR46,tokara,32,https://www.tokara.jp/profile/gaiyou/
+IS0033,横当島,Yokoatejima,PR46,tokara,33,https://www.tokara.jp/profile/gaiyou/
+IS0034,奄美大島,Amami Oshima,PR46,amami,34,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0035,加計呂麻島,Kakeromajima,PR46,amami,35,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0036,請島,Ukejima,PR46,amami,36,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0037,与路島,Yoroshima,PR46,amami,37,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0038,喜界島,Kikaijima,PR46,amami,38,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0039,徳之島,Tokunoshima,PR46,amami,39,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0040,沖永良部島,Okinoerabu Island,PR46,amami,40,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0041,与論島,Yoron Island,PR46,amami,41,https://www.pref.kagoshima.jp/aq01/chiiki/oshima/
+IS0042,沖縄島,Okinawa Island,PR47,okinawa,42,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0043,久米島,Kumejima,PR47,okinawa,43,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0044,宮古島,Miyakojima,PR47,miyako,44,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0045,伊良部島,Irabujima,PR47,miyako,45,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0046,下地島,Shimojishima,PR47,miyako,46,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0047,多良間島,Taramajima,PR47,miyako,47,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0048,石垣島,Ishigakijima,PR47,yaeyama,48,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0049,西表島,Iriomotejima,PR47,yaeyama,49,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0050,竹富島,Taketomijima,PR47,yaeyama,50,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0051,小浜島,Kohamajima,PR47,yaeyama,51,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0052,黒島,Kuroshima (Yaeyama),PR47,yaeyama,52,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0053,波照間島,Haterumajima,PR47,yaeyama,53,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0054,与那国島,Yonagunijima,PR47,yaeyama,54,https://www.pref.okinawa.lg.jp/kensei/tokei/1016451/1038825.html
+IS0055,南大東島,Minamidaitojima,PR47,daito,55,https://www.pref.okinawa.jp/okinawa_kankyo/shizen_hogo/hozen_chiiki/shishin/syuuhen_umi_karte/index.html
+IS0056,北大東島,Kitadaitojima,PR47,daito,56,https://www.pref.okinawa.jp/okinawa_kankyo/shizen_hogo/hozen_chiiki/shishin/syuuhen_umi_karte/index.html
+IS0057,沖大東島,Okidaitojima,PR47,daito,57,https://www.pref.okinawa.jp/okinawa_kankyo/shizen_hogo/hozen_chiiki/shishin/syuuhen_umi_karte/index.html
+IS0058,大島,Izu Oshima,PR13,izu,58,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0059,利島,Toshima,PR13,izu,59,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0060,新島,Niijima,PR13,izu,60,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0061,式根島,Shikinejima,PR13,izu,61,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0062,神津島,Kozushima,PR13,izu,62,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0063,三宅島,Miyakejima,PR13,izu,63,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0064,御蔵島,Mikurashima,PR13,izu,64,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0065,八丈島,Hachijojima,PR13,izu,65,https://www.islandaccess.metro.tokyo.lg.jp/
+IS0066,八丈小島,Hachijo Kojima,PR13,izu,66,https://www.soumu.metro.tokyo.lg.jp/09hatijou/kakuka_top/c-doboku/naturalparkprotection
+IS0067,青ヶ島,Aogashima,PR13,izu,67,https://www.bousai.metro.tokyo.lg.jp/taisaku/torikumi/1023240/1023241/index.html
+IS0068,鳥島,Torishima (Izu),PR13,izu,68,https://www.bousai.metro.tokyo.lg.jp/taisaku/torikumi/1023240/1023241/index.html
+IS0069,父島,Chichijima,PR13,ogasawara,69,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0070,兄島,Anijima,PR13,ogasawara,70,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0071,弟島,Otojima,PR13,ogasawara,71,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0072,西島,Nishijima (Ogasawara),PR13,ogasawara,72,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0073,東島,Higashijima,PR13,ogasawara,73,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0074,南島,Minamijima (Ogasawara),PR13,ogasawara,74,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0075,母島,Hahajima,PR13,ogasawara,75,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0076,向島,Mukojima (Hahajima),PR13,ogasawara,76,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0077,平島,Hirashima (Ogasawara),PR13,ogasawara,77,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0078,姉島,Anejima,PR13,ogasawara,78,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0079,妹島,Imotojima,PR13,ogasawara,79,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0080,姪島,Meijima,PR13,ogasawara,80,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0081,聟島,Mukojima (Mukojima Islands),PR13,ogasawara,81,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0082,嫁島,Yomejima,PR13,ogasawara,82,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0083,媒島,Nakodojima,PR13,ogasawara,83,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0084,北之島,Kitanoshima,PR13,ogasawara,84,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0085,北硫黄島,Kita Ioto,PR13,ogasawara,85,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0086,南硫黄島,Minami Ioto,PR13,ogasawara,86,https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/files1/27rulebook.pdf
+IS0087,硫黄島,Ioto,PR13,ogasawara,87,https://www.soumu.metro.tokyo.lg.jp/07ogasawara/guidance/summary
+IS0088,西之島,Nishinoshima (Ogasawara),PR13,ogasawara,88,https://www.soumu.metro.tokyo.lg.jp/07ogasawara/guidance/summary
+IS0089,南鳥島,Minamitorishima,PR13,ogasawara,89,https://www.soumu.metro.tokyo.lg.jp/07ogasawara/guidance/summary
+IS0090,沖ノ鳥島,Okinotorishima,PR13,ogasawara,90,https://www.soumu.metro.tokyo.lg.jp/07ogasawara/guidance/summary
