@@ -1,0 +1,32 @@
+name: Build public data
+on:
+  schedule:
+    - cron: '0 20 * * 0'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-data-staging-build
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    environment: staging
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1
+        with:
+          version: 12.16.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Generates and verifies a staging build. T17 owns distribution/deployment.
+      - run: pnpm build:public-data --run
+        env:
+          SUPABASE_URL: https://zbbmvrmmxhrytwqrjyyk.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

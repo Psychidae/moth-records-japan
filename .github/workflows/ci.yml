@@ -33,6 +33,7 @@ jobs:
       - run: pnpm import:listmj
       - run: pnpm import:listmj-annotations
       - run: pnpm import:regions
+      - run: pnpm build:public-data --seed --output generated/public-ci
       - name: Install local PostgreSQL and pgTAP
         run: |
           sudo apt-get update

@@ -90,4 +90,16 @@ export class StagingStore {
   async publish(payload: Snapshot): Promise<void> {
     z.number().int().positive().parse(await this.request('rpc/ingest_external_snapshot', { method: 'POST', body: JSON.stringify({ payload }) }));
   }
+  async publicSource(): Promise<unknown> {
+    return this.request('rpc/export_public_source', { method: 'POST', body: '{}' });
+  }
+  async registerBuild(version: string, counts: Record<string, number>, artifactSha256: string): Promise<void> {
+    z.string().regex(/^\d{4}\.(?:0[1-9]|1[0-2])\.[1-9]\d*$/).parse(version);
+    z.record(z.string(),z.number().int().nonnegative()).parse(counts);
+    z.string().regex(/^[a-f0-9]{64}$/).parse(artifactSha256);
+    const response = await this.transport(`${this.root}/rest/v1/releases?on_conflict=version`, { method: 'POST', headers: { apikey: this.key, Authorization: `Bearer ${this.key}`, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal' }, body: JSON.stringify({ version, status: 'building', counts, artifact_sha256: artifactSha256 }), signal: AbortSignal.timeout(45_000) });
+    if (!response.ok) throw new Error(`Staging release registration HTTP ${response.status}`);
+    const saved=z.array(z.object({version:z.string(),artifact_sha256:z.string(),counts:z.record(z.string(),z.number().int().nonnegative())})).length(1).parse(await this.request(`releases?select=version,artifact_sha256,counts&version=eq.${encodeURIComponent(version)}`))[0];
+    if (!saved || saved.version!==version || saved.artifact_sha256!==artifactSha256 || Object.keys(saved.counts).length!==Object.keys(counts).length || Object.entries(counts).some(([key,value])=>saved.counts[key]!==value)) throw new Error('Existing public version has different content');
+  }
 }

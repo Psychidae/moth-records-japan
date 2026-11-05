@@ -157,6 +157,8 @@ Accept: application/vnd.citationstyles.csl+json
 
 `misidentification` と `board` は区分の判定に使わない。記録としては表示する。
 
+上表の「順」は判定の優先順位で、公開matrixのwire値とは区別する。疎行列では `0=none` はセルを省略し、`1=original, 2=citation, 3=specimen, 4=photo_rg, 5=needs_review, 6=presence_only` を使う。`presence_only` は機微度2専用で、由来を公開せず `discovery=false` とする。機微度0/1には6を使わない。`packages/public-data` の `evidenceCodes` がこの公開契約を定義する。
+
 **発見候補**は、区分が3または4で、かつ文献の記録（区分1、2）がない種 × 県の組とする。
 
 ## 7. 公開データの生成
