@@ -13,4 +13,7 @@ for migration in supabase/migrations/*.sql; do
   psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --single-transaction --file "$migration"
 done
 psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --single-transaction --file supabase/seed.sql
+# The same source import must be safe to replay before permissions are exercised.
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/import.sql
+psql --no-psqlrc --set ON_ERROR_STOP=1 --dbname "$database" --file generated/listmj/import.sql
 pg_prove --verbose --dbname "$database" supabase/tests/*.sql
