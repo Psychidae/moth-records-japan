@@ -21,7 +21,7 @@
   - 受け入れ: 件数が一致する。分解できない文献の一覧を出す。
 - [x] **T07 地域データ**: `seed/prefectures.csv`、南千島、`seed/islands.csv`、`seed/adjacency.csv`。
   - 受け入れ: 47都道府県に iNaturalist と GADM のIDがある。隣接関係が対称である。
-- [ ] **T08 iNaturalist 集計**: `sync-inat.yml`。学名の対応づけと未対応一覧。
+- [x] **T08 iNaturalist 集計**: `sync-inat.yml`。学名の対応づけと未対応一覧。
   - 受け入れ: 間隔2秒以上。429で再試行する。観察の座標を保存しない。
 - [ ] **T09 GBIF 集計**: `sync-gbif.yml`。
   - 受け入れ: iNaturalist のデータセットを除外する。DOIを保存する。

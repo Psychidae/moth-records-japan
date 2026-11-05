@@ -86,3 +86,13 @@ list.htmlのspeciesブロックも6,626件で、XLSXのspecies6,628件より2件
 隣接は都府県間の陸域境界（河川・湖沼上の県境と、島内の共有陸境界を含む）を手入力した174方向辺・87組とする。県コードPR間だけを扱い、IS島コード・OT01は県の隣接へ加えない。海峡や海上境界、橋・トンネルだけを理由に隣接とはしない。[玉野市の石島の説明](https://www.city.tamano.lg.jp/soshiki/1/1367.html)で岡山−香川、[愛媛県の瓢箪島の説明](https://www.pref.ehime.jp/ehimenotakara/780.html)で広島−愛媛の島内県境を確認して含める。一般の境界図の参照先は[国土地理院の日本全図](https://www.gsi.go.jp/chizuhensyu/chizuhensyu41009.html)。精密な行政区ポリゴンの取込・計算は行わず、G3の未確認状態を保つ。
 
 regionsへseed_source/seed_keyを追記し、元のコード・種類・和名・親・外部IDのハッシュで出典上の識別を保つ。既存コードが無関係の地域や異なる入力の識別に使われていたら全体を停止する。正当な再投入ではDB内部IDと管理者の表示編集を保持する。隣接は新しい公開DB表へ入れず、正本CSVと生成JSONで後続の公開データ生成へ渡す。各入力のSHA-256と件数をレポートへ出す。
+
+## 2026-11-06 T08: iNaturalistの集計と安全な実行
+
+[公式Swagger](https://github.com/inaturalist/iNaturalistAPI/blob/main/lib/views/swagger_v1.yml.ejs)のspecies_countsは末端分類群を返し、speciesだけを保証しない。既存IDを優先し、未対応は学名・階級が完全一致するローカル分類群1件とactiveな外部分類群1件のときだけ対応する。重複4組を先頭一致で解消しない。taxa検索は通常上限200件以内の完全な応答だけを採用し、切れた一覧から一意性を推定しない。外側のcountを使い、taxon.observations_countと混同しない。ページ総数の変化・重複・欠落は全処理を失敗させ、前のsnapshotを維持する。
+
+県・quality_grade別の集計、学名検索、写真の取得と429再試行を単一の直列スケジューラへ通す。[推奨利用方法](https://www.inaturalist.org/pages/api+recommended+practices)より厳しい2秒間隔と9,500リクエスト上限を設ける。429は秒数/HTTP-dateのRetry-After、なければ60秒で3回まで再試行する。User-Agentにサイト英語名・版・連絡先を入れる。
+
+応答はZodで必要列だけへ変換し、観察の座標、raw応答、taxon.default_photoは保存しない。写真は別の観察検索から、許諾コード、帰属表記、観察URL、許可ホストの画像URLがそろうものを各分類群最大6枚に限る。全取得・検証後にservice_role専用の原子的RPCを呼ぶ。未登録の連絡先・staging秘密情報は要求せず、定期ジョブを「待機」で正常終了させる。未収集は生物学的不在や0観察の主張ではない。
+
+Supabase changelogの2026-11-04 CLI v3破壊的変更を確認し、既存2.90.0を維持した。実行前にCLI helpを確認し、stagingだけを対象とする。公開サイトへDB接続を追加しない。
