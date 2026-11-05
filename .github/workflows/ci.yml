@@ -11,7 +11,7 @@ concurrency:
 jobs:
   checks:
     name: checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       # No environment or secrets: this job also runs safely for fork PRs.
@@ -29,4 +29,12 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - run: pnpm test:schema-smoke
+      - name: Install local PostgreSQL and pgTAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-16 postgresql-16-pgtap libtap-parser-sourcehandler-pgtap-perl
+          sudo pg_ctlcluster 16 main start || sudo pg_ctlcluster 16 main status
+      - name: Verify permissions on real PostgreSQL
+        run: sudo -u postgres bash scripts/test-pgtap.sh
       - run: pnpm build

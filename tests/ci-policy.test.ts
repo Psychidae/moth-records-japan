@@ -64,6 +64,26 @@ describe('CI permissions and supply chain policy', () => {
     expect(dependabot).toContain('timezone: Asia/Tokyo');
   });
 
+  it('runs every original permission scenario in pgTAP on a disposable real PostgreSQL database', () => {
+    const original = [...read('tests/schema_smoke.mjs').matchAll(/await (?:ok|denied)\("([^"]+)"/g)].map(match => match[1]);
+    expect(original).toHaveLength(56);
+    const tapFiles = readdirSync('supabase/tests').filter(name => name.endsWith('.sql'));
+    const tap = tapFiles.map(name => read(join('supabase/tests', name))).join('\n');
+    for (const label of original) expect(tap).toContain(`'${label}'`);
+    expect(tap).toMatch(/\bplan\(56\)/);
+    expect(tap).toMatch(/^begin;/im);
+    expect(tap).toMatch(/^rollback;/im);
+    const ci = read('.github/workflows/ci.yml');
+    expect(ci).toContain('pnpm test:schema-smoke');
+    expect(ci).toContain('postgresql-16-pgtap');
+    expect(ci).toContain('sudo -u postgres bash scripts/test-pgtap.sh');
+    const runner = read('scripts/test-pgtap.sh');
+    expect(runner).toContain('pg_prove --verbose');
+    expect(runner).toContain('--set ON_ERROR_STOP=1');
+    expect(runner).toContain('supabase/migrations/*.sql');
+    expect(runner).toContain('scripts/ci-auth-bootstrap.sql');
+  });
+
   it('pins all direct dependency versions and enforces strict typing and install protections', () => {
     for (const path of manifests()) {
       const manifest = manifestSchema.parse(JSON.parse(read(path)) as unknown);
