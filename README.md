@@ -2,13 +2,12 @@
 
 Codex へ渡すための仕様書一式です。
 
-仕様 v1.3（2026-11-06 改訂）。未決事項は `docs/00_overview.md` のゲート G1〜G9 として管理します。
+仕様 v1.5（2026-11-06 改訂）。未決事項は `docs/00_overview.md` のゲート G1〜G11 として管理します。
 
 ## 渡し方
 
-1. `docs/11_accounts_and_keys.md` の準備を済ませる
-2. このフォルダの中身を新しい GitHub リポジトリの最上位に置く
-3. Codex に次の文を渡す
+1. Codex に次の文を渡す。鍵は空のままでよい
+2. 鍵を取得したら `scripts/set-secrets.sh` で格納する。手順は `docs/11_accounts_and_keys.md`
 
 ```text
 AGENTS.md の連続実行モードに従い、docs/07_tasks.md を上から最後まで実施してください。
