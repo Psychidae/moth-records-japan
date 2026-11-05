@@ -11,17 +11,17 @@ iNaturalist API、J-STAGE WebAPI、doi.org、GBIF の検索API、NDLサーチ（
 | 状況 | サービス | やること | URL | 控える値 |
 |---|---|---|---|---|
 | 済 | GitHub（`Psychidae`） | 2段階認証を確認 | https://github.com/settings/security | - |
-| | GitHub | 公開リポジトリを作成 | https://github.com/new | リポジトリ名 |
+| 実行待ち | GitHub | `scripts/setup-github.sh` を実行。公開リポジトリと保護設定を作る | https://github.com/Psychidae/moth-records-japan | - |
 | 新規 | Cloudflare | アカウント作成 | https://dash.cloudflare.com/sign-up | Account ID |
 | | Cloudflare | Workers 配信用トークンを作成 | https://dash.cloudflare.com/profile/api-tokens | `CLOUDFLARE_API_TOKEN` |
 | | Cloudflare | R2 を有効化し、バケットとAPI鍵を作成 | https://developers.cloudflare.com/r2/get-started/ | `R2_BACKUP_*`, `R2_LIT_*` |
-| 済 | Supabase（`Psychidae's Org`） | staging と production の2プロジェクトを東京で作成 | https://supabase.com/dashboard/new | `SUPABASE_*` |
+| 済 | Supabase（`Psychidae's Org`） | staging と production を東京に作成済み。接続値は `environment.md` | https://supabase.com/dashboard/project/zbbmvrmmxhrytwqrjyyk | `SUPABASE_DB_URL`, `SUPABASE_SERVICE_ROLE_KEY` は未登録 |
 | | Supabase | CI用トークンを作成 | https://supabase.com/dashboard/account/tokens | `SUPABASE_ACCESS_TOKEN` |
 | 新規 | GBIF | アカウント作成 | https://www.gbif.org/user/profile | `GBIF_USERNAME`, `GBIF_PASSWORD` |
 | 新規 | Healthchecks.io | アカウント作成、通知先の確認 | https://healthchecks.io/ | `HEALTHCHECKS_PING_*` |
 | 新規 | パスワードマネージャ | 鍵の保管場所を用意 | https://bitwarden.com/ | - |
 
-既存の Supabase の3プロジェクトは停止中である。無料枠の有効プロジェクト数に収まるはずだが、作成時に確認する。
+Supabase の組織は Free プランで、月額は0ドルと確認済み。既存の3プロジェクトは停止中である。
 
 バックアップ用の鍵は手元で作る。秘密鍵はパスワードマネージャへ保管し、公開鍵だけを `BACKUP_AGE_PUBLIC_KEY` に登録する。
 

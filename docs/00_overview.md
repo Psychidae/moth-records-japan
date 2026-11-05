@@ -83,5 +83,6 @@ G3 が未完了でも進められるよう、地図はまずタイルマップ�
 | `09_literature_repository.md` | 文献リポジトリ |
 | `10_automation.md` | 人の工程を減らす自動化規則 |
 | `11_accounts_and_keys.md` | 事前に必要な登録と鍵 |
+| `environment.md` | 環境の公開接続値 |
 | `../seed/*.csv` | 検証済みの初期データ |
 | `../tests/schema_smoke.mjs` | 権限モデルの検証テスト |
