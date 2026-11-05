@@ -17,7 +17,7 @@
 
 - [x] **T05 List-MJ 取込**: `03_data_pipeline.md` 1節。
   - 受け入れ: 受け入れ数値の表と完全一致。再実行で `taxon_code` が変わらない。`import_report.json` を出力する。
-- [ ] **T06 List-MJ 注釈と文献**: 975件の注釈、282件の文献。
+- [ ] **T06 List-MJ 注釈と文献**: 975件の注釈、282件の文献。実装済み・受入保留: 同梱原本は281文献、仕様は282文献。独立検証済み。`decisions.md` と `handover_report.md` 参照。連続実行規則の例外として、以後はこの保留を除く最上位の未完了タスクへ進む。
   - 受け入れ: 件数が一致する。分解できない文献の一覧を出す。
 - [ ] **T07 地域データ**: `seed/prefectures.csv`、南千島、`seed/islands.csv`、`seed/adjacency.csv`。
   - 受け入れ: 47都道府県に iNaturalist と GADM のIDがある。隣接関係が対称である。
