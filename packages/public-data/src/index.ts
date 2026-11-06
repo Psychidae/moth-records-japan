@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// Public browser validation must not probe dynamic code generation under the strict CSP.
+z.config({jitless:true});
+
 export const scalar = z.union([z.string(), z.number().finite(), z.boolean(), z.null()]);
 export type Scalar = z.infer<typeof scalar>;
 // Wire values are distinct from the priority-row numbers in docs/03 section 6.
