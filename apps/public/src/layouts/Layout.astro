@@ -18,4 +18,5 @@ const navigation=[['種をさがす','/search/'],['地域から見る','/about/#
   </div><nav class="main-nav" aria-label="主なページ">{navigation.map(([label,url])=><a href={url}>{label}</a>)}</nav></header>
   <main id="main" class="container"><slot/></main>
   <footer class="site-footer"><div class="container"><p class="footer-name">{site.name}</p><p>分類基盤: <a href="http://listmj.mothprog.com/">List-MJ</a>（CC0 1.0） · 記録データ: CC BY 4.0</p><nav aria-label="サイト情報"><a href="/about/">このサイトについて</a><a href="/changes/">更新履歴</a><a href="/privacy/">プライバシー</a><a href="/terms/">利用規約</a></nav><p class="small">データ版 {release.version}</p></div></footer>
+  <script src="../scripts/search.ts"></script>
 </body></html>

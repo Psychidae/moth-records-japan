@@ -1,4 +1,4 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="名前でさがす" noindex><article class="prose"><p class="eyebrow">名称検索</p><h1>名前でさがす</h1><p>学名・和名・別名から分類情報を調べます。名称検索の画面を整備しています。</p><p><a href="/data/">現在の収録状況を見る</a></p></article></Layout>
+<Layout title="名称検索" noindex><article class="prose"><h1>名称検索</h1><form id="search-form" class="catalog-search" action="/search/" role="search"><label for="search-query">学名・和名・別名</label><div><input id="search-query" name="q" type="search" maxlength="160" autocomplete="off"/><button type="submit">検索</button></div></form><p class="small">例: <a href="/search/?q=シロウマヒロコバネ">シロウマヒロコバネ</a> · <a href="/search/?q=Psychidae">Psychidae</a>。ひらがな・カタカナ、全角・半角は区別しません。</p><noscript><p>名称検索にはJavaScriptの有効化が必要です。</p></noscript><p id="search-status" role="status" aria-live="polite">学名・和名・別名を入力してください。</p><ol id="search-results" class="search-results"></ol><nav id="search-pagination" class="pagination" aria-label="検索結果のページ" hidden><button id="search-previous" type="button">前へ</button><span id="search-page-status"></span><button id="search-next" type="button">次へ</button></nav></article></Layout>

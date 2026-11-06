@@ -144,3 +144,9 @@ pnpm 12では旧onlyBuiltDependencies/ignoredBuiltDependenciesは廃止されて
 T11のデザインはオーナーの追加指示（2026-11-06）に従い、英語主タイトルJapanese Moth Distribution Records Database／日本語副題「日本産蛾類分布記録データベース」に変更した。いずれもconfigで差し替え可能とし、ドメイン・問い合わせ先は未設定のまま。提供パレットのcharcoal #232021 / light gray #D9D8D6 / navy #314465を基調とし、目録型の配置へ変更した。旧SVGと大見出しの宣伝文・反復する不在説明は削除し、未取得・未登録はデータ欄の簡潔な状態表示にした。PNGアイコンはオーナーが選んだ方法の承認後に追加し、それまではテキストだけのヘッダとする。
 
 公開inputは選択した最新版だけでなく配信対象の全版を検査する。manifest未被覆ファイル、不明root項目、重複、symlinkを拒否する。開発seedが旧版に残っていても通常/release buildを停止し、public外へ移すよう案内する。現成果物に混入はなく、独立レビューで指摘された経路を回帰テストで閉じた。
+
+## 2026-11-06 T12: 公開名称検索
+
+全ページの検索focusまたは検索操作後にだけnames.jsonを読み、Zodでwire形式と各名称行を検証してから正規化indexを作る。NFKC・ひらがな→カタカナ・英字大小・空白を正規化し、複数コードの同学名を保持する。名称の種類を推測せずother_namesを別名/異名候補として扱い、該当時は採用中のscientific_nameへ案内する。検索語/ページはURLへ保存し、描画はtextContentとDOM作成だけで行う。
+
+Zod4の既定JITは厳格CSP下で動的実行の可否probeを試み得る。公開DTO moduleでschema構築前にjitless=trueへ固定し、Function constructorを使用不能にした別Node processでもschema作成・読込・検索が成功する回帰テストを加えた。CSPへunsafe-eval等は追加しない。依存は追加していない。
