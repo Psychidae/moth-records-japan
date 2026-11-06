@@ -38,7 +38,6 @@ GitHub Actions ── 定期取込 (iNaturalist, GBIF) ───────┤
 | AI | @anthropic-ai/sdk | 1.6.0 |
 | 配信 | wrangler | 4.158.0 |
 | 地図データ変換 | mapshaper | 0.7.101 |
-| 学名のフォント | @fontsource-variable/source-serif-4 | 5.3.1 |
 | テスト | vitest, @playwright/test, @electric-sql/pglite | 5.1.0, 1.64.1, 0.5.15 |
 | アクセシビリティ検査 | @axe-core/playwright | 4.14.0 |
 
