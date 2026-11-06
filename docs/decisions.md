@@ -128,3 +128,15 @@ recheckはmain・staging/productionだけを許可する事前jobを置く。こ
 [GITHUB_TOKENによるworkflow_dispatch](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)と[REST API 2026-03-10](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event)を確認した。APIの返すworkflow_run_idを追い、main・dispatchイベント・照合用run-nameも検査する。最新runの先頭を推測して使わない。子の実処理stepがskippedなら待機、失敗なら後続停止とし、単なるsuccess終了を実処理完了と誤認しない。
 
 監視は合計5時間で停止する。各子の上限360分より短く、初回収集や合計時間によって後続へ進めない可能性がある。この場合は子が継続中かもしれないことを明記し、重複起動せず該当runを確認する。長時間処理ごとの独立した監視jobへの分割は、運用時間が分かった段階で見直す。readiness_onlyは設定確認だけの診断用入力で、鍵が後から揃っても実処理を開始しない。
+
+## 2026-11-06 T11: 静的公開サイトと厳格なCSP
+
+Astro 7.4.7は7日待機に抵触するため、npm registryで2026-10-28公開を確認した7.4.4を完全固定する。Wranglerも同条件で4.156.0（10月29日公開）をローカル静的配信検証に限り採用する。Astroはstatic出力、inlineStylesheets=never、assetsInlineLimit=0とし、hydration islandやClientRouterを使わない。スタイル・対話処理は同一originの外部ファイルへ置く。構造化データは後続タスクで可視HTMLのmicrodataとし、inline JSON-LDを入れない。Cloudflare Web Analyticsは外部script/connectが現CSPと矛盾するため無効のままにする。CSPを緩めず、導入判断をquestionsへ残す。
+
+Cloudflare Static Assets用_headersは単一の/*規則へ5指定ヘッダと補助のX-Frame-Options: DENYを書く。Astro devにも同一ヘッダを設定するが、受入はWranglerの実HTTP応答で確認する。本番配信や新しいホスティング登録は行わない。
+
+通常buildは検査済み公開成果物の欠落・ハッシュ不一致で停止する。実DB由来の提供版を優先し、公開済み版を書き換えない。明示MOTH_PUBLIC_BOOTSTRAP=1のdev/CIチェックだけ、既存T10の--seed生成処理を再利用できる。開発生成は由来markerを付け、画面に実DBの審査・機微設定を含まないことを表示する。CI=trueやNODE_ENVで自動的に代用しない。marker付き成果物は明示opt-inなしのbuildで拒否する。
+
+pnpm 12では旧onlyBuiltDependencies/ignoredBuiltDependenciesは廃止されていた。公式[設定資料](https://github.com/pnpm/pnpm/blob/main/pnpm/docs/settings/build.md)に従いallowBuildsでesbuild/workerdを明示falseにする。postinstallは実行せず、配布済みplatform binaryでbuild/previewを検証する。minimumReleaseAge=10080とignore-scripts=trueを維持する。
+
+一次資料: [AstroのCSS設定](https://docs.astro.build/en/reference/configuration-reference/#buildinlinestylesheets)、[client scripts](https://docs.astro.build/en/guides/client-side-scripts/)、[Static Assets headers](https://developers.cloudflare.com/workers/static-assets/headers/)、[Web Analytics CSP](https://developers.cloudflare.com/web-analytics/faq/#what-do-i-need-to-add-to-my-content-security-policy)。

@@ -96,6 +96,7 @@ show_status() {
   echo "登録状況（$ENV_NAME）"
   while IFS=$'\t' read -r n k t s h u <&3; do
     case "$n" in \#*|"") continue ;; esac
+    [ "$k" = "ci_only" ] && continue
     if is_set "$n" "$k" "$t"; then mark="登録済み"; else mark="未登録  "; fi
     printf '  %s  [%s] %s\n' "$mark" "$s" "$n"
   done 3< "$MANIFEST"
@@ -135,6 +136,10 @@ fi
 
 while IFS=$'\t' read -r n k t s h u <&3; do
   case "$n" in \#*|"") continue ;; esac
+  if [ "$k" = "ci_only" ]; then
+    if [ "$TARGET_ARG" = "$n" ]; then echo "$n は開発・CI専用で、環境へ登録できません。"; exit 2; fi
+    continue
+  fi
   if [ -n "$TARGET_ARG" ]; then
     [ "$n" = "$TARGET_ARG" ] || continue
     FOUND=1

@@ -3,13 +3,16 @@ import { pathToFileURL } from 'node:url';
 import { z } from 'zod';
 
 const environmentSchema=z.enum(['staging','production']);
-const manifestRow=z.tuple([z.string().regex(/^[A-Z][A-Z0-9_]{0,79}$/),z.enum(['secret','variable']),z.enum(['github','supabase','both']),z.enum(['A','B']),z.string().min(1),z.string().min(1)]);
+const manifestRow=z.tuple([z.string().regex(/^[A-Z][A-Z0-9_]{0,79}$/),z.enum(['secret','variable','ci_only']),z.enum(['github','supabase','both']),z.enum(['A','B']),z.string().min(1),z.string().min(1)]);
 export function parseReadinessManifest(text:string):Set<string> {
   const names=new Set<string>();
+  const seen=new Set<string>();
   for(const line of text.split(/\r?\n/)) {
     if(!line || line.startsWith('#')) continue;
     const row=manifestRow.parse(line.split('\t'));
-    if(names.has(row[0])) throw new Error('Duplicate configuration name');
+    if(seen.has(row[0])) throw new Error('Duplicate configuration name');
+    seen.add(row[0]);
+    if(row[1]==='ci_only') continue;
     names.add(row[0]);
   }
   if(!names.size) throw new Error('Empty configuration manifest');

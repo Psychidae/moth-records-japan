@@ -93,7 +93,7 @@ describe('CI permissions and supply chain policy', () => {
     }
     expect(z.object({ compilerOptions: z.object({ strict: z.literal(true) }) }).safeParse(JSON.parse(read('tsconfig.json')) as unknown).success).toBe(true);
     expect(read('pnpm-workspace.yaml')).toMatch(/^minimumReleaseAge: 10080$/m);
-    expect(read('pnpm-workspace.yaml')).toMatch(/^onlyBuiltDependencies:/m);
+    expect(read('pnpm-workspace.yaml')).toMatch(/^allowBuilds:\n  esbuild: false\n  workerd: false$/m);
     expect(read('.npmrc')).toMatch(/^ignore-scripts=true$/m);
   });
 

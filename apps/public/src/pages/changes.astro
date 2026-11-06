@@ -1,0 +1,7 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { loadPublicRelease } from '../lib/data.ts';
+import { formatJapanTime } from '../lib/date.ts';
+const {version,manifest}=loadPublicRelease();
+---
+<Layout title="更新履歴"><article class="prose"><p class="eyebrow">更新履歴</p><h1>更新履歴</h1><h2>データ版 {version}</h2><p>生成日時: <time datetime={manifest.generatedAt}>{formatJapanTime(manifest.generatedAt)}</time></p><p>List-MJの分類基盤と地域区分を収録しています。これはデータ生成の履歴で、一般公開や配信の日時とは異なります。</p><h2>学名の変更履歴</h2><p class="empty">公開可能な変更履歴はまだ登録されていません。</p></article></Layout>

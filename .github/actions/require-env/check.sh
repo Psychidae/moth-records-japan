@@ -10,12 +10,12 @@ known=('')
 while IFS=$'\t' read -r name kind target phase description source extra; do
   case "$name" in ''|\#*) continue ;; esac
   [[ "$name" =~ ^[A-Z][A-Z0-9_]{0,79}$ ]] || fail
-  [[ "$kind" == secret || "$kind" == variable ]] || fail
+  [[ "$kind" == secret || "$kind" == variable || "$kind" == ci_only ]] || fail
   [[ "$target" == github || "$target" == supabase || "$target" == both ]] || fail
   [[ "$phase" == A || "$phase" == B ]] || fail
   [ -n "$description" ] && [ -n "$source" ] && [ -z "$extra" ] || fail
   for item in "${known[@]}"; do [[ "${item%%:*}" != "$name" ]] || fail; done
-  known+=("$name:$target")
+  if [[ "$kind" == ci_only ]]; then known+=("$name:ci_only"); else known+=("$name:$target"); fi
 done < "$manifest"
 [ "${#known[@]}" -gt 1 ] || fail
 required=('')
@@ -25,7 +25,7 @@ while IFS= read -r name; do
   for item in "${required[@]}"; do [[ "$item" != "$name" ]] || fail; done
   found=false
   for item in "${known[@]}"; do
-    if [[ "${item%%:*}" == "$name" && "${item#*:}" != supabase ]]; then found=true; fi
+    if [[ "${item%%:*}" == "$name" && "${item#*:}" != supabase && "${item#*:}" != ci_only ]]; then found=true; fi
   done
   [[ "$found" == true ]] || fail
   required+=("$name")
