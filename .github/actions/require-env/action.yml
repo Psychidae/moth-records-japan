@@ -1,0 +1,21 @@
+name: Require configured environment
+description: Check registered configuration names without disclosing their values
+inputs:
+  required:
+    description: Space or newline separated names from scripts/secrets-manifest.tsv
+    required: true
+outputs:
+  ready:
+    description: true only when every required value is configured
+    value: ${{ steps.check.outputs.ready }}
+  missing:
+    description: Comma separated names only; never configuration values
+    value: ${{ steps.check.outputs.missing }}
+runs:
+  using: composite
+  steps:
+    - id: check
+      shell: bash
+      env:
+        REQUIRED_ENV_NAMES: ${{ inputs.required }}
+      run: bash "$GITHUB_ACTION_PATH/check.sh"

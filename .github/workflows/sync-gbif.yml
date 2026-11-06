@@ -1,9 +1,20 @@
 name: Sync GBIF
+run-name: ${{ inputs.recheck_id && format('Recheck {0}', inputs.recheck_id) || 'Sync GBIF' }}
 on:
   schedule:
     # UTC dates 28..31 cover every month-end; the command checks day 1 in JST.
     - cron: '0 19 28-31 * *'
   workflow_dispatch:
+    inputs:
+      readiness_only:
+        description: 設定確認のみ行い、実処理は起動しない
+        required: false
+        default: false
+        type: boolean
+      recheck_id:
+        description: 再開処理の照合用識別子（通常は空欄）
+        required: false
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -18,15 +29,28 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
+      - id: ready
+        uses: ./.github/actions/require-env
+        with:
+          required: SUPABASE_SERVICE_ROLE_KEY GBIF_USERNAME GBIF_PASSWORD
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GBIF_USERNAME: ${{ vars.GBIF_USERNAME }}
+          GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
       - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1
+        if: steps.ready.outputs.ready == 'true' && inputs.readiness_only != true
         with:
           version: 12.16.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        if: steps.ready.outputs.ready == 'true' && inputs.readiness_only != true
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: |
+        if: steps.ready.outputs.ready == 'true' && inputs.readiness_only != true
+      - name: Run configured task
+        if: steps.ready.outputs.ready == 'true' && inputs.readiness_only != true
+        run: |
           if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch || "$(TZ=Asia/Tokyo date +%d)" == 01 ]]; then
             pnpm sync:gbif --run
           else
@@ -35,5 +59,8 @@ jobs:
         env:
           SUPABASE_URL: https://zbbmvrmmxhrytwqrjyyk.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          GBIF_USERNAME: ${{ secrets.GBIF_USERNAME }}
+          GBIF_USERNAME: ${{ vars.GBIF_USERNAME }}
           GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
+      - name: Explain check-only mode
+        if: inputs.readiness_only == true
+        run: echo '確認のみ: 実処理を起動していません。' >> "$GITHUB_STEP_SUMMARY"
