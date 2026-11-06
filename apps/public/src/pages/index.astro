@@ -2,10 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import { loadPublicRelease } from '../lib/data.ts';
 import { formatJapanTime } from '../lib/date.ts';
+import { site } from '../../../../packages/config/site.ts';
 const {national,version,origin,manifest}=loadPublicRelease();
 ---
-<Layout title="分布記録を調べる">
-  <div class="catalog-heading"><h1>分布記録を調べる</h1><p class="small">データ版 {version} · <time datetime={manifest.generatedAt}>{formatJapanTime(manifest.generatedAt)}</time></p></div>
+<Layout title={site.name}>
+  <div class="catalog-heading"><h1 lang="en">{site.name}</h1><p class="catalog-subtitle">{site.nameJa}</p><p class="small">データ版 {version} · <time datetime={manifest.generatedAt}>{formatJapanTime(manifest.generatedAt)}</time></p></div>
   <div class="stats" aria-label="収録状況"><div class="stat"><strong>{national.counts.species.toLocaleString('ja-JP')}</strong><span>List-MJ掲載種数</span></div><div class="stat"><strong>{national.counts.records.toLocaleString('ja-JP')}</strong><span>公開文献記録</span></div><div class="stat"><strong>{national.counts.references.toLocaleString('ja-JP')}</strong><span>公開文献</span></div><div class="stat"><strong>47</strong><span>都道府県</span></div></div>
   <div class="catalog-layout"><div>
     <section class="catalog-block"><h2>検索と目録</h2><ul class="catalog-links"><li><a href="/search/">名称検索</a><small>学名・和名・別名から分類群を検索</small></li><li><a href="/about/#regions">地域区分</a><small>47都道府県・主要90島・南千島</small></li><li><a href="/data/">公開データ</a><small>版番号・出典・ライセンス・ファイル一覧</small></li></ul></section>

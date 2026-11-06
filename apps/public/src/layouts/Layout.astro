@@ -9,7 +9,7 @@ const navigation=[['種をさがす','/search/'],['地域から見る','/about/#
 ---
 <!doctype html>
 <html lang="ja">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title} | {site.name}</title><meta name="description" content={description}/>{noindex && <meta name="robots" content="noindex,follow"/>}<meta name="color-scheme" content="light"/></head>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title===site.name ? title : `${title} | ${site.name}`}</title><meta name="description" content={description}/>{noindex && <meta name="robots" content="noindex,follow"/>}<meta name="color-scheme" content="light"/></head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
   <header class="site-header"><div class="header-inner">

@@ -149,3 +149,4 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 - 全7ページと公開manifestのローカル実HTTP応答で200と5指定ヘッダ・補助X-Frame-Optionsを確認した。Wrangler Static Assetsが_headersを処理している。全生成HTMLのinline script/style/style属性なしをbuildの必須検査にした。
 - 通常・release buildは公開成果物の欠落や開発seedの代用を拒否する。明示CI/dev opt-inだけT10のoffline generatorを再利用し、起源を画面に示す。ci_onlyメタデータは鍵setter・再開・require-env対象から除外する。鍵スクリプト・本番接続・新hosting登録・配信は実行していない。
 - ローカル確認URLは http://127.0.0.1:8787/ 。公開・stagingへの配信結果を意味しない。検索の実処理はT12、種/地域/CSVと性能の検証は続くT13〜T16で実施する。
+- オーナー追加指定の色調・英語H1と日本語副題・目録型レイアウトを同PRへ反映した。Actias alienaのPNGアイコンは生成方法の確認中で、T11時点はテキストのみ。親担当が承認済み素材を受けて追加する。本文・footerの反復的な注意文と旧SVGは削除済み。
