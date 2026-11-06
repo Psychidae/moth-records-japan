@@ -13,7 +13,7 @@ export function assertBrandPng(data:Buffer,size:number,maxBytes:number):void {
 export function verifyPublicAssets(root:string):void {
   const allowed=new Map([['_headers','file'],['robots.txt','file'],['data','directory'],['assets','directory']]);
   for(const entry of readdirSync(root,{withFileTypes:true})) {
-    if(entry.isSymbolicLink() || lstatSync(join(root,entry.name)).isSymbolicLink() || allowed.get(entry.name)!==(entry.isDirectory()?'directory':'file'))throw new Error('Unknown file in public root');
+    if(entry.isSymbolicLink() || lstatSync(join(root,entry.name)).isSymbolicLink() || allowed.get(entry.name)!==(entry.isDirectory()?'directory':entry.isFile()?'file':'other'))throw new Error('Unknown file in public root');
   }
   const directory=join(root,'assets');
   const entries=readdirSync(directory,{withFileTypes:true});
