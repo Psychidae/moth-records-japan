@@ -104,3 +104,4 @@ th{background:var(--soft)}
 }
 .catalog-subtitle{font-size:.95rem;color:var(--muted);margin:.4rem 0 .7rem}
 .catalog-search label{display:block;font-weight:600;margin:.5rem 0}.catalog-search>div{display:flex;gap:.6rem}.catalog-search input{flex:1;width:100%}.search-results{list-style:none;padding:0}.search-results li{padding:1rem 0;border-top:1px solid var(--line)}.search-results p{margin:.15rem 0}.result-name a{font-weight:650}.result-scientific{font-family:Georgia,"Times New Roman",serif}.alias-guide{font-size:.85rem;background:var(--soft);padding:.5rem}.pagination{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}.pagination button{font-size:.85rem}
+.brand-icon{width:64px;height:64px;object-fit:contain;flex:0 0 64px}@media(max-width:400px){.brand-icon{width:52px;height:52px;flex-basis:52px}.brand{gap:.55rem}}
