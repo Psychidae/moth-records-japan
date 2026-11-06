@@ -38,7 +38,9 @@ GitHub Actions ── 定期取込 (iNaturalist, GBIF) ───────┤
 | AI | @anthropic-ai/sdk | 1.6.0 |
 | 配信 | wrangler | 4.158.0 |
 | 地図データ変換 | mapshaper | 0.7.101 |
+| 学名のフォント | @fontsource-variable/source-serif-4 | 5.3.1 |
 | テスト | vitest, @playwright/test, @electric-sql/pglite | 5.1.0, 1.64.1, 0.5.15 |
+| アクセシビリティ検査 | @axe-core/playwright | 4.14.0 |
 
 選定理由、上限、撤退方法は `08_tool_decisions.md` に記載する。一覧にない依存を追加しない。写真の再生成に使う `vips` はコンテナ内のコマンドであり、npm の依存には入れない。地図は自前のSVG部品で描き、地図ライブラリを入れない。Excel読込の依存も入れず、変換済みの `seed/source/listmj3_210603_rows.jsonl` を読む。
 
