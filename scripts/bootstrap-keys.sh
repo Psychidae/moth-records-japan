@@ -120,11 +120,11 @@ needs() { is_set "$1" "$2" "$(manifest_field "$2" 2)" "$(manifest_field "$2" 3)"
 
 put() { # 環境 名前 値。保存は set-secrets.sh に任せる
   if printf '%s\n' "$3" | SET_SECRETS_NO_RECHECK=1 bash scripts/set-secrets.sh --env "$1" "$2" >/dev/null 2>&1; then
-    echo "  格納: $2（$1）"
+    echo "  格納: ${2}（${1}）"
     case " $CHANGED_ENVS " in *" $1 "*) ;; *) CHANGED_ENVS="$CHANGED_ENVS $1" ;; esac
     return 0
   fi
-  note_fail "$2（$1）を格納できませんでした"
+  note_fail "${2}（${1}）を格納できませんでした"
   return 1
 }
 
@@ -253,7 +253,7 @@ turnstile() { # 環境
     [ -n "$domains" ] && domains="$domains.workers.dev"
   fi
   if [ -z "$domains" ]; then
-    echo "  保留: Turnstile（$env）。配信先が未定です。TURNSTILE_DOMAINS=example.org を付けて再実行してください"
+    echo "  保留: Turnstile（${env}）。配信先が未定です。TURNSTILE_DOMAINS=example.org を付けて再実行してください"
     return 0
   fi
   cf_admin GET "/accounts/$CF_ACCOUNT/challenges/widgets?per_page=50"
@@ -264,10 +264,10 @@ turnstile() { # 環境
     cf_admin POST "/accounts/$CF_ACCOUNT/challenges/widgets" \
       "$(jq -cn --arg n "$name" --arg d "$domains" '{name:$n,domains:($d|split(",")),mode:"managed"}')"
   fi
-  ok_http || { note_fail "Turnstile（$env）を作れません: $(reason)"; return 1; }
+  ok_http || { note_fail "Turnstile（${env}）を作れません: $(reason)"; return 1; }
   sitekey=$(printf '%s' "$BODY" | jq -r '.result.sitekey')
   secret=$(printf '%s' "$BODY" | jq -r '.result.secret // empty')
-  [ -n "$secret" ] || { note_fail "Turnstile（$env）の秘密鍵を取得できません"; return 1; }
+  [ -n "$secret" ] || { note_fail "Turnstile（${env}）の秘密鍵を取得できません"; return 1; }
   put "$env" VITE_TURNSTILE_SITE_KEY "$sitekey"
   put "$env" TURNSTILE_SECRET_KEY "$secret"
   secret=""
@@ -276,7 +276,7 @@ turnstile() { # 環境
 do_cloudflare() { # 環境
   local env="$1" base="moth-records-$1" name perm_scripts perm_settings policies
   echo
-  echo "Cloudflare（$env）"
+  echo "Cloudflare（${env}）"
   local missing=0 key
   for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID R2_ACCOUNT_ENDPOINT R2_BACKUP_ACCESS_KEY_ID \
     R2_BACKUP_SECRET_ACCESS_KEY R2_LIT_ACCESS_KEY_ID R2_LIT_SECRET_ACCESS_KEY VITE_TURNSTILE_SITE_KEY TURNSTILE_SECRET_KEY; do
@@ -317,7 +317,7 @@ do_cloudflare() { # 環境
 do_healthchecks() { # 環境
   local env="$1" item key label timeout grace url
   echo
-  echo "Healthchecks.io（$env）"
+  echo "Healthchecks.io（${env}）"
   needs "$env" HEALTHCHECKS_PING_BACKUP || needs "$env" HEALTHCHECKS_PING_SYNC || needs "$env" HEALTHCHECKS_PING_HEALTH || { echo "  登録済み"; return 0; }
   if [ -z "$HC_KEY" ]; then
     echo "  Project Settings の API Access で読み書き用のキーを作る: https://healthchecks.io/"
@@ -345,7 +345,7 @@ do_supabase() { # 環境
   local env="$1" ref value password pooler user host name
   ref=$(project_ref "$env")
   echo
-  echo "Supabase（$env）"
+  echo "Supabase（${env}）"
 
   if needs "$env" SUPABASE_SERVICE_ROLE_KEY; then
     value=$(supabase projects api-keys --project-ref "$ref" -o json 2>/dev/null | jq -r '[.[] | select(.name == "service_role")][0].api_key // empty')
@@ -390,7 +390,7 @@ do_supabase() { # 環境
 do_age() { # 環境
   local env="$1" public
   echo
-  echo "バックアップの暗号鍵（$env）"
+  echo "バックアップの暗号鍵（${env}）"
   needs "$env" BACKUP_AGE_PUBLIC_KEY || { echo "  登録済み"; return 0; }
   if ! command -v age-keygen >/dev/null; then
     confirm "  age が未導入です。brew install age を実行しますか" || { echo "  飛ばしました"; return 0; }
@@ -460,7 +460,7 @@ fi
 
 for env in $CHANGED_ENVS; do
   if gh workflow view recheck-env.yml --repo "$REPO" >/dev/null 2>&1; then
-    gh workflow run recheck-env.yml --repo "$REPO" -f environment="$env" >/dev/null && echo "待機していた処理を再開しました（$env）。"
+    gh workflow run recheck-env.yml --repo "$REPO" -f environment="$env" >/dev/null && echo "待機していた処理を再開しました（${env}）。"
   fi
 done
 

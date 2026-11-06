@@ -93,7 +93,7 @@ FOUND=0
 
 show_status() {
   local n k t s h u mark
-  echo "登録状況（$ENV_NAME）"
+  echo "登録状況（${ENV_NAME}）"
   while IFS=$'\t' read -r n k t s h u <&3; do
     case "$n" in \#*|"") continue ;; esac
     if is_set "$n" "$k" "$t"; then mark="登録済み"; else mark="未登録  "; fi
