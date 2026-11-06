@@ -83,7 +83,7 @@
   - 受け入れ: 巻号ごとに外部リンク、スキャン、目録のみが区別される。
 - [ ] **L04 スキャンの受付**: `/upload`, `upload-start`, 隔離領域。機能フラグ `scan_uploads_open` は偽のまま実装する。
   - 受け入れ: 署名URLが15分で切れる。PDFと画像以外を拒否する。1日の容量制限が働く。`scan_blocked` の号と、外部公開済みの号へのアップロードを拒否する。
-- [ ] **L05 検査と再生成**: `process-scan.yml`。
+- [ ] **L05 検査と再生成**: `process-scan.yml`。`R2_LIT_*` は文献の3バケットを扱える1組なので、隔離処理用の読み取り専用の鍵を `scripts/secrets-manifest.tsv` と `scripts/bootstrap-keys.sh` へ追加する。
   - 受け入れ: EICAR テストファイルが拒否される。JavaScript を含むPDFから再生成したファイルに JavaScript が残らない。処理ジョブから本番DBの鍵が読めない。
 - [ ] **L06 権利の申告と公開**: 4種類の申告、自動公開の判定、発行元の一括許諾、`files.` の配信、`registered` の署名URL。
   - 受け入れ: 根拠のないファイルが受付で拒否される。没年1968年以降の満了申告が公開されない。全公開領域のファイルに `Content-Security-Policy: sandbox` が付く。

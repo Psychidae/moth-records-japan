@@ -150,7 +150,7 @@ if [ "$FOUND" = 0 ]; then
   echo "すべて登録済みです。"
 fi
 
-if [ "$CHANGED" = 1 ]; then
+if [ "$CHANGED" = 1 ] && [ -z "${SET_SECRETS_NO_RECHECK:-}" ]; then
   if gh workflow view recheck-env.yml --repo "$REPO" >/dev/null 2>&1; then
     gh workflow run recheck-env.yml --repo "$REPO" -f environment="$ENV_NAME" >/dev/null \
       && echo "待機していた処理を再開しました。"
