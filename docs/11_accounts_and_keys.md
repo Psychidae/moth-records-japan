@@ -72,6 +72,50 @@ age-keygen -o moth-backup.key
 | Docker 互換環境 | 未導入。ローカルでDBを動かす場合に必要 | https://orbstack.dev/ |
 | Codex | 設定フォルダは確認。実行コマンドは未確認 | https://developers.openai.com/codex/ |
 
+## 鍵の自動発行
+
+24件のうち15件は `scripts/bootstrap-keys.sh` が発行して格納する。値は画面に出ない。
+
+**先に済ませること**
+
+1. Cloudflare のアカウントを作り、R2 を有効にする: https://dash.cloudflare.com/?to=/:account/r2/overview
+2. Healthchecks.io のアカウントを作り、Project Settings の API Access で読み書き用のキーを作る: https://healthchecks.io/
+3. Supabase のアクセストークンを作る: https://supabase.com/dashboard/account/tokens
+4. `supabase login` を実行する
+
+**実行**
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/bootstrap-keys.sh --dry-run
+```
+
+```bash
+bash ~/moth-records-japan/moth-db-plan/scripts/bootstrap-keys.sh
+```
+
+画面の案内に従い、Supabase のトークン、Healthchecks.io のキー、Cloudflare の発行用トークンの3つを貼る。既定で staging と production の両方を処理する。登録済みの鍵は飛ばすので、途中で失敗しても再実行できる。
+
+| 発行する鍵 | 方法 |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | Workers の配信権限だけのトークンを環境ごとに作る |
+| `CLOUDFLARE_ACCOUNT_ID`, `R2_ACCOUNT_ENDPOINT` | アカウントから取得する |
+| `R2_BACKUP_*`, `R2_LIT_*` | 対象のバケットだけを扱えるトークンから作る |
+| `VITE_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | ウィジェットを作る。配信先が未定なら保留する |
+| `HEALTHCHECKS_PING_*` | 監視を作る |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase CLI で取得する |
+| `SUPABASE_DB_URL` | DBパスワードを新しい値へ再設定して作る。実行前に確認を求める |
+| `BACKUP_AGE_PUBLIC_KEY` | `~/moth-backup.key` に暗号鍵を作り、公開鍵を登録する |
+
+R2 のバケットの作成、バックアップの保持ロック（35日）、自動削除（バックアップ36日、隔離7日）も行う。バケット名は `environment.md` にある。
+
+Cloudflare の発行用トークンは、成功すると最後に自動で失効する。失敗した場合は再実行できるよう残す。
+
+**実行後に必ず行うこと**: `~/moth-backup.key` をパスワードマネージャへ保管し、確認後にファイルを削除する。失うとバックアップを復元できない。
+
+自動発行できない残りの9件は、次の「鍵の入れ方」で入れる。
+
+Turnstile は配信先が未定だと保留になる。独自ドメインを決めたら、Cloudflare の画面でウィジェットへホスト名を追加する。
+
 ## 鍵の入れ方
 
 鍵はすべて空のままで Codex を進められる。未登録の処理は待機し、登録すると動く。鍵を取得したら次を実行する。
