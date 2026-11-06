@@ -22,3 +22,7 @@
 ## 2026-11-06 T02a: 未実装処理と監視時間
 
 DB定義反映・配信はT17以降の処理で、現時点にdispatch先がない。再開一覧には未実装として残し、実装後に明示的に対応を追加する。production専用の再開先も未実装。現行recheckの合計監視は5時間なので、それを超える初回収集では子runを確認してから未実行処理だけを手動実行する。自動再dispatchはしない。
+
+## 2026-11-06 T11: アクセス解析と開発用生成
+
+Cloudflare Web Analyticsのbeaconは現行の外部script禁止・self-only CSPと両立しない。オーナーの方針決定まで解析タグは無効とする。CSP緩和やbeacon複製は行わない。MOTH_PUBLIC_BOOTSTRAPはCI/devだけの明示確認用設定で、deploy/productionの環境変数へ登録しない。通常buildでは検査済み成果物が必要である。

@@ -1,0 +1,21 @@
+---
+import '../styles/global.css';
+import { site } from '../../../../packages/config/site.ts';
+import { loadPublicRelease } from '../lib/data.ts';
+interface Props {title:string; description?:string; noindex?:boolean}
+const {title,description='日本産蛾類の分類目録、都道府県・島嶼別の分布記録と出典情報。',noindex=false}=Astro.props;
+const release=loadPublicRelease();
+const navigation=[['種をさがす','/search/'],['地域から見る','/about/#regions'],['文献','/about/#literature'],['タイプ産地','/about/#types'],['寄主植物','/about/#hosts'],['データ','/data/'],['参加する','/about/#join']];
+---
+<!doctype html>
+<html lang="ja">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title===site.name ? title : `${title} | ${site.name}`}</title><meta name="description" content={description}/>{noindex && <meta name="robots" content="noindex,follow"/>}<meta name="color-scheme" content="light"/></head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header"><div class="header-inner">
+    <a href="/" class="brand"><span>{site.name}<small>{site.nameJa}</small></span></a>
+    <form class="header-search" action="/search/" role="search" data-names-url={`/data/${release.version}/names.json`}><label class="visually-hidden" for="site-search">学名・和名・別名で検索</label><input id="site-search" name="q" type="search" placeholder="学名・和名・別名" maxlength="160"/><button type="submit">検索</button></form>
+  </div><nav class="main-nav" aria-label="主なページ">{navigation.map(([label,url])=><a href={url}>{label}</a>)}</nav></header>
+  <main id="main" class="container"><slot/></main>
+  <footer class="site-footer"><div class="container"><p class="footer-name">{site.name}</p><p>分類基盤: <a href="http://listmj.mothprog.com/">List-MJ</a>（CC0 1.0） · 記録データ: CC BY 4.0</p><nav aria-label="サイト情報"><a href="/about/">このサイトについて</a><a href="/changes/">更新履歴</a><a href="/privacy/">プライバシー</a><a href="/terms/">利用規約</a></nav><p class="small">データ版 {release.version}</p></div></footer>
+</body></html>

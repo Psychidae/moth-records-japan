@@ -2,5 +2,16 @@
   "name": "@moth/app-public",
   "private": true,
   "type": "module",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "build": "astro build",
+    "dev": "astro dev --host 127.0.0.1",
+    "preview": "wrangler dev --assets dist --name moth-records-public-local --compatibility-date 2026-10-29 --port 8787 --ip 127.0.0.1"
+  },
+  "dependencies": {
+    "astro": "7.4.4"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  }
 }

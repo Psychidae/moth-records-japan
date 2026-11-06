@@ -1,0 +1,9 @@
+export const securityHeaders: Record<string, string> = {
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://static.inaturalist.org https://inaturalist-open-data.s3.amazonaws.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'X-Frame-Options': 'DENY',
+};
+export const cloudflareHeaders = `/*\n${Object.entries(securityHeaders).map(([key,value]) => `  ${key}: ${value}`).join('\n')}\n`;

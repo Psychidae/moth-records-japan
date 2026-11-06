@@ -3,4 +3,6 @@ packages:
   - packages/*
   - pipelines/*
 minimumReleaseAge: 10080
-onlyBuiltDependencies: []
+allowBuilds:
+  esbuild: false
+  workerd: false

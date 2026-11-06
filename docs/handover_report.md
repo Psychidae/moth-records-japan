@@ -141,3 +141,12 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 4. 合計監視は5時間。正常な子が長時間継続している場合も親だけ時間切れになる可能性がある。この場合は表示された子runをActionsで先に確認し、同じ子を重複起動せず、未実行の処理だけを個別workflowから再開する。自動の再dispatchはしない。各処理別の監視job分割は運用時間を見て見直す。
 5. stagingのSecret名一覧が0件であることを値なしで確認した。readiness_only=trueで実iNaturalist workflowを起動し、run42134497898はsuccess。require-env成功、setup/install/実処理はskippedを実際のjob結果で確認した。診断入力は、途中で鍵が揃っても実処理を起動しない。
 6. 必須5コマンドと単体115件が成功。未登録/登録済み、値の非表示、未知名/manifest欠落、不正環境、production→staging拒否、子の失敗/待機/時間切れ、正確なrun ID照合、vars/secret整合を検証した。登録済みの再開はモック確認で、実キー登録後の外部収集/DB保存/配信・本番起動は未確認。set-secrets.shは読取のみで実行していない。
+
+## T11 公開サイトの骨格（2026-11-06）
+
+- Astro静的サイトの共通レイアウトとトップ・about/data/changes/privacy/terms、次の検索工程の入口を実装した。タイトルはオーナー指定の英語主題・日本語副題とし、問い合わせ先は未設定のまま。日本語の本文とデータ欄で公開文献・記録0件、外部集計未取得を表示する。
+- 実stagingの公開用成果物2026.11.2を使用。apps/publicはDBへ接続せず、Supabase依存もない。提供ファイルの全SHA-256をbuild前に再照合する。機微判定の元データは公開buildへ取り込まない。
+- 全7ページと公開manifestのローカル実HTTP応答で200と5指定ヘッダ・補助X-Frame-Optionsを確認した。Wrangler Static Assetsが_headersを処理している。全生成HTMLのinline script/style/style属性なしをbuildの必須検査にした。
+- 通常・release buildは公開成果物の欠落や開発seedの代用を拒否する。明示CI/dev opt-inだけT10のoffline generatorを再利用し、起源を画面に示す。ci_onlyメタデータは鍵setter・再開・require-env対象から除外する。鍵スクリプト・本番接続・新hosting登録・配信は実行していない。
+- ローカル確認URLは http://127.0.0.1:8787/ 。公開・stagingへの配信結果を意味しない。検索の実処理はT12、種/地域/CSVと性能の検証は続くT13〜T16で実施する。
+- オーナー追加指定の色調・英語H1と日本語副題・目録型レイアウトを同PRへ反映した。Actias alienaのPNGアイコンは生成方法の確認中で、T11時点はテキストのみ。親担当が承認済み素材を受けて追加する。本文・footerの反復的な注意文と旧SVGは削除済み。

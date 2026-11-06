@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { loadPublicRelease } from '../lib/data.ts';
+import { formatJapanTime } from '../lib/date.ts';
+import { site } from '../../../../packages/config/site.ts';
+const {national,version,origin,manifest}=loadPublicRelease();
+---
+<Layout title={site.name}>
+  <div class="catalog-heading"><h1 lang="en">{site.name}</h1><p class="catalog-subtitle">{site.nameJa}</p><p class="small">データ版 {version} · <time datetime={manifest.generatedAt}>{formatJapanTime(manifest.generatedAt)}</time></p></div>
+  <div class="stats" aria-label="収録状況"><div class="stat"><strong>{national.counts.species.toLocaleString('ja-JP')}</strong><span>List-MJ掲載種数</span></div><div class="stat"><strong>{national.counts.records.toLocaleString('ja-JP')}</strong><span>公開文献記録</span></div><div class="stat"><strong>{national.counts.references.toLocaleString('ja-JP')}</strong><span>公開文献</span></div><div class="stat"><strong>47</strong><span>都道府県</span></div></div>
+  <div class="catalog-layout"><div>
+    <section class="catalog-block"><h2>検索と目録</h2><ul class="catalog-links"><li><a href="/search/">名称検索</a><small>学名・和名・別名から分類群を検索</small></li><li><a href="/about/#regions">地域区分</a><small>47都道府県・主要90島・南千島</small></li><li><a href="/data/">公開データ</a><small>版番号・出典・ライセンス・ファイル一覧</small></li></ul></section>
+    <section class="catalog-block"><h2>最近追加された文献</h2><p class="small">{national.counts.references===0 ? '未登録' : `公開文献 ${national.counts.references.toLocaleString('ja-JP')}件`}</p></section>
+    <section class="catalog-block"><h2>学名の変更履歴</h2><p class="small">公開履歴は未登録</p><a href="/changes/">更新履歴</a></section>
+  </div><aside><section class="card catalog-block"><h2>データの状態</h2><dl class="release-status"><dt>分類群</dt><dd>{national.counts.taxa.toLocaleString('ja-JP')}</dd><dt>地域区分</dt><dd>{national.counts.regions}</dd><dt>文献記録</dt><dd>{national.counts.records===0 ? '未登録' : `${national.counts.records.toLocaleString('ja-JP')}件`}</dd><dt>iNaturalist全国集計</dt><dd>{national.external.inaturalist.status==='uncollected' ? '未取得' : '取得済み'}</dd><dt>GBIF全国集計</dt><dd>{national.external.gbif.status==='uncollected' ? '未取得' : '取得済み'}</dd></dl>{origin==='offline-seed' && <p class="small">開発確認用: 同梱分類・地域データ。実DBの審査・機微設定は含みません。</p>}</section><section class="card"><h2>凡例・出典</h2><p class="small">文献・標本・写真を区別して表示します。</p><a href="/about/#evidence">証拠区分</a><br/><a href="/about/">List-MJと収録範囲</a></section></aside></div>
+</Layout>

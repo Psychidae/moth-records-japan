@@ -42,3 +42,6 @@ jobs:
       - name: Verify permissions on real PostgreSQL
         run: sudo -u postgres bash scripts/test-pgtap.sh
       - run: pnpm build
+        env:
+          # Explicit check-only baseline; release workflows must supply verified artifacts.
+          MOTH_PUBLIC_BOOTSTRAP: '1'

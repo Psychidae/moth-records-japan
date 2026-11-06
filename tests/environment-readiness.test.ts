@@ -25,6 +25,14 @@ const plan:ResumePlan[]=[{id:'inaturalist',workflow:'sync-inat.yml',state:'ready
 const defaults={environment:'staging' as const,token:fakeSecret,runId:'123-1',repository:'Psychidae/moth-records-japan'};
 
 describe('require-env without disclosing values',()=> {
+  it('never treats a ci-only development switch as a resumable environment setting',()=> {
+    expect(names.has('MOTH_PUBLIC_BOOTSTRAP')).toBe(false);
+    expect(check('MOTH_PUBLIC_BOOTSTRAP',{MOTH_PUBLIC_BOOTSTRAP:'1'}).status).not.toBe(0);
+    const setter=readFileSync('scripts/set-secrets.sh','utf8');
+    expect(setter).toContain('[ "$k" = "ci_only" ] && continue');
+    expect(setter).toContain('if [ "$k" = "ci_only" ]; then');
+    expect(setter.indexOf('if [ "$k" = "ci_only" ]; then')).toBeLessThan(setter.lastIndexOf('ask_one "$n"'));
+  });
   it('returns ready=false with missing names only and exits successfully',()=> {
     const result=check('SUPABASE_SERVICE_ROLE_KEY\nCONTACT_EMAIL');
     expect(result.status).toBe(0);expect(result.output).toBe('ready=false\nmissing=SUPABASE_SERVICE_ROLE_KEY,CONTACT_EMAIL\n');expect(result.summary).toContain('待機: SUPABASE_SERVICE_ROLE_KEY,CONTACT_EMAIL');
