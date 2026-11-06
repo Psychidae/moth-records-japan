@@ -1,0 +1,21 @@
+Actias aliena brand icon / 2026-11-06
+Mode: built-in image_gen, explicitly approved by user in chat. No CLI/API-key path used.
+Original generated output retained in ~/.codex/generated_images. Final selected output has transparent alpha.
+192/96/64/32 PNGs are ordinary downscaled web assets; morphology and composition were not changed during packaging.
+This is a generated illustration for branding, not specimen or observation evidence.
+
+INITIAL GENERATION PROMPT
+Use case: logo-brand
+Asset type: original raster website emblem and favicon source for a professional Japanese moth distribution database.
+Primary request: a slightly realistic natural-history illustration of one adult male Actias aliena, the Japanese オオミズアオ, not a flat vector logo.
+Subject and morphology: dorsal view with wings spread, two broad forewings, two rounded hindwings each with a complete long slender tail, two feathered antennae, a small ivory furry body. Natural pale blue-green wings, a narrow muted reddish-brown forewing leading edge, and four small correctly placed natural eyespots, one per wing. Make the moth recognizable as Actias aliena rather than a butterfly or a generic North American luna moth. No extra wings or antennae.
+Style: restrained semi-realistic scientific illustration with gentle scale texture and soft tonal modeling, clean readable silhouette, professional and elegant, not cartoon, not geometric, not SVG-style, not a 3D plastic render.
+Composition: exactly one moth, centered and balanced, head upward, full spread wings and full tails visible, generous transparent margin, square image. Detail should remain clear at header-icon size.
+Color context: used beside charcoal #232021, light gray #D9D8D6, and navy #314465. Preserve the moth's natural pale blue-green and ivory colors with cool restrained shading rather than recoloring it solid navy.
+Background: genuinely transparent alpha, no scene, no surface, no fake checkerboard, no halo, no shadow.
+Text: none.
+Avoid: lettering, symbols, circles, crests, frames, badges, pins, specimen labels, photographic backgrounds, watermarks, cropped tails, clutter.
+
+TARGETED FRAMING/ALPHA EDIT PROMPT
+Use case: precise-object-edit. Edit the supplied Actias aliena semi-realistic raster icon. Preserve the single moth, its natural pale blue-green colors, four eyespots, reddish-brown leading edges, ivory furry body, feathered antennae, and two hindwing tails. Correct the framing: reconstruct any clipped wing tips naturally, reduce the whole moth so it fits completely inside the central 80 percent of the square canvas, and give it generous genuinely transparent margins on ALL four sides. Both broad forewing tips and both complete tail tips must be well away from the image boundary. Clean the alpha edge with natural smooth antialiasing, remove red/yellow edge fringes and stray isolated pixels. Keep the same slightly realistic natural-history illustration style, no flat vector conversion. No text, letters, badge, frame, background, surface, drop shadow, watermark, or extra objects.
+

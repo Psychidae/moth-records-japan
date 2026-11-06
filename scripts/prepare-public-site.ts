@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { latestVersion, loadPublicRelease } from '../apps/public/src/lib/data.ts';
 import { cloudflareHeaders } from '../apps/public/src/lib/headers.ts';
+import { verifyPublicAssets } from '../apps/public/src/lib/public-assets.ts';
 const repository=fileURLToPath(new URL('../',import.meta.url));
 const publicDirectory=join(repository,'apps/public/public');
 const root=join(publicDirectory,'data');
@@ -17,6 +18,7 @@ if(!hasRelease) {
   writeFileSync(join(root,'_development-origin.json'),JSON.stringify({version:latestVersion(root),kind:'offline-seed'})+'\n');
 }
 const release=loadPublicRelease(root);
+verifyPublicAssets(publicDirectory);
 if(release.hasDevelopmentArtifact && (releaseBuild || process.env.MOTH_PUBLIC_BOOTSTRAP!=='1')) throw new Error('Offline seed is for explicit development/check builds only; move development versions outside public before release');
 mkdirSync(publicDirectory,{recursive:true});
 writeFileSync(join(publicDirectory,'_headers'),cloudflareHeaders);

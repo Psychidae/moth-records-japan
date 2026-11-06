@@ -9,11 +9,11 @@ const navigation=[['種をさがす','/search/'],['地域から見る','/about/#
 ---
 <!doctype html>
 <html lang="ja">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title===site.name ? title : `${title} | ${site.name}`}</title><meta name="description" content={description}/>{noindex && <meta name="robots" content="noindex,follow"/>}<meta name="color-scheme" content="light"/></head>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>{title===site.name ? title : `${title} | ${site.name}`}</title><meta name="description" content={description}/>{noindex && <meta name="robots" content="noindex,follow"/>}<meta name="color-scheme" content="light"/><link rel="icon" type="image/png" sizes="32x32" href="/assets/actias-aliena-32.png"/><link rel="icon" type="image/png" sizes="64x64" href="/assets/actias-aliena-64.png"/></head>
 <body>
   <a class="skip-link" href="#main">本文へ移動</a>
   <header class="site-header"><div class="header-inner">
-    <a href="/" class="brand"><span>{site.name}<small>{site.nameJa}</small></span></a>
+    <a href="/" class="brand"><img class="brand-icon" src="/assets/actias-aliena-96.png" srcset="/assets/actias-aliena-192.png 2x" width="64" height="64" alt="" decoding="async"/><span>{site.name}<small>{site.nameJa}</small></span></a>
     <form class="header-search" action="/search/" role="search" data-names-url={`/data/${release.version}/names.json`}><label class="visually-hidden" for="site-search">学名・和名・別名で検索</label><input id="site-search" name="q" type="search" placeholder="学名・和名・別名" maxlength="160"/><button type="submit">検索</button></form>
   </div><nav class="main-nav" aria-label="主なページ">{navigation.map(([label,url])=><a href={url}>{label}</a>)}</nav></header>
   <main id="main" class="container"><slot/></main>

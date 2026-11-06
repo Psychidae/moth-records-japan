@@ -13,7 +13,8 @@ describe('public build input isolation',()=>{
       for(const path of ['pipelines','packages','seed']) cpSync(path,join(root,path),{recursive:true,filter:source=>!source.includes('node_modules')});
       mkdirSync(join(root,'scripts'));cpSync('scripts/prepare-public-site.ts',join(root,'scripts/prepare-public-site.ts'));
       mkdirSync(join(root,'apps/public/src/lib'),{recursive:true});
-      for(const file of ['data.ts','headers.ts']) cpSync(`apps/public/src/lib/${file}`,join(root,'apps/public/src/lib',file));
+      for(const file of ['data.ts','headers.ts','public-assets.ts']) cpSync(`apps/public/src/lib/${file}`,join(root,'apps/public/src/lib',file));
+      mkdirSync(join(root,'apps/public/public'),{recursive:true});cpSync('apps/public/public/assets',join(root,'apps/public/public/assets'),{recursive:true});
       symlinkSync(resolve('node_modules'),join(root,'node_modules'),'dir');
       const run=(bootstrap:boolean,release=false)=>spawnSync(process.execPath,['--experimental-strip-types','scripts/prepare-public-site.ts',...(release?['--release']:[])],{cwd:root,encoding:'utf8',env:{PATH:process.env.PATH??'',...(bootstrap?{MOTH_PUBLIC_BOOTSTRAP:'1'}:{})}});
       expect(run(false).status).not.toBe(0);
