@@ -57,10 +57,11 @@ age-keygen -o moth-backup.key
 
 | もの | URL | 必要になる時 |
 |---|---|---|
-| 独自ドメイン | https://www.cloudflare.com/products/registrar/ | 一般公開、メール送信 |
-| Supabase Pro | https://supabase.com/dashboard/org/_/billing | 投稿の一般公開 |
+| 独自ドメイン | https://www.cloudflare.com/products/registrar/ | 写真の公開、メール送信 |
+| Supabase Pro | https://supabase.com/dashboard/org/_/billing | 予定なし。`15_community.md` |
 | BHL APIキー | https://www.biodiversitylibrary.org/getapikey.aspx | BHL の探索を有効にする時 |
-| Googleログイン | https://console.cloud.google.com/auth/clients | 希望する場合のみ |
+| Googleログイン | https://console.cloud.google.com/auth/clients | C02 の本番有効化 |
+| Stripe | https://dashboard.stripe.com/register | C09 の受付開始。G14 の後 |
 
 ## 開発環境
 
@@ -160,8 +161,8 @@ Resend を Supabase Auth のメール送信に使う設定は、Supabase の Aut
 
 - Cloudflare R2: 開始時に決済の手続きが必要な場合がある。無料枠内なら請求は発生しない
 - Anthropic: 前払いまたは従量課金。上限を必ず設定する
-- 独自ドメイン: 年額
-- Supabase Pro: 月25ドル〜
+- 独自ドメイン: `.com` は年約10.5ドル
+- Supabase Pro: 月25ドル〜。予定なし
 
 ## Codex へ渡すもの
 

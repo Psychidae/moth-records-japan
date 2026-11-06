@@ -52,6 +52,8 @@
 
 ## 写真の自動公開の条件
 
+`photo_post_moderation` が真のときは、`15_community.md` の条件で未確認として公開する。偽のときは次の条件を使う。
+
 次をすべて満たす場合のみ公開する。
 
 - 投稿者の `photo_trust_level` が1

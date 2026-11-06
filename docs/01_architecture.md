@@ -4,6 +4,7 @@
 
 ```text
 [訪問者] ──> 公開サイト (静的HTML/JSON, Cloudflare)         DB接続なし
+                 │ 写真、コメント、順位は読み取りAPI（apps/api）を fetch する。15_community.md
                  │ 「修正を提案」リンク
                  ▼
 [投稿者・審査者] ─> 投稿サイト (静的SPA, Cloudflare) ─┐
@@ -54,6 +55,7 @@ moth-db/
 ├─ seed/
 ├─ apps/
 │  ├─ public/        Astro。公開サイト
+│  ├─ api/           Cloudflare Worker。読み取り専用API
 │  ├─ portal/        Vite + React。投稿サイト
 │  └─ admin/         Vite + React。管理サイト
 ├─ packages/
@@ -87,7 +89,7 @@ moth-db/
 | staging | 確認 | Supabase staging プロジェクト | `staging.*` |
 | production | 本番 | Supabase production プロジェクト | 独自ドメイン |
 
-Docker を使えない開発環境では staging を開発用DBに使う。production へは接続しない。staging は Supabase Free、production は P1 まで Free、P2 の投稿公開前に Pro へ上げる。
+Docker を使えない開発環境では staging を開発用DBに使う。production へは接続しない。staging と production は Supabase Free で運営する。Pro へ上げる予定はない。`15_community.md`
 
 リポジトリは GitHub の公開リポジトリとする。秘密情報は GitHub Environments にのみ置く。
 
