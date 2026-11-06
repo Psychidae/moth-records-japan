@@ -55,4 +55,5 @@ jobs:
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
       - name: Explain check-only mode
         if: inputs.readiness_only == true
-        run: echo '確認のみ: 実処理を起動していません。' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo '確認のみ: 実処理を起動していません。' >> "$GITHUB_STEP_SUMMARY"
