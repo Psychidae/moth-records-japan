@@ -59,6 +59,7 @@ export async function executeResumePlan(plan:ResumePlan[], options:{environment:
     const marker=`${options.runId}-${index+1}`;
     const dispatched=await request(`workflows/${item.workflow}/dispatches`,{method:'POST',body:JSON.stringify({ref:'main',inputs:{recheck_id:marker}})});
     const id=dispatchSchema.parse(await dispatched.json()).workflow_run_id;
+    report(`起動: ${item.id} (run ${id})`);
     while(true) {
       const run=runSchema.parse(await (await request(`runs/${id}`)).json());
       if(run.id!==id||run.display_title!==`Recheck ${marker}`) throw new Error('Recheck workflow run mismatch');

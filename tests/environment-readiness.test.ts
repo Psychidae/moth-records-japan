@@ -81,7 +81,7 @@ describe('resume planning and execution evidence',()=> {
       if(url.includes('/jobs?')) return json({jobs:[{steps:[{name:'Run configured task',conclusion:'success'}]}]});
       return json({id:current,event:'workflow_dispatch',head_branch:'main',display_title:`Recheck 123-1-${current}`,status:'completed',conclusion:'success'});
     }});
-    expect(report).toEqual(['実行完了: inaturalist (run 1)','実行完了: gbif (run 2)']);expect(report.join('')).not.toContain(fakeSecret);
+    expect(report).toEqual(['起動: inaturalist (run 1)','実行完了: inaturalist (run 1)','起動: gbif (run 2)','実行完了: gbif (run 2)']);expect(report.join('')).not.toContain(fakeSecret);
     const second=calls.findIndex(line=>line.startsWith('POST')&&line.includes('sync-gbif'));
     expect(calls.slice(0,second).some(line=>line.includes('/runs/1/jobs'))).toBe(true);
   });
@@ -93,14 +93,14 @@ describe('resume planning and execution evidence',()=> {
         if(url.includes('/jobs?')) return json({jobs:[{steps:outcome==='missing'?[]:[{name:'Run configured task',conclusion:'skipped'}]}]});
         return json({id:1,event:'workflow_dispatch',head_branch:'main',display_title:'Recheck 123-1-1',status:'completed',conclusion:outcome==='failure'?'failure':'success'});
       }});
-      if(outcome==='skipped') {await promise;expect(report[0]).toContain('待機:');}
+      if(outcome==='skipped') {await promise;expect(report.some(message=>message.startsWith('待機:'))).toBe(true);}
       else await expect(promise).rejects.toThrow();
       expect(posts).toBe(1);expect(report.join('')).not.toContain('実行完了');
     }
   });
   it('times out without duplicate dispatches, rejects mismatched runs and never emits API response secrets',async()=> {
-    let now=0;let posts=0;
-    await expect(executeResumePlan(plan,{...defaults,now:()=>now,sleep:async ms=>{now+=ms;},timeoutMs:1000,transport:async(_url,init)=>{if(init?.method==='POST'){posts++;return json({workflow_run_id:1});}return json({id:1,event:'workflow_dispatch',head_branch:'main',display_title:'Recheck 123-1-1',status:'in_progress',conclusion:null});}})).rejects.toThrow('timed out');expect(posts).toBe(1);
+    let now=0;let posts=0;const report:string[]=[];
+    await expect(executeResumePlan(plan,{...defaults,report:message=>report.push(message),now:()=>now,sleep:async ms=>{now+=ms;},timeoutMs:1000,transport:async(_url,init)=>{if(init?.method==='POST'){posts++;return json({workflow_run_id:1});}return json({id:1,event:'workflow_dispatch',head_branch:'main',display_title:'Recheck 123-1-1',status:'in_progress',conclusion:null});}})).rejects.toThrow('timed out');expect(posts).toBe(1);expect(report).toEqual(['起動: inaturalist (run 1)']);
     await expect(executeResumePlan(plan,{...defaults,transport:async(_url,init)=>init?.method==='POST'?json({workflow_run_id:1}):json({id:2,event:'workflow_dispatch',head_branch:'main',display_title:'Recheck 123-1-1',status:'completed',conclusion:'success'})})).rejects.toThrow('mismatch');
     await expect(executeResumePlan(plan,{...defaults,transport:async()=>new Response(fakeSecret,{status:403})})).rejects.toThrow('Workflow API HTTP 403');
     await expect(executeResumePlan([{id:'inaturalist',workflow:'untrusted.yml',state:'ready',reason:''}],{...defaults,transport:async()=>{throw new Error('must not call');}})).rejects.toThrow('Unapproved');
