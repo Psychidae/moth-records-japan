@@ -163,3 +163,4 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 - 明示承認されたnative生成のオオミズアオAIイラストを、ヘッダとファビコンへ追加した。元PNGと再現用promptはdocs/branding、公開用の小さい4PNGだけをpublic/assetsへ保存した。
 - 全5コマンド成功、19 files/134 tests。公開assetのSHA/寸法/RGBA/容量/完全被覆を検査し、不明ファイル・symlink・改変画像を拒否する。実ローカルHTTPで4PNGが200 image/png、配信外masterのURLは404を確認した。
 - 写真・記録・種同定の根拠には混ぜず、aboutにAI生成イラストと記載した。CSPと未解決の公開機能フラグは変更していない。
+- 親の実ブラウザでdesktop/320pxのアイコン・題名・検索欄を確認し、独立のread-only guard reviewも問題なし。競合を通常mergeで解消したhead ba7efcbのCI42142143622成功後に完了チェックを記録した。
