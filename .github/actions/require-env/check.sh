@@ -45,5 +45,6 @@ if [ "${#missing[@]}" -eq 1 ]; then
   echo '設定確認: 必要な項目が揃っています。' >> "$GITHUB_STEP_SUMMARY"
 else
   printf 'ready=false\nmissing=%s\n' "$joined" >> "$GITHUB_OUTPUT"
+  printf '待機: %s\n' "$joined"
   printf '待機: %s\n' "$joined" >> "$GITHUB_STEP_SUMMARY"
 fi

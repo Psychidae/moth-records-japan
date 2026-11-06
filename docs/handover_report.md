@@ -131,3 +131,13 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 7. 必須5コマンドと単体102件が成功。機微詳細・非公開記録・メール・UUID・辞書・CSV改ざん（hash更新込み）・島・写真・非公開文献への参照・atomic失敗・size sharding・JST月境界を検証した。CIは同梱baseline生成と全migrationの実PostgreSQL権限検証も実行する。
 
 8. 独立レビュー前の未公開2026.11.1は、新契約へ上書きせず generated/unpublished-builds/2026.11.1 へ移した。staging release1はfailed（公開前にsupersededの注記）、最終2だけがbuilding。過去版の物理削除・live切替はしていない。
+
+
+## T02aの鍵待機と再開（2026-11-06）
+
+1. PR #1の仕様を統合し、require-envを既存のiNaturalist/GBIF/公開生成jobへ適用した。未登録なら不足名だけをlog/summaryへ表示し、ready=falseで正常終了する。setup/install/実処理を飛ばす。GBIF_USERNAMEはvars、CONTACT_EMAILもvars/manifestへ揃えた。値の取得・登録は行っていない。
+2. recheck-envはmain上のstaging/production選択だけを受け付ける。Environmentも秘密もないvalidate jobで確認した後、選択Environmentの保護を受けるdispatch jobへ進む。本番承認前の鍵注入・dispatchを行わない。actions:writeはこのjobだけ。現在の3処理はstaging専用なのでproductionでは未実装として表示し、stagingへ流用しない。
+3. DB定義反映と配信workflowは未実装として記録し、起動しない。実装済みのiNaturalist→GBIF→公開生成を、設定が揃ったものだけ順に実行する。GitHub APIが返すrun IDとイベント/main/run-nameを検査し、実処理step成功まで待つ。子が待機なら完了と扱わず、失敗なら後続を止める。最新runを推測しない。
+4. 合計監視は5時間。正常な子が長時間継続している場合も親だけ時間切れになる可能性がある。この場合は表示された子runをActionsで先に確認し、同じ子を重複起動せず、未実行の処理だけを個別workflowから再開する。自動の再dispatchはしない。各処理別の監視job分割は運用時間を見て見直す。
+5. stagingのSecret名一覧が0件であることを値なしで確認した。readiness_only=trueで実iNaturalist workflowを起動し、run42134497898はsuccess。require-env成功、setup/install/実処理はskippedを実際のjob結果で確認した。診断入力は、途中で鍵が揃っても実処理を起動しない。
+6. 必須5コマンドと単体115件が成功。未登録/登録済み、値の非表示、未知名/manifest欠落、不正環境、production→staging拒否、子の失敗/待機/時間切れ、正確なrun ID照合、vars/secret整合を検証した。登録済みの再開はモック確認で、実キー登録後の外部収集/DB保存/配信・本番起動は未確認。set-secrets.shは読取のみで実行していない。

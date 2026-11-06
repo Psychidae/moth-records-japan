@@ -108,6 +108,14 @@ describe('resume planning and execution evidence',()=> {
 });
 
 describe('workflow protection and manifest alignment',()=> {
+  it('requires block or quoted YAML scalars when shell summaries contain colon-space',()=> {
+    const invalidInline=(source:string)=>[...source.matchAll(/^\s*(?:-\s*)?run:\s+(.+)$/gm)].some(match=> {
+      const command=match[1]??'';return !/^[|>"']/.test(command)&&/:\s/.test(command);
+    });
+    expect(invalidInline("      - run: echo '確認のみ: 処理なし' >> summary")).toBe(true);
+    expect(invalidInline("      - run: |\n          echo '確認のみ: 処理なし' >> summary")).toBe(false);
+    for(const file of ['sync-inat.yml','sync-gbif.yml','publish-data.yml','recheck-env.yml']) expect(invalidInline(readFileSync(`.github/workflows/${file}`,'utf8'))).toBe(false);
+  });
   it('puts secrets and action-write permission only behind the validated Environment job',()=> {
     const workflow=readFileSync('.github/workflows/recheck-env.yml','utf8');const before=workflow.split('  dispatch:')[0]??'';
     expect(before).not.toContain('secrets.');expect(before).not.toContain('actions: write');expect(before).not.toMatch(/^    environment:/m);
