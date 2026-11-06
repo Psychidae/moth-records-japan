@@ -1,0 +1,1 @@
+export const evidence = { original:{label:'原記録',symbol:'●'},citation:{label:'引用',symbol:'○'},specimen:{label:'標本',symbol:'■'},photo_rg:{label:'写真',symbol:'▲'},needs_review:{label:'要確認',symbol:'◌'},none:{label:'未記録',symbol:'—'} } as const;

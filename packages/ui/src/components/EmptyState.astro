@@ -1,0 +1,5 @@
+---
+interface Props {label?:string}
+const {label='未記録'}=Astro.props;
+---
+<p class="empty">{label}<slot/></p>

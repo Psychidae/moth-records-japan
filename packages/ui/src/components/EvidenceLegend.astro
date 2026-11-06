@@ -1,0 +1,5 @@
+---
+import EvidenceBadge from './EvidenceBadge.astro';
+import { evidence } from '../evidence.ts';
+---
+<div><ul class="evidence-legend" aria-label="証拠の凡例">{(Object.keys(evidence) as (keyof typeof evidence)[]).map(kind=><li><EvidenceBadge kind={kind}/></li>)}</ul><a class="small" href="/about/#evidence">証拠区分について</a></div>

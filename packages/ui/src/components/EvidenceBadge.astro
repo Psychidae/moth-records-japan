@@ -1,0 +1,6 @@
+---
+import { evidence } from '../evidence.ts';
+interface Props {kind:keyof typeof evidence}
+const {kind}=Astro.props;const item=evidence[kind];
+---
+<span class="evidence-badge"><span class="evidence-symbol" aria-hidden="true">{item.symbol}</span>{item.label}</span>

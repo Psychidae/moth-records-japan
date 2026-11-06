@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../../../../packages/ui/src/components/Button.astro';
+import Field from '../../../../packages/ui/src/components/Field.astro';
+import SearchBox from '../../../../packages/ui/src/components/SearchBox.astro';
+import ScientificName from '../../../../packages/ui/src/components/ScientificName.astro';
+import EvidenceBadge from '../../../../packages/ui/src/components/EvidenceBadge.astro';
+import EvidenceLegend from '../../../../packages/ui/src/components/EvidenceLegend.astro';
+import DataTable from '../../../../packages/ui/src/components/DataTable.astro';
+import Notice from '../../../../packages/ui/src/components/Notice.astro';
+import EmptyState from '../../../../packages/ui/src/components/EmptyState.astro';
+import Breadcrumbs from '../../../../packages/ui/src/components/Breadcrumbs.astro';
+import Pagination from '../../../../packages/ui/src/components/Pagination.astro';
+import CopyButton from '../../../../packages/ui/src/components/CopyButton.astro';
+import PhotoCredit from '../../../../packages/ui/src/components/PhotoCredit.astro';
+---
+<Layout title="部品見本" noindex><article class="prose"><h1>部品見本</h1>
+<section class="component-example"><h2>ボタン</h2><div class="actions"><Button href="/search/">名称検索</Button><Button secondary>操作</Button></div></section>
+<section class="component-example"><h2>入力</h2><Field id="example-name" label="名称" required/><Field id="example-error" label="年" error="年を4桁で入力してください。" value="20"/><SearchBox id="example-search" prominent/></section>
+<section class="component-example"><h2>学名と証拠区分</h2><p><ScientificName name="Actias aliena" authorship="(Butler, 1879)"/></p><p><EvidenceBadge kind="original"/></p><EvidenceLegend/></section>
+<section class="component-example"><h2>表</h2><DataTable caption="記録の表示例" headers={['地域','区分']} rows={[["東京都","原記録"],["長野県","引用"]]}/></section>
+<section class="component-example"><h2>状態と案内</h2><Notice title="お知らせ"><p>表示例です。</p></Notice><EmptyState/><Breadcrumbs items={[{label:'分類群',href:'/species/'},{label:'オオミズアオ'}]}/><Pagination page={1} pages={2} next="/styleguide/?page=2"/></section>
+<section class="component-example"><h2>引用と写真クレジット</h2><p id="example-citation">日本産蛾類分布記録データベース（表示例）</p><CopyButton target="example-citation"/><figure><PhotoCredit photographer="撮影者名（表示例）" license="権利条件（表示例）"/></figure></section>
+</article></Layout>

@@ -1,0 +1,5 @@
+---
+interface Props {page:number;pages:number;previous?:string;next?:string}
+const {page,pages,previous,next}=Astro.props;
+---
+<nav class="pagination" aria-label="ページ">{previous && <a class="button secondary" rel="prev" href={previous}>前へ</a>}<span>{page} / {pages}ページ</span>{next && <a class="button secondary" rel="next" href={next}>次へ</a>}</nav>

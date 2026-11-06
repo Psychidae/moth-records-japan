@@ -1,0 +1,5 @@
+---
+interface Props {photographer:string;license:string;href?:string}
+const {photographer,license,href}=Astro.props;
+---
+<figcaption class="photo-credit">{href ? <a href={href} rel="noopener noreferrer">{photographer}</a> : photographer} · {license}</figcaption>

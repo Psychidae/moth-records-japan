@@ -1,0 +1,5 @@
+---
+interface Props {name:string; authorship?:string|null; italic?:boolean}
+const {name,authorship,italic=true}=Astro.props;
+---
+<span class="scientific-name">{italic ? <i>{name}</i> : <span>{name}</span>}{authorship && <span class="authorship"> {authorship}</span>}</span>

@@ -1,0 +1,10 @@
+@charset "UTF-8";
+:root {
+ --color-paper:#FFFFFF; --color-surface:#FFFFFF; --color-raised:#F4F4F2;
+ --color-ink:#232021; --color-muted:#595959; --color-line:#D9D8D6;
+ --color-control:#7F7F7B; --color-accent:#314465; --color-accent-hover:#232F48;
+ --color-on-accent:#FFFFFF; --color-focus:#314465; --color-warn:#8A4B08; --color-danger:#9B2C22;
+ --font-body:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
+ --font-heading:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+ --font-scientific:"Times New Roman",Times,"Liberation Serif",Tinos,serif;
+}

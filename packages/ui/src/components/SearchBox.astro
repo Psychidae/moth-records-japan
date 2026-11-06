@@ -1,0 +1,5 @@
+---
+interface Props {id:string; namesUrl?:string; label?:string; prominent?:boolean}
+const {id,namesUrl,label='学名・和名・別名',prominent=false}=Astro.props;
+---
+<form class:list={[prominent ? 'catalog-search' : 'header-search']} action="/search/" role="search" data-names-url={namesUrl}><label class:list={[{'visually-hidden':!prominent}]} for={id}>{label}</label><div class="search-controls"><input id={id} name="q" type="search" placeholder="学名・和名・別名" maxlength="160"/><button type="submit">検索</button></div></form>

@@ -156,3 +156,7 @@ Zod4の既定JITは厳格CSP下で動的実行の可否probeを試み得る。�
 オーナーがCodex内の実生成を明示承認したオオミズアオActias alienaのAIイラストを、独立したB01変更として採用する。ヘッダは96/192px、faviconは32/64pxのPNGを同一originから配信する。SVGや他サイトの写真は使用しない。原本1254pxと生成・余白調整プロンプトはdocs/brandingへ保持し、公開distへ含めない。標本/観察写真や分布記録の証拠としては扱わない。
 
 公開rootはdata/_headers/robots.txt/assetsだけを許可する。assetsは上記4ファイルの完全一致に限定し、PNG signature・8bit RGBA・寸法・小さい容量上限・固定SHA-256を検査する。不明なroot/asset項目、symlink、PNG payloadの変更を拒否する。CSPは変更しない。
+
+## 2026-11-06 Mac mini / 最新デザイン指示
+
+Airから未コミット変更とT13退避内容を保全して復元。PR #24の白背景・寒色・Times New Roman・Webフォント非配信の指示をT12aで優先する。承認済みPNGを保持し、Source Serif 4依存を削除する。旧暖色・緑・ダークモードの規定を適用しない。写真はリポジトリ外で保全し、B02のローカル試行だけに使用する。
