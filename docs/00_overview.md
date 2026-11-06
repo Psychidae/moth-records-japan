@@ -69,6 +69,7 @@
 | G9 | NDLサーチへ継続利用の連絡、CiNii の appid 取得 | L01 |
 | G10 | 写真投稿の権利申告と利用規約の文面確認 | `photo_uploads_open` の有効化 |
 | G11 | iNaturalist のアプリ所有者の申請と承認、利用規約の確認 | `inat_cross_post` の有効化 |
+| G12 | staging の実物でデザインと使いやすさを確認 | T21 の公開前 |
 
 G3 が未完了でも進められるよう、地図はまずタイルマップ（47都道府県を正方形で並べた図）で実装する。
 
@@ -88,6 +89,7 @@ G3 が未完了でも進められるよう、地図はまずタイルマップ�
 | `10_automation.md` | 人の工程を減らす自動化規則 |
 | `11_accounts_and_keys.md` | 事前に必要な登録と鍵 |
 | `12_photos.md` | 写真の投稿、種の移動、iNaturalist 連携 |
+| `13_design.md` | デザインと使いやすさ |
 | `environment.md` | 環境の公開接続値 |
 | `../seed/*.csv` | 検証済みの初期データ |
 | `../tests/schema_smoke.mjs` | 権限モデルの検証テスト |
