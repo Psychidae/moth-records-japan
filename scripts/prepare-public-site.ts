@@ -17,7 +17,7 @@ if(!hasRelease) {
   writeFileSync(join(root,'_development-origin.json'),JSON.stringify({version:latestVersion(root),kind:'offline-seed'})+'\n');
 }
 const release=loadPublicRelease(root);
-if(release.origin==='offline-seed' && process.env.MOTH_PUBLIC_BOOTSTRAP!=='1') throw new Error('Offline seed is for explicit development/check builds only');
+if(release.hasDevelopmentArtifact && (releaseBuild || process.env.MOTH_PUBLIC_BOOTSTRAP!=='1')) throw new Error('Offline seed is for explicit development/check builds only; move development versions outside public before release');
 mkdirSync(publicDirectory,{recursive:true});
 writeFileSync(join(publicDirectory,'_headers'),cloudflareHeaders);
 console.log(`公開サイト入力: ${release.version} / ${release.origin}（配信は未実行）`);

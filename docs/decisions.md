@@ -140,3 +140,7 @@ Cloudflare Static Assets用_headersは単一の/*規則へ5指定ヘッダと補
 pnpm 12では旧onlyBuiltDependencies/ignoredBuiltDependenciesは廃止されていた。公式[設定資料](https://github.com/pnpm/pnpm/blob/main/pnpm/docs/settings/build.md)に従いallowBuildsでesbuild/workerdを明示falseにする。postinstallは実行せず、配布済みplatform binaryでbuild/previewを検証する。minimumReleaseAge=10080とignore-scripts=trueを維持する。
 
 一次資料: [AstroのCSS設定](https://docs.astro.build/en/reference/configuration-reference/#buildinlinestylesheets)、[client scripts](https://docs.astro.build/en/guides/client-side-scripts/)、[Static Assets headers](https://developers.cloudflare.com/workers/static-assets/headers/)、[Web Analytics CSP](https://developers.cloudflare.com/web-analytics/faq/#what-do-i-need-to-add-to-my-content-security-policy)。
+
+T11のデザインはオーナーの追加指示（2026-11-06）に従い、英語主タイトルJapanese Moth Distribution Records Database／日本語副題「日本産蛾類分布記録データベース」に変更した。いずれもconfigで差し替え可能とし、ドメイン・問い合わせ先は未設定のまま。提供パレットのcharcoal #232021 / light gray #D9D8D6 / navy #314465を基調とし、目録型の配置へ変更した。旧SVGと大見出しの宣伝文・反復する不在説明は削除し、未取得・未登録はデータ欄の簡潔な状態表示にした。PNGアイコンはオーナーが選んだ方法の承認後に追加し、それまではテキストだけのヘッダとする。
+
+公開inputは選択した最新版だけでなく配信対象の全版を検査する。manifest未被覆ファイル、不明root項目、重複、symlinkを拒否する。開発seedが旧版に残っていても通常/release buildを停止し、public外へ移すよう案内する。現成果物に混入はなく、独立レビューで指摘された経路を回帰テストで閉じた。

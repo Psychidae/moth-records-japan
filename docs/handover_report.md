@@ -144,7 +144,7 @@ T06は実装・検証を進めたが、完了チェックを入れていない�
 
 ## T11 公開サイトの骨格（2026-11-06）
 
-- Astro静的サイトの共通レイアウトとトップ・about/data/changes/privacy/terms、次の検索工程の入口を実装した。サイト名は仮称、問い合わせ先は未設定のまま。本文は日本語で、公開文献・記録0件と外部集計未取得を明示している。
+- Astro静的サイトの共通レイアウトとトップ・about/data/changes/privacy/terms、次の検索工程の入口を実装した。タイトルはオーナー指定の英語主題・日本語副題とし、問い合わせ先は未設定のまま。日本語の本文とデータ欄で公開文献・記録0件、外部集計未取得を表示する。
 - 実stagingの公開用成果物2026.11.2を使用。apps/publicはDBへ接続せず、Supabase依存もない。提供ファイルの全SHA-256をbuild前に再照合する。機微判定の元データは公開buildへ取り込まない。
 - 全7ページと公開manifestのローカル実HTTP応答で200と5指定ヘッダ・補助X-Frame-Optionsを確認した。Wrangler Static Assetsが_headersを処理している。全生成HTMLのinline script/style/style属性なしをbuildの必須検査にした。
 - 通常・release buildは公開成果物の欠落や開発seedの代用を拒否する。明示CI/dev opt-inだけT10のoffline generatorを再利用し、起源を画面に示す。ci_onlyメタデータは鍵setter・再開・require-env対象から除外する。鍵スクリプト・本番接続・新hosting登録・配信は実行していない。

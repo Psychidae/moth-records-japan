@@ -1,12 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { loadPublicRelease } from '../lib/data.ts';
-const {national,version,origin}=loadPublicRelease();
+import { formatJapanTime } from '../lib/date.ts';
+const {national,version,origin,manifest}=loadPublicRelease();
 ---
-<Layout title="蛾の名前から、記録の根拠へ">
-  <section class="hero"><p class="eyebrow">名前と地域を、根拠でつなぐ</p><h1>蛾の名前から、<br/>記録の根拠へ。</h1><p class="lead">日本産蛾類の分類をたどり、文献・標本・写真の記録を、それぞれの根拠とともに確かめるためのデータベースです。</p><div class="actions"><a class="button" href="/search/">名前でさがす</a><a class="button secondary" href="/about/#evidence">記録の見方を知る</a></div></section>
-  <div class="stats" aria-label="収録状況"><div class="stat"><strong>{national.counts.species.toLocaleString('ja-JP')}</strong><span>List-MJ掲載種数</span></div><div class="stat"><strong>{national.counts.records}</strong><span>公開文献記録</span></div><div class="stat"><strong>{national.counts.references}</strong><span>公開文献</span></div><div class="stat"><strong>47</strong><span>都道府県（地域区分は{national.counts.regions}）</span></div></div>
-  <p class="notice">現在は分類・地域の基盤を整備しています。文献記録は未登録、iNaturalist・GBIFの全国集計は未取得です。空欄や0件は、生物学的な不在を示しません。</p>
-  {origin==='offline-seed' && <p class="notice">同梱分類・地域データを使った開発確認用の表示です。審査済みの実DBの公開版ではありません。</p>}
-  <div class="card-grid"><section class="card"><h2>証拠を分けて見る</h2><p>文献の原記録と引用、標本、写真を区別します。疑わしい記録も注記とともに扱います。</p><a href="/about/#evidence">証拠区分について</a></section><section class="card"><h2>出典から確かめる</h2><p>分類の基盤はList-MJ。公開データには版番号を付け、引用と再利用の条件を明示します。</p><a href="/data/">データ版 {version} と利用条件</a></section><section class="card"><h2>最近追加された文献</h2><p class="empty">公開文献はまだ登録されていません。</p></section><section class="card"><h2>最近の学名変更</h2><p class="empty">公開可能な変更履歴はまだ登録されていません。</p><a href="/changes/">更新履歴を見る</a></section></div>
+<Layout title="分布記録を調べる">
+  <div class="catalog-heading"><h1>分布記録を調べる</h1><p class="small">データ版 {version} · <time datetime={manifest.generatedAt}>{formatJapanTime(manifest.generatedAt)}</time></p></div>
+  <div class="stats" aria-label="収録状況"><div class="stat"><strong>{national.counts.species.toLocaleString('ja-JP')}</strong><span>List-MJ掲載種数</span></div><div class="stat"><strong>{national.counts.records.toLocaleString('ja-JP')}</strong><span>公開文献記録</span></div><div class="stat"><strong>{national.counts.references.toLocaleString('ja-JP')}</strong><span>公開文献</span></div><div class="stat"><strong>47</strong><span>都道府県</span></div></div>
+  <div class="catalog-layout"><div>
+    <section class="catalog-block"><h2>検索と目録</h2><ul class="catalog-links"><li><a href="/search/">名称検索</a><small>学名・和名・別名から分類群を検索</small></li><li><a href="/about/#regions">地域区分</a><small>47都道府県・主要90島・南千島</small></li><li><a href="/data/">公開データ</a><small>版番号・出典・ライセンス・ファイル一覧</small></li></ul></section>
+    <section class="catalog-block"><h2>最近追加された文献</h2><p class="small">{national.counts.references===0 ? '未登録' : `公開文献 ${national.counts.references.toLocaleString('ja-JP')}件`}</p></section>
+    <section class="catalog-block"><h2>学名の変更履歴</h2><p class="small">公開履歴は未登録</p><a href="/changes/">更新履歴</a></section>
+  </div><aside><section class="card catalog-block"><h2>データの状態</h2><dl class="release-status"><dt>分類群</dt><dd>{national.counts.taxa.toLocaleString('ja-JP')}</dd><dt>地域区分</dt><dd>{national.counts.regions}</dd><dt>文献記録</dt><dd>{national.counts.records===0 ? '未登録' : `${national.counts.records.toLocaleString('ja-JP')}件`}</dd><dt>iNaturalist全国集計</dt><dd>{national.external.inaturalist.status==='uncollected' ? '未取得' : '取得済み'}</dd><dt>GBIF全国集計</dt><dd>{national.external.gbif.status==='uncollected' ? '未取得' : '取得済み'}</dd></dl>{origin==='offline-seed' && <p class="small">開発確認用: 同梱分類・地域データ。実DBの審査・機微設定は含みません。</p>}</section><section class="card"><h2>凡例・出典</h2><p class="small">文献・標本・写真を区別して表示します。</p><a href="/about/#evidence">証拠区分</a><br/><a href="/about/">List-MJと収録範囲</a></section></aside></div>
 </Layout>

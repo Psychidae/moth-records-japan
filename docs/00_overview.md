@@ -43,8 +43,9 @@
 
 | 設定 | 既定値 |
 |---|---|
-| `SITE_NAME` | `日本産蛾類記録データベース（仮称）` |
-| `SITE_NAME_EN` | `Moth Records of Japan (tentative)` |
+| `SITE_NAME` | `Japanese Moth Distribution Records Database` |
+| `SITE_NAME_EN` | `Japanese Moth Distribution Records Database` |
+| `nameJa`（config） | `日本産蛾類分布記録データベース` |
 | `PUBLIC_DOMAIN` | 未定。開発中は `*.workers.dev` |
 | `SUBMIT_DOMAIN` | `submit.` + 独自ドメイン |
 | `ADMIN_DOMAIN` | `admin.` + 独自ドメイン |
