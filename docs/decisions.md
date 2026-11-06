@@ -117,3 +117,14 @@ service_role専用の単一SQL projectionを読み、許可した列だけから
 全JSONの生構造・辞書と展開後CSVを再検査し、UUID（GBIF dataset UUIDも含む）、メール、非公開記録、機微詳細を拒否する。CSVの式に見える文字列はアポストロフィで中和し、原文はprivateに保持する。8MiBを超える記録は地域→科、属→種の順に分割し、それでも大きければ番号付きshardへ分ける。全ファイル18,000以下・各JSON/展開CSV8MiB以下を検査する。
 
 一時出力の全検査後に新しい版ディレクトリへatomic renameし、既存の版は上書きしない。版の年月はAsia/Tokyo。releasesのbuildingは生成済みを示すだけで配信・本番反映を意味しない。公開データはGit管理外の生成物で、同梱seedからの再生成は実DBの審査・機微設定を含まない開発用baselineと明示する。
+
+
+## 2026-11-06 T02a: 鍵の待機と安全な再開
+
+require-envはcheckout後の最初の確認に置き、manifestに登録されたGitHub用の設定名だけを調べる。未登録はready=falseと不足名だけをsummaryへ出して正常終了し、installと実処理を飛ばす。未知名・重複・不正なmanifestは設定ミスとして拒否する。値はstdout/output/summaryへ書かない。GBIF_USERNAMEはvariable、CONTACT_EMAILもvariableとしてmetadataに追加し、取得・登録は行わない。GitHub組込tokenやready等の内部出力は利用者が登録する設定ではない。
+
+recheckはmain・staging/productionだけを許可する事前jobを置く。このjobにはEnvironmentも秘密情報も付けない。検証後のdispatch jobだけが選択Environmentの保護を受け、actions:writeを持つ。[GitHubのEnvironment仕様](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)に従い、本番承認前に鍵を注入・処理を開始しない。現在の取込3本はstaging専用なので、productionからは呼ばず未実装と表示する。DB定義反映・配信workflowも未実装として記録し、存在しない処理を起動済みと扱わない。
+
+[GITHUB_TOKENによるworkflow_dispatch](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)と[REST API 2026-03-10](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event)を確認した。APIの返すworkflow_run_idを追い、main・dispatchイベント・照合用run-nameも検査する。最新runの先頭を推測して使わない。子の実処理stepがskippedなら待機、失敗なら後続停止とし、単なるsuccess終了を実処理完了と誤認しない。
+
+監視は合計5時間で停止する。各子の上限360分より短く、初回収集や合計時間によって後続へ進めない可能性がある。この場合は子が継続中かもしれないことを明記し、重複起動せず該当runを確認する。長時間処理ごとの独立した監視jobへの分割は、運用時間が分かった段階で見直す。readiness_onlyは設定確認だけの診断用入力で、鍵が後から揃っても実処理を開始しない。

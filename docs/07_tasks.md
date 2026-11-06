@@ -8,7 +8,7 @@
   - 受け入れ: `pnpm install --frozen-lockfile`, `lint`, `typecheck`, `test`, `build` が成功する。
 - [x] **T02 CI と保護**: `ci.yml`、SHA固定、最小権限、Dependabot、`docs/decisions.md`、`docs/questions.md`。リポジトリの保護は `scripts/setup-github.sh` で設定済み。`ci.yml` の完成後、必須ステータスチェックの追加手順を `docs/handover_report.md` に書く。
   - 受け入れ: `pull_request_target` がない。全 `uses:` が40桁SHAである。
-- [ ] **T02a 鍵の待機と再開**: `.github/actions/require-env` と `recheck-env.yml` を作る。`01_architecture.md` の「鍵が未登録のときの動作」に従う。既存の `sync-inat.yml`, `sync-gbif.yml` にも適用する。`docs/handover_report.md` の「PR #1 は未統合」の記述を更新する。
+- [x] **T02a 鍵の待機と再開**: `.github/actions/require-env` と `recheck-env.yml` を作る。`01_architecture.md` の「鍵が未登録のときの動作」に従う。既存の `sync-inat.yml`, `sync-gbif.yml` にも適用する。`docs/handover_report.md` の「PR #1 は未統合」の記述を更新する。
   - 受け入れ: 鍵が未登録でも CI が失敗しない。鍵を登録して `recheck-env.yml` を実行すると、待機していた処理が動く。
 - [x] **T03 DBスキーマ**: `docs/02_schema.sql` を `supabase/migrations/0001_init.sql` へ移す。`seed/feature_flags.csv` と `seed/external_resources.csv` を投入。
   - 受け入れ: 空のDBで適用できる。

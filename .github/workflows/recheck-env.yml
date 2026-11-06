@@ -1,0 +1,78 @@
+name: Recheck environment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 再開する環境
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+permissions:
+  contents: read
+concurrency:
+  group: recheck-${{ inputs.environment }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      environment: ${{ steps.validate.outputs.environment }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - id: validate
+        run: bash scripts/validate-recheck.sh
+        env:
+          REQUESTED_ENVIRONMENT: ${{ inputs.environment }}
+  dispatch:
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    # Environment protection releases secrets only after its required approval.
+    environment: ${{ needs.validate.outputs.environment }}
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - id: inat
+        uses: ./.github/actions/require-env
+        with:
+          required: SUPABASE_SERVICE_ROLE_KEY CONTACT_EMAIL
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+      - id: gbif
+        uses: ./.github/actions/require-env
+        with:
+          required: SUPABASE_SERVICE_ROLE_KEY GBIF_USERNAME GBIF_PASSWORD
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GBIF_USERNAME: ${{ vars.GBIF_USERNAME }}
+          GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
+      - id: public_data
+        uses: ./.github/actions/require-env
+        with:
+          required: SUPABASE_SERVICE_ROLE_KEY
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1
+        with:
+          version: 12.16.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node --experimental-strip-types scripts/recheck-environment.ts
+        env:
+          RECHECK_ENVIRONMENT: ${{ needs.validate.outputs.environment }}
+          READY_INAT: ${{ steps.inat.outputs.ready }}
+          READY_GBIF: ${{ steps.gbif.outputs.ready }}
+          READY_PUBLIC_DATA: ${{ steps.public_data.outputs.ready }}
+          GH_TOKEN: ${{ github.token }}

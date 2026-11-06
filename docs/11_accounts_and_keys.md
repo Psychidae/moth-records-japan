@@ -74,7 +74,7 @@ age-keygen -o moth-backup.key
 
 ## 鍵の自動発行
 
-24件のうち15件は `scripts/bootstrap-keys.sh` が発行して格納する。値は画面に出ない。
+CONTACT_EMAILを含む25件の設定のうち15件は `scripts/bootstrap-keys.sh` が発行して格納する。値は画面に出ない。
 
 **先に済ませること**
 
@@ -112,7 +112,7 @@ Cloudflare の発行用トークンは、成功すると最後に自動で失効
 
 **実行後に必ず行うこと**: `~/moth-backup.key` をパスワードマネージャへ保管し、確認後にファイルを削除する。失うとバックアップを復元できない。
 
-自動発行できない残りの9件は、次の「鍵の入れ方」で入れる。
+自動発行できない残りの10件は、次の「鍵の入れ方」で入れる。CONTACT_EMAILはiNaturalist APIの問い合わせ先で、GitHub Environmentのvariableへ登録する。
 
 Turnstile は配信先が未定だと保留になる。独自ドメインを決めたら、Cloudflare の画面でウィジェットへホスト名を追加する。
 
