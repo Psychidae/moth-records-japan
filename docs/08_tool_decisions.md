@@ -17,7 +17,7 @@
 | 公開サイト生成 | Astro | `output: 'static'` のみ。Cloudflare 専用アダプタは使わない | 15,628ページを5.5秒で生成（簡略な雛形、手元のMac） | 実測 | 出力はHTML。生成ツールだけ差し替え可能 |
 | 投稿、管理画面 | Vite + React | 静的SPAとして配信 | なし | - | 標準的なReact |
 | データベース | Supabase（PostgreSQL） | migration でスキーマ管理。全テーブルRLS | Pro $25/月〜、8GB、MAU 10万、日次バックアップ7日 | 公式 | `pg_dump` で標準PostgreSQLへ移行 |
-| 認証 | Supabase Auth | マジックリンク、TOTP | Free MAU 5万、Pro 10万 | 公式 | 利用者を移行。再ログインが必要 |
+| 認証 | Supabase Auth | Google、マジックリンク、TOTP | Free MAU 5万、Pro 10万 | 公式 | 利用者を移行。再ログインが必要 |
 | サーバー処理 | Supabase Edge Functions | DOI取得、提案受付、AI下処理 | Pro 200万回/月、CPU 2秒、メモリ256MB、待機150秒 | 公式 | 通常のTypeScriptとして他の実行環境へ移す |
 | 定期処理 | GitHub Actions | 取込、生成、バックアップ、見守り | 公開リポジトリの標準ランナーは無料 | 公式 | 別のCIへ移せる。処理本体は `pipelines/` にある |
 | メール | Resend | Auth のSMTP、通知 | Free 100通/日、3,000通/月。Pro $20/月 | 公式 | SMTPなので設定変更で移行 |
@@ -69,7 +69,8 @@ JSC の実測（132,584件で展開後約24MB、転送約2.2MB）から換算し
 | 段階 | 主な費用 | 月額の目安 |
 |---|---|---|
 | P0〜P1 閲覧のみ | ドメイン | ほぼ0ドル |
-| P2 投稿開始 | Supabase Pro | 25ドル〜 |
+| P2 投稿開始 | 無料枠とドメイン。`15_community.md` の段階B | 約0.9ドル |
+| 本格運用 | Supabase Pro。予定なし。必要なら運営費の支援から支払う | 25ドル〜 |
 | P3 AI開始 | 上に加えてAI | 30〜45ドル |
 | 成長時 | Workers Paid 5ドル、Resend Pro 20ドルを必要時に追加 | 55〜70ドル |
 | スキャン追加分 | 300GB で R2 約4.5ドル、複製の超過 約4.3ドル | 約9ドル加算 |

@@ -45,7 +45,7 @@ Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
 
 投稿、管理サイトは `connect-src` に Supabase のURLと Turnstile を追加する。インラインスクリプトは使わない。
 
-写真のため、公開サイトの `img-src` と `connect-src` に `files.<domain>` を追加する。投稿サイトは `connect-src` と `img-src` に R2 の署名URLのホストを追加し、`connect-src` に `https://www.inaturalist.org` と `https://api.inaturalist.org` を追加する。管理サイトには iNaturalist への接続を追加しない。
+写真のため、公開サイトの `img-src` と `connect-src` に `files.<domain>` を追加する。読み取りAPIのため、公開サイトの `connect-src` に API のホストを追加する。投稿サイトは `connect-src` と `img-src` に R2 の署名URLのホストを追加し、`connect-src` に `https://www.inaturalist.org` と `https://api.inaturalist.org` を追加する。管理サイトには iNaturalist への接続を追加しない。
 
 ### データベース
 
@@ -77,8 +77,9 @@ minimumReleaseAge: 10080
 
 - Supabase Auth のメール確認を有効にする
 - Turnstile を Auth の CAPTCHA として設定する
-- 編集者以上は TOTP のMFAを登録するまで管理サイトを使えない。判定はJWTの `aal` クレームで行う
-- 管理サイトは Cloudflare Access の許可リストで保護する
+- キュレーター以上は TOTP のMFAを登録するまで `/curate` と管理サイトを使えない。判定はJWTの `aal` クレームで行う
+- 管理サイトは Cloudflare Access の許可リストで保護する。キュレーターの `/curate` は許可リストの対象外とする
+- コメントと大会の文字は HTML として解釈しない
 
 ## バックアップ
 

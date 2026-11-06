@@ -4,6 +4,8 @@
 
 テーブルと権限は `docs/12_photos_schema.sql`、検証は `tests/photos_schema_smoke.mjs` に定義する。
 
+公開までの流れ、`review_state`、`visibility`、読み取りAPI、画像の大きさ、控えの保管先は `15_community.md` を優先する。
+
 ## 基本の考え方
 
 1. 写真に種を直接持たせない。同定の履歴を持ち、移動は履歴の追加とする
