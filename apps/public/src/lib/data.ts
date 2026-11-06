@@ -15,9 +15,10 @@ export function latestVersion(root = dataRoot): string {
   if (!selected) throw new Error('Verified public artifact required. Offline development only: MOTH_PUBLIC_BOOTSTRAP=1 pnpm build');
   return selected;
 }
-export function readPublicJson(path: string, version = latestVersion(), root = dataRoot): unknown {
+export function readPublicJson(path: string, version: string|undefined = undefined, root = dataRoot): unknown {
   if (!/^[a-zA-Z0-9_./-]+$/.test(path) || path.split('/').includes('..') || path.startsWith('/')) throw new Error('Invalid public data path');
-  return JSON.parse(readFileSync(join(root,version,path),'utf8')) as unknown;
+  const selected=z.string().regex(/^\d{4}\.\d{2}\.\d+$/).parse(version ?? latestVersion(root));
+  return JSON.parse(readFileSync(join(root,selected,path),'utf8')) as unknown;
 }
 export function loadPublicRelease(root = dataRoot) {
   const version=latestVersion(root);
