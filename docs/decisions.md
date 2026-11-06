@@ -150,3 +150,9 @@ T11のデザインはオーナーの追加指示（2026-11-06）に従い、英�
 全ページの検索focusまたは検索操作後にだけnames.jsonを読み、Zodでwire形式と各名称行を検証してから正規化indexを作る。NFKC・ひらがな→カタカナ・英字大小・空白を正規化し、複数コードの同学名を保持する。名称の種類を推測せずother_namesを別名/異名候補として扱い、該当時は採用中のscientific_nameへ案内する。検索語/ページはURLへ保存し、描画はtextContentとDOM作成だけで行う。
 
 Zod4の既定JITは厳格CSP下で動的実行の可否probeを試み得る。公開DTO moduleでschema構築前にjitless=trueへ固定し、Function constructorを使用不能にした別Node processでもschema作成・読込・検索が成功する回帰テストを加えた。CSPへunsafe-eval等は追加しない。依存は追加していない。
+
+## 2026-11-06 B01: 承認済み透過PNGのブランドアイコン
+
+オーナーがCodex内の実生成を明示承認したオオミズアオActias alienaのAIイラストを、独立したB01変更として採用する。ヘッダは96/192px、faviconは32/64pxのPNGを同一originから配信する。SVGや他サイトの写真は使用しない。原本1254pxと生成・余白調整プロンプトはdocs/brandingへ保持し、公開distへ含めない。標本/観察写真や分布記録の証拠としては扱わない。
+
+公開rootはdata/_headers/robots.txt/assetsだけを許可する。assetsは上記4ファイルの完全一致に限定し、PNG signature・8bit RGBA・寸法・小さい容量上限・固定SHA-256を検査する。不明なroot/asset項目、symlink、PNG payloadの変更を拒否する。CSPは変更しない。
