@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {mkdtemp, writeFile, symlink, rm, readFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {randomUUID} from 'node:crypto';
+import {mkdir, mkdtemp, writeFile, symlink, rm, readFile, stat} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {childEnvironment, freshSignature, imageId, jpegFacts, readBounded, sha256, sizes, syntheticJpeg, validateContainer, validateOutputs} from './contract.ts';
@@ -13,6 +15,20 @@ test('deterministic original synthetic fixture has bounded pixels and explicit i
   assert.deepEqual(jpegFacts(bytes, false), {width: 2400, height: 1600, metadata: [225, 254]});
   assert.throws(() => jpegFacts(bytes, true), /Metadata/);
   assert.equal(bytes.includes(Buffer.from('EICAR')), false);
+});
+test('actual fixture CLI remains readable by the isolated UID under umask 077', async () => {
+  const root = '/tmp/moth-photo-job-' + randomUUID().replaceAll('-', '');
+  await mkdir(root, {mode: 0o700});
+  try {
+    const stdout = execFileSync('/bin/sh', ['-c', 'umask 077; exec "$@"', 'fixture-test', process.execPath, '--experimental-strip-types', 'scripts/photo-runtime-acceptance/fixture.ts', root], {encoding: 'utf8', timeout: 10000});
+    const source = syntheticJpeg();
+    assert.equal(stdout, `${sha256(source)} ${source.length}\n`);
+    assert.equal((await stat(root)).mode & 0o777, 0o700, 'Host job directory stays private');
+    assert.equal((await stat(root + '/input.jpg')).mode & 0o777, 0o444, 'Fixed UID can read, nobody can write');
+    assert.deepEqual(await readFile(root + '/input.jpg'), source);
+    assert.throws(() => execFileSync('/bin/sh', ['-c', 'umask 077; exec "$@"', 'fixture-test', process.execPath, '--experimental-strip-types', 'scripts/photo-runtime-acceptance/fixture.ts', root], {encoding: 'utf8', timeout: 10000, stdio: 'pipe'}));
+    assert.deepEqual(await readFile(root + '/input.jpg'), source, 'Existing input is never replaced');
+  } finally {await rm(root, {recursive: true, force: true});}
 });
 test('acceptance local identity rejects tags, repositories, short digests and shell input', () => {
   assert.equal(imageId(`sha256:${'a'.repeat(64)}`), `sha256:${'a'.repeat(64)}`);
