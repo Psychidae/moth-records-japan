@@ -61,7 +61,7 @@ jobs:
           required: SUPABASE_SERVICE_ROLE_KEY
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      - uses: pnpm/action-setup@9fd676a19091d4595eefd76e4bd31c97133911f1
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
         with:
           version: 12.16.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
