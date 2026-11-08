@@ -39,6 +39,9 @@ harmless ClamAV EICAR self-test. It uses the same namespace restrictions.
 
 The source and root filesystem are read-only, UID/GID are 65532, all Linux
 capabilities are dropped, no-new-privileges is set, and only loopback is present.
+The daemon must report its builtin seccomp profile; the live probe must have
+Seccomp mode 2. Actual scratch permissions are checked as root-owned 1777 and
+the empty output directory as UID/GID 65532-owned 0700, without symlinks.
 Memory is 1 GiB, CPU is 1, PIDs are 64, scratch tmpfs is 256 MiB and output tmpfs
 is 64 MiB. The existing memory limit is deliberately not relaxed; an AV database
 that exceeds it must fail acceptance. Docker configuration, exit status and OOM

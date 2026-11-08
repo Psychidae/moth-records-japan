@@ -32,8 +32,8 @@ the public trust bundle before APT connects. No private certificate or key is us
 
 `inventory.mjs` additionally records every installed builder package/version/arch
 and every downloaded archive hash. The base digest covers inherited packages.
-`runtime-files.json` records every shipped regular file's content hash and every
-symlink target (excluding itself and provenance). It includes installed npm files,
+`runtime-files.json` records every shipped regular file's content hash, directory
+and symlink target (excluding itself and provenance), with mode/UID/GID. It includes installed npm files,
 copied shared libraries/modules, executables, licenses and source. This is an exact
 build inventory, not a claim of an independently audited SPDX/CycloneDX SBOM.
 
@@ -106,6 +106,13 @@ later. The temporary local image tag is never a production trust anchor.
   `PHOTO_CHILD_ENVIRONMENT`; Docker may additionally provide `HOSTNAME`.
 - UID/GID `65532:65532`, working directory `/work`; exactly the existing CLI/source
   and Zod. Runtime executables: Node, clamscan, vipsthumbnail, sigtool.
+- The assembled image explicitly sets `/tmp` to root-owned mode `01777`; other
+  directories are `0755`, data/source are `0444` and executables `0555`. `mkdir`
+  alone does not preserve `01777` under umask `0022`. The final build audit checks
+  ownership/modes and executes all four binaries and source import as UID/GID
+  `65532`. It also proves `/tmp/work` create/write/read/remove succeeds and
+  immutable paths reject writes. Host input/output mount permissions still need
+  independent acceptance; the production sandbox flags are unchanged.
 - Debian shared libraries and loadable modules needed by the installed decoders,
   ELF loader, public timezone/OS data and package copyright notices are retained.
   No shell, Python executable, npm, apt, compiler, freshclam updater, network client
@@ -127,8 +134,19 @@ weaken them. Full official ClamAV database memory use needs real-run verificatio
 ## Verification status
 
 Verified locally: official base manifest/config, snapshot package metadata and
-principal archive pins; JavaScript/Bash syntax and scoped static checks. No Docker
-build, FreshClam download, ClamAV scan, libvips processing or production executor
-run has yet occurred when this recipe was written. CI evidence, once available,
-must report its exact image/source/signature identities, isolation facts, AV
+principal archive pins; JavaScript/Bash syntax and scoped static checks. The
+permission regression test can be run with:
+
+```sh
+node --test pipelines/process-photo/container/permissions.test.mjs
+```
+
+Initial GitHub Linux builds successfully fetched the snapshot packages, verified
+official CVDs and assembled the image. Run `42493619454` then failed at the first
+UID-65532 `/tmp/work` creation: the original image did not explicitly restore the
+sticky world-writable `/tmp` mode after `mkdir` applied the umask. This recipe now
+fixes and records those modes and adds the final unprivileged permission smoke.
+The revised image and actual ClamAV/libvips photo processing still require another
+real CI acceptance run. No production executor qualification is claimed. Complete
+evidence must report exact image/source/signature identities, isolation facts, AV
 negative control and four decoded/re-encoded output identities independently.

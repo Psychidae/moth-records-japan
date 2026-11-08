@@ -54,6 +54,8 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 read -r source_sha source_bytes < <(node --experimental-strip-types scripts/photo-runtime-acceptance/fixture.ts "$root")
 [[ "$source_sha" =~ ^[a-f0-9]{64}$ && "$source_bytes" =~ ^[1-9][0-9]{0,7}$ && "$source_bytes" -le 10485760 ]]
+timeout --kill-after=5s 15s docker info --format '{"os":{{json .OSType}},"security":{{json .SecurityOptions}}}' > "$evidence/daemon.json"
+node --experimental-strip-types scripts/photo-runtime-acceptance/verify.ts daemon "$root" "$evidence" "$image"
 sudo install -d -m 700 -o 65532 -g 65532 "$root/derived"
 # Output is disk-bounded independently of a successful/failed decoder.
 sudo mount -t tmpfs -o size=64m,uid=65532,gid=65532,mode=0700,nosuid,nodev,noexec tmpfs "$root/derived"

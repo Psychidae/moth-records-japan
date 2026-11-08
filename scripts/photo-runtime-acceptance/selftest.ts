@@ -5,7 +5,7 @@ import {randomUUID} from 'node:crypto';
 import {mkdir, mkdtemp, writeFile, symlink, rm, readFile, stat} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {childEnvironment, freshSignature, imageId, jpegFacts, readBounded, sha256, sizes, syntheticJpeg, validateContainer, validateOutputs} from './contract.ts';
+import {childEnvironment, freshSignature, imageId, jpegFacts, readBounded, sha256, sizes, syntheticJpeg, validateContainer, validateDaemon, validateOutputs, validateProbeIsolation} from './contract.ts';
 
 test('deterministic original synthetic fixture has bounded pixels and explicit invented metadata', () => {
   const bytes = syntheticJpeg();
@@ -87,6 +87,20 @@ test('actual Docker configuration is checked, not only declared launch arguments
   for (const change of [{OOMKilled: true}, {ExitCode: 1}, {Running: true}, {Error: 'error'}]) assert.throws(() => validateContainer([{...value[0], State: {...value[0]!.State, ...change}}], expected, true));
   assert.throws(() => validateContainer([{...value[0], Mounts: [...value[0]!.Mounts, {Type: 'bind', Source: '/repo', Destination: '/work', RW: false}]}], expected));
 });
+test('daemon requires Linux and the exact builtin seccomp security option', () => {
+  const daemon = {os: 'linux', security: ['name=apparmor', 'name=seccomp,profile=builtin', 'name=cgroupns']};
+  assert.deepEqual(validateDaemon(daemon), daemon);
+  for (const invalid of [{}, {os: 'linux'}, {...daemon, os: 'windows'}, {...daemon, security: null}, {...daemon, security: []}, {...daemon, security: ['name=seccomp']}, {...daemon, security: ['name=seccomp,profile=unconfined']}, {...daemon, security: ['name=seccomp,profile=custom']}, {...daemon, security: ['name=seccomp,profile=builtin', 1]}]) assert.throws(() => validateDaemon(invalid));
+});
+test('probe requires active seccomp and actual private output/sticky scratch permissions', () => {
+  const isolation = {platform: 'linux', uid: 65532, gid: 65532, interfaces: ['lo'], seccomp: 2, capabilities: ['CapInh: 0000', 'CapPrm: 0000', 'CapEff: 0000', 'CapBnd: 0000', 'CapAmb: 0000', 'NoNewPrivs: 1'], environment_keys: [...Object.keys(childEnvironment), 'HOSTNAME'].sort(), directories: {tmp: {directory: true, symlink: false, mode: 0o1777, uid: 0, gid: 0}, out: {directory: true, symlink: false, mode: 0o700, uid: 65532, gid: 65532, entries: []}}};
+  assert.deepEqual(validateProbeIsolation(isolation), isolation);
+  for (const change of [{seccomp: undefined}, {seccomp: 0}, {seccomp: 1}, {seccomp: '2'}, {directories: undefined}, {capabilities: Array<string>(6).fill('CapEff: 0000')}, {environment_keys: ['HOSTNAME']}]) assert.throws(() => validateProbeIsolation({...isolation, ...change}));
+  for (const change of [{directory: false}, {symlink: true}, {mode: 0o777}, {mode: 0o755}, {uid: 65532}, {gid: 65532}]) assert.throws(() => validateProbeIsolation({...isolation, directories: {...isolation.directories, tmp: {...isolation.directories.tmp, ...change}}}));
+  for (const change of [{directory: false}, {symlink: true}, {mode: 0o777}, {mode: 0o755}, {uid: 0}, {gid: 0}, {entries: undefined}, {entries: ['existing.jpg']}]) assert.throws(() => validateProbeIsolation({...isolation, directories: {...isolation.directories, out: {...isolation.directories.out, ...change}}}));
+  assert.throws(() => validateProbeIsolation({...isolation, directories: {tmp: isolation.directories.tmp}}));
+  assert.throws(() => validateProbeIsolation({...isolation, directories: {out: isolation.directories.out}}));
+});
 test('workflow has no service credentials or publication and pins trusted actions', async () => {
   const workflow = await readFile('.github/workflows/photo-runtime-acceptance.yml', 'utf8');
   assert.match(workflow, /contents: read/); assert.match(workflow, /runs-on: ubuntu-24.04/);
@@ -96,5 +110,7 @@ test('workflow has no service credentials or publication and pins trusted action
   assert.match(runner, /mount -t tmpfs -o size=64m/); assert.match(runner, /sudo umount/);
   assert.match(runner, /480s docker start --attach/); assert.match(runner, /trap on_exit EXIT/);
   assert.match(runner, /--log-driver none/); assert.match(runner, /ulimit -f 2048/);
+  assert.match(runner, /15s docker info --format/);
+  assert.ok(runner.indexOf('verify.ts daemon') < runner.indexOf('docker run --rm'));
   assert.doesNotMatch(runner, /docker pull|docker push|docker login|--privileged|--network host/);
 });

@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readFile, readdir, readlink, lstat, writeFile, symlink, utimes, chmod } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { verifySignatures } from './signatures.mjs';
+import { normalizeRuntimePermissions } from './permissions.mjs';
 
 const root = '/runtime';
 const pins = JSON.parse(await readFile('/opt/recipe/inputs.json', 'utf8'));
@@ -39,12 +40,6 @@ for (const path of pins.source) {
   source.push({ path, bytes: bytes.length, sha256: hash(bytes) });
   await copy(`/opt/source/${path}`, `${root}/work/${path}`);
 }
-// This checks actual linked executables/imports inside the assembled filesystem,
-// not builder-installed libraries. It does not execute a photo or bypass its guard.
-for (const binary of ['/usr/local/bin/node', '/usr/bin/clamscan', '/usr/bin/vipsthumbnail', '/usr/bin/sigtool']) {
-  execFileSync('/usr/sbin/chroot', [root, binary, '--version'], { timeout: 30000, maxBuffer: 16384, env: { PATH: '/usr/local/bin:/usr/bin:/bin', LANG: 'C.UTF-8' } });
-}
-execFileSync('/usr/sbin/chroot', [root, '/usr/local/bin/node', '--experimental-strip-types', '--input-type=module', '-e', 'await import("/work/pipelines/process-photo/src/cli.ts")'], { timeout: 30000, maxBuffer: 16384, env: { PATH: '/usr/local/bin:/usr/bin:/bin', LANG: 'C.UTF-8' } });
 // Preserve distribution copyright/license notices without shipping doc tools.
 for (const name of await readdir('/usr/share/doc')) {
   const path = `/usr/share/doc/${name}/copyright`;
@@ -62,16 +57,21 @@ for (const name of (await readdir('/opt/recipe')).sort()) {
   recipe.push({ path: `pipelines/process-photo/container/${name}`, bytes: bytes.length, sha256: hash(bytes) });
 }
 const files = [];
+await normalizeRuntimePermissions(root);
 async function walk(directory) {
   for (const name of (await readdir(directory)).sort()) {
     const absolute = join(directory, name), stat = await lstat(absolute), path = absolute.slice(root.length);
-    if (stat.isDirectory()) await walk(absolute);
-    else if (stat.isSymbolicLink()) files.push({ path, link: await readlink(absolute) });
+    if (stat.uid !== 0 || stat.gid !== 0) throw Error(`Runtime file must be root-owned: ${path}`);
+    const permissions = { mode: stat.mode & 0o7777, uid: stat.uid, gid: stat.gid };
+    if (stat.isDirectory()) {
+      if (permissions.mode !== (path === '/tmp' ? 0o1777 : 0o755)) throw Error(`Runtime directory mode mismatch: ${path}`);
+      files.push({ path, type: 'directory', ...permissions });
+      await walk(absolute);
+    } else if (stat.isSymbolicLink()) files.push({ path, link: await readlink(absolute), ...permissions });
     else if (stat.isFile()) {
       const bytes = await readFile(absolute);
-      files.push({ path, bytes: bytes.length, sha256: hash(bytes) });
-      // No writable runtime source/database or set-ID executable.
-      await chmod(absolute, (stat.mode & 0o111) ? 0o555 : 0o444);
+      if (![0o444, 0o555].includes(permissions.mode)) throw Error(`Runtime file mode mismatch: ${path}`);
+      files.push({ path, bytes: bytes.length, sha256: hash(bytes), ...permissions });
     } else throw Error(`Unexpected runtime file: ${path}`);
   }
 }
@@ -79,6 +79,18 @@ await walk(root);
 await writeFile(`${metadata}/runtime-files.json`, JSON.stringify(files, null, 2) + '\n', { mode: 0o444 });
 const provenance = { format: 'photo-runtime-provenance-v1', platform: pins.platform, node_version: process.version, base_image: pins.node_image, debian_snapshot: pins.debian_snapshot, packages: inventory.packages, archives: inventory.archives, signatures, source, recipe, runtime_files_sha256: hash(await readFile(`${metadata}/runtime-files.json`)), qualification: 'not-qualified-until-independent-linux-acceptance-passes' };
 await writeFile(`${metadata}/provenance.json`, JSON.stringify(provenance, null, 2) + '\n', { mode: 0o444 });
+// These two records are created after the tree pass; do not let a restrictive
+// builder umask turn their intended public-read permission into owner-only.
+await chmod(`${metadata}/runtime-files.json`, 0o444);
+await chmod(`${metadata}/provenance.json`, 0o444);
+// Exercise the final hardened image filesystem as the actual unprivileged user.
+// Host-provided /in and /out bind ownership remains the independent CI's check.
+const smokeEnvironment = { PATH: '/usr/local/bin:/usr/bin:/bin', LANG: 'C.UTF-8', HOME: '/tmp/empty', TMPDIR: '/tmp/work', VIPS_CONCURRENCY: '1', VIPS_DISC_THRESHOLD: '64m' };
+const smokeOptions = { timeout: 30000, maxBuffer: 16384, env: smokeEnvironment };
+for (const binary of ['/usr/local/bin/node', '/usr/bin/clamscan', '/usr/bin/vipsthumbnail', '/usr/bin/sigtool']) {
+  execFileSync('/usr/sbin/chroot', ['--userspec=65532:65532', root, binary, '--version'], smokeOptions);
+}
+execFileSync('/usr/sbin/chroot', ['--userspec=65532:65532', root, '/usr/local/bin/node', '--experimental-strip-types', '--input-type=module', '-e', await readFile('/opt/recipe/permission-smoke.mjs', 'utf8')], smokeOptions);
 // Stable file timestamps for identical pinned inputs. OCI exporter metadata can
 // still differ; the image content ID and complete file inventory are recorded.
 const epoch = Date.parse(signatures.daily_built_at) / 1000;

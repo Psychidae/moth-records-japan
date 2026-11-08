@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
-import {childEnvironment, freshSignature, imageId, object, readBounded, readOutputs, sha256, sourcePaths, syntheticJpeg, validateContainer} from './contract.ts';
+import {freshSignature, imageId, object, readBounded, readOutputs, sha256, sourcePaths, syntheticJpeg, validateContainer, validateDaemon, validateProbeIsolation} from './contract.ts';
 
 const [mode, root, evidence, image] = process.argv.slice(2);
 assert.ok(root && evidence && image);
@@ -9,7 +9,10 @@ imageId(image);
 const fixture = syntheticJpeg();
 assert.deepEqual(await readBounded(join(root, 'input.jpg'), 10485760), fixture);
 const json = async (name: string) => JSON.parse((await readBounded(join(evidence, name), 2 * 1024 * 1024)).toString('utf8')) as unknown;
-if (mode === 'container') {
+if (mode === 'daemon') {
+  validateDaemon(await json('daemon.json'));
+} else if (mode === 'container') {
+  validateDaemon(await json('daemon.json'));
   validateContainer(await json('container-before.json'), {image, root, source: fixture});
 } else {
   assert.equal(mode, 'result');
@@ -21,14 +24,8 @@ if (mode === 'container') {
   assert.match(String(probe.vips), /vips-\d+\.\d+/);
   const signatureDate = freshSignature(String(probe.clamscan));
   assert.deepEqual(probe.av_self_test, {detected: true, exit_code: 1});
-  const isolation = object(probe.isolation);
-  assert.equal(isolation.platform, 'linux'); assert.equal(isolation.uid, 65532); assert.equal(isolation.gid, 65532);
-  assert.deepEqual(isolation.interfaces, ['lo']);
-  assert.ok(Array.isArray(isolation.capabilities));
-  assert.equal(isolation.capabilities.length, 6);
-  assert.ok(isolation.capabilities.every(line => typeof line === 'string' && /^(?:Cap(?:Inh|Prm|Eff|Bnd|Amb):\s+0+|NoNewPrivs:\s+1)$/.test(line)));
-  assert.ok(Array.isArray(isolation.environment_keys));
-  assert.ok(isolation.environment_keys.every(key => typeof key === 'string' && [...Object.keys(childEnvironment), 'HOSTNAME', 'PWD'].includes(key)));
+  const daemon = validateDaemon(await json('daemon.json'));
+  const isolation = validateProbeIsolation(probe.isolation);
   const provenance = object(probe.provenance);
   assert.equal(provenance.format, 'photo-runtime-provenance-v1');
   assert.match(String(provenance.base_image), /@sha256:[a-f0-9]{64}$/);
@@ -64,7 +61,7 @@ if (mode === 'container') {
     fixture: {recipe: 'baseline-gray-2400x1600-v1', sha256: sha256(fixture), bytes: fixture.length, width: 2400, height: 1600, original_photos_used: 0},
     source: sources, engines: {node: probe.node_version, clamscan: probe.clamscan, vips: probe.vips, signatures: probe.signatures},
     base_image: provenance.base_image, debian_snapshot: provenance.debian_snapshot,
-    provenance_sha256: sha256(JSON.stringify(provenance)), isolation, av_self_test: probe.av_self_test,
+    provenance_sha256: sha256(JSON.stringify(provenance)), daemon, isolation, av_self_test: probe.av_self_test,
     output: outputs, container_state: container.State,
     real_db_calls: 0, real_storage_calls: 0, production_intake_enabled: false,
   };

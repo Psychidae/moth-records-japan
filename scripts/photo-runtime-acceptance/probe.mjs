@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {createReadStream} from 'node:fs';
-import {readFile, mkdir, writeFile, rm} from 'node:fs/promises';
+import {readFile, mkdir, writeFile, rm, lstat, readdir} from 'node:fs/promises';
 import {assertPhotoIsolation, PHOTO_CHILD_ENVIRONMENT} from '/work/pipelines/process-photo/src/sandbox-plan.ts';
 
 const source = await readFile('/in/input.jpg');
@@ -12,6 +12,14 @@ const status = await readFile('/proc/self/status', 'utf8');
 const mounts = await readFile('/proc/self/mountinfo', 'utf8');
 const interfaces = (await readFile('/proc/net/dev', 'utf8')).split('\n').slice(2).map(line => line.split(':')[0]?.trim()).filter(Boolean);
 assertPhotoIsolation({platform: process.platform, uid: process.getuid(), gid: process.getgid(), cwd: process.cwd(), interfaces, status, mounts, environment: process.env, args: ['/in/input.jpg', '/out', digest(source), String(source.length)]});
+assert.match(status, /^Seccomp:\s+2$/m, 'Active seccomp filter required');
+const directoryFacts = async path => {
+  const stat = await lstat(path);
+  return {directory: stat.isDirectory(), symlink: stat.isSymbolicLink(), mode: stat.mode & 0o7777, uid: stat.uid, gid: stat.gid};
+};
+const directories = {tmp: await directoryFacts('/tmp'), out: {...await directoryFacts('/out'), entries: await readdir('/out')}};
+assert.deepEqual(directories.tmp, {directory: true, symlink: false, mode: 0o1777, uid: 0, gid: 0});
+assert.deepEqual(directories.out, {directory: true, symlink: false, mode: 0o700, uid: 65532, gid: 65532, entries: []});
 const provenance = JSON.parse(await readFile('/usr/share/moth-photo-runtime/provenance.json', 'utf8'));
 const command = (binary, args) => execFileSync(binary, args, {env: PHOTO_CHILD_ENVIRONMENT, encoding: 'utf8', timeout: 60000, maxBuffer: 65536, killSignal: 'SIGKILL'}).trim();
 const clamscan = command('/usr/bin/clamscan', ['--version']);
@@ -37,4 +45,4 @@ try {
   catch (error) {detected = error.status === 1 && /FOUND/.test(String(error.stdout));}
   assert.equal(detected, true, 'Real ClamAV self-test required');
 } finally {await rm('/tmp/work', {recursive: true, force: true});}
-process.stdout.write(JSON.stringify({format: 'photo-runtime-probe-v1', node_version: process.version, clamscan, vips, signatures, source: sourceFiles, provenance, av_self_test: {detected, exit_code: 1}, isolation: {platform: process.platform, uid: process.getuid(), gid: process.getgid(), interfaces, capabilities: status.split('\n').filter(line => /^Cap(Inh|Prm|Eff|Bnd|Amb):|^NoNewPrivs:/.test(line)), environment_keys: Object.keys(process.env).sort()}}) + '\n');
+process.stdout.write(JSON.stringify({format: 'photo-runtime-probe-v1', node_version: process.version, clamscan, vips, signatures, source: sourceFiles, provenance, av_self_test: {detected, exit_code: 1}, isolation: {platform: process.platform, uid: process.getuid(), gid: process.getgid(), interfaces, seccomp: 2, directories, capabilities: status.split('\n').filter(line => /^Cap(Inh|Prm|Eff|Bnd|Amb):|^NoNewPrivs:/.test(line)), environment_keys: Object.keys(process.env).sort()}}) + '\n');

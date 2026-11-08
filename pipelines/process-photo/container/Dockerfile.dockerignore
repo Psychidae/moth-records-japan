@@ -12,6 +12,9 @@
 !pipelines/process-photo/container/inventory.mjs
 !pipelines/process-photo/container/signatures.mjs
 !pipelines/process-photo/container/assemble.mjs
+!pipelines/process-photo/container/permissions.mjs
+!pipelines/process-photo/container/permission-smoke.mjs
+!pipelines/process-photo/container/permissions.test.mjs
 !pipelines/process-photo/container/inputs.json
 !pipelines/process-photo/container/package.json
 !pipelines/process-photo/container/package-lock.json

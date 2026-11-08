@@ -183,6 +183,37 @@ export function freshSignature(version: string, now = Date.now()): string {
   return new Date(Date.parse(time)).toISOString();
 }
 
+export function validateDaemon(value: unknown) {
+  const daemon = object(value);
+  keys(daemon, ['os', 'security']);
+  assert.equal(daemon.os, 'linux');
+  assert.ok(Array.isArray(daemon.security) && daemon.security.every(item => typeof item === 'string'));
+  assert.ok(daemon.security.includes('name=seccomp,profile=builtin'), 'Docker builtin seccomp profile required');
+  return daemon;
+}
+
+export function validateProbeIsolation(value: unknown) {
+  const isolation = object(value);
+  assert.equal(isolation.platform, 'linux'); assert.equal(isolation.uid, 65532); assert.equal(isolation.gid, 65532);
+  assert.deepEqual(isolation.interfaces, ['lo']);
+  assert.equal(isolation.seccomp, 2, 'Active seccomp filter required');
+  assert.ok(Array.isArray(isolation.capabilities));
+  assert.equal(isolation.capabilities.length, 6);
+  for (const field of ['CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb', 'NoNewPrivs']) {
+    const expression = new RegExp(`^${field}:\\s+${field === 'NoNewPrivs' ? '1' : '0+'}$`);
+    assert.equal(isolation.capabilities.filter(line => typeof line === 'string' && expression.test(line)).length, 1);
+  }
+  assert.ok(Array.isArray(isolation.environment_keys));
+  assert.equal(new Set(isolation.environment_keys).size, isolation.environment_keys.length);
+  assert.ok(isolation.environment_keys.every(key => typeof key === 'string' && [...Object.keys(childEnvironment), 'HOSTNAME', 'PWD'].includes(key)));
+  for (const key of Object.keys(childEnvironment)) assert.ok(isolation.environment_keys.includes(key));
+  const directories = object(isolation.directories);
+  keys(directories, ['tmp', 'out']);
+  assert.deepEqual(directories.tmp, {directory: true, symlink: false, mode: 0o1777, uid: 0, gid: 0});
+  assert.deepEqual(directories.out, {directory: true, symlink: false, mode: 0o700, uid: 65532, gid: 65532, entries: []});
+  return isolation;
+}
+
 export function validateContainer(value: unknown, expected: {image: string; root: string; source: Buffer}, finished = false) {
   assert.ok(Array.isArray(value) && value.length === 1);
   const container = object(value[0]), config = object(container.Config), host = object(container.HostConfig);
