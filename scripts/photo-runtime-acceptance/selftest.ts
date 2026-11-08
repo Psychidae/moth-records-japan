@@ -5,7 +5,7 @@ import {randomUUID} from 'node:crypto';
 import {mkdir, mkdtemp, writeFile, symlink, rm, readFile, stat} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {childEnvironment, freshSignature, imageId, jpegFacts, readBounded, sha256, sizes, syntheticJpeg, validateContainer, validateDaemon, validateOutputs, validateProbeIsolation} from './contract.ts';
+import {childEnvironment, freshSignature, imageId, jpegFacts, readBounded, sha256, sizes, syntheticJpeg, validateContainer, validateDaemon, validateOutputs, validateProbeIsolation, validateSignatureBuildTime} from './contract.ts';
 
 test('deterministic original synthetic fixture has bounded pixels and explicit invented metadata', () => {
   const bytes = syntheticJpeg();
@@ -38,6 +38,23 @@ test('AV verification rejects old, future, missing and unparseable signatures', 
   const now = Date.parse('2026-01-03T00:00:00Z');
   assert.equal(freshSignature('ClamAV 1.4.3/12345/Fri Jan 02 01:00:00 2026', now), '2026-01-02T01:00:00.000Z');
   for (const version of ['ClamAV 1.4.3/12345/Thu Jan 01 00:00:00 2026', 'ClamAV 1.4.3/12345/Sat Jan 03 02:00:00 2026', 'ClamAV 1.4.3', 'fake/12345/Fri Jan 02 01:00:00 2026']) assert.throws(() => freshSignature(version, now));
+});
+test('signed CVD timestamp comparison respects sigtool minute precision without relaxing full-precision freshness', () => {
+  const minute = '2026-11-08T06:23:00.000Z';
+  const version = 'ClamAV 1.4.6/28177/Sun Nov  8 06:23:52 2026';
+  const exact = Date.parse('2026-11-08T06:23:52.000Z');
+  assert.deepEqual(validateSignatureBuildTime(minute, version, exact), {sigtool_minute: minute, clamscan_timestamp: '2026-11-08T06:23:52.000Z'});
+  for (const second of ['00', '59']) assert.equal(validateSignatureBuildTime(minute, `ClamAV 1.4.6/28177/Sun Nov  8 06:23:${second} 2026`, exact).sigtool_minute, minute);
+  for (const wrong of ['2026-11-08T06:22:00.000Z', '2026-11-08T06:24:00.000Z', '2026-11-07T06:23:00.000Z', '2026-11-09T06:23:00.000Z', '2026-11-08T06:23:52.000Z', '2026-11-08T06:23:00.001Z', '2026-11-08T06:23:00+00:00', 'invalid']) assert.throws(() => validateSignatureBuildTime(wrong, version, exact));
+  // Strictly less than 48h, and the existing one-hour future skew allowance,
+  // remain based on 06:23:52, never on sigtool's truncated 06:23:00.
+  assert.ok(validateSignatureBuildTime(minute, version, exact + 48 * 3600000 - 1));
+  assert.throws(() => validateSignatureBuildTime(minute, version, exact + 48 * 3600000));
+  assert.throws(() => validateSignatureBuildTime(minute, version, exact + 48 * 3600000 + 1));
+  assert.ok(validateSignatureBuildTime(minute, version, exact - 3600000));
+  assert.throws(() => validateSignatureBuildTime(minute, version, exact - 3600000 - 1));
+  assert.throws(() => validateSignatureBuildTime('2026-11-08T06:24:00.000Z', 'ClamAV 1.4.6/28177/Sun Nov  8 06:23:59 2026', exact));
+  assert.throws(() => validateSignatureBuildTime(minute, 'ClamAV 1.4.6/28177/Sun Nov  8 06:24:00 2026', exact));
 });
 test('structural verifier rejects truncated files, trailers, malformed markers and metadata', () => {
   const bytes = syntheticJpeg();

@@ -183,6 +183,18 @@ export function freshSignature(version: string, now = Date.now()): string {
   return new Date(Date.parse(time)).toISOString();
 }
 
+/** Call only after the signed CVD bytes/size/SHA match the image provenance.
+ * sigtool --info reports build time to the minute; clamscan --version retains
+ * seconds. Check freshness at full precision, then compare the exact UTC minute.
+ */
+export function validateSignatureBuildTime(sigtoolMinute: string, version: string, now = Date.now()) {
+  const clamscanTimestamp = freshSignature(version, now);
+  assert.match(sigtoolMinute, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00\.000Z$/, 'Canonical sigtool minute required');
+  const actualMinute = new Date(Math.floor(Date.parse(clamscanTimestamp) / 60000) * 60000).toISOString();
+  assert.equal(sigtoolMinute, actualMinute, 'Signed CVD build minute mismatch');
+  return {sigtool_minute: sigtoolMinute, clamscan_timestamp: clamscanTimestamp};
+}
+
 export function validateDaemon(value: unknown) {
   const daemon = object(value);
   keys(daemon, ['os', 'security']);

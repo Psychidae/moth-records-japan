@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
-import {freshSignature, imageId, object, readBounded, readOutputs, sha256, sourcePaths, syntheticJpeg, validateContainer, validateDaemon, validateProbeIsolation} from './contract.ts';
+import {imageId, object, readBounded, readOutputs, sha256, sourcePaths, syntheticJpeg, validateContainer, validateDaemon, validateProbeIsolation, validateSignatureBuildTime} from './contract.ts';
 
 const [mode, root, evidence, image] = process.argv.slice(2);
 assert.ok(root && evidence && image);
@@ -22,7 +22,6 @@ if (mode === 'daemon') {
   assert.equal(probe.format, 'photo-runtime-probe-v1');
   assert.match(String(probe.node_version), /^v24\./);
   assert.match(String(probe.vips), /vips-\d+\.\d+/);
-  const signatureDate = freshSignature(String(probe.clamscan));
   assert.deepEqual(probe.av_self_test, {detected: true, exit_code: 1});
   const daemon = validateDaemon(await json('daemon.json'));
   const isolation = validateProbeIsolation(probe.isolation);
@@ -52,14 +51,14 @@ if (mode === 'daemon') {
     assert.ok(Number(actual[0]!.bytes) > 0 && Number(actual[0]!.bytes) <= 512 * 1024 * 1024);
     assert.match(String(actual[0]!.info), /Verification OK/);
   }
-  assert.equal(new Date(String(pinned.daily_built_at)).toISOString(), signatureDate);
+  const signatureBuild = validateSignatureBuildTime(String(pinned.daily_built_at), String(probe.clamscan));
   const receipt = {
     format: 'photo-runtime-acceptance-v1', scope: 'synthetic-only-no-registration-or-publication',
     accepted_at: new Date().toISOString(), source_commit: process.env.GITHUB_SHA ?? null,
     run_url: process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null,
     image_id: image, image_kind: 'local-docker-content-id-not-registry-manifest',
     fixture: {recipe: 'baseline-gray-2400x1600-v1', sha256: sha256(fixture), bytes: fixture.length, width: 2400, height: 1600, original_photos_used: 0},
-    source: sources, engines: {node: probe.node_version, clamscan: probe.clamscan, vips: probe.vips, signatures: probe.signatures},
+    source: sources, engines: {node: probe.node_version, clamscan: probe.clamscan, vips: probe.vips, signatures: probe.signatures, signature_build: signatureBuild},
     base_image: provenance.base_image, debian_snapshot: provenance.debian_snapshot,
     provenance_sha256: sha256(JSON.stringify(provenance)), daemon, isolation, av_self_test: probe.av_self_test,
     output: outputs, container_state: container.State,
