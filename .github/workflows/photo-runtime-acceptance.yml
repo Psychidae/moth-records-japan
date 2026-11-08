@@ -1,0 +1,78 @@
+name: Synthetic isolated photo runtime acceptance
+on:
+  push:
+    branches: [main, 'task/photo-runtime-acceptance-*']
+    paths:
+      - '.github/workflows/photo-runtime-acceptance.yml'
+      - 'scripts/photo-runtime-acceptance/**'
+      - 'pipelines/process-photo/container/**'
+      - 'pipelines/process-photo/src/**'
+      - 'packages/schema/photo-processing.ts'
+  pull_request:
+    paths:
+      - '.github/workflows/photo-runtime-acceptance.yml'
+      - 'scripts/photo-runtime-acceptance/**'
+      - 'pipelines/process-photo/container/**'
+      - 'pipelines/process-photo/src/**'
+      - 'packages/schema/photo-processing.ts'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: photo-runtime-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Deliberately no environment, secrets, registry login/push, DB, R2 or real photos.
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.14.1'
+      - name: Check source acceptance contracts without workspace install
+        run: node --experimental-strip-types --test scripts/photo-runtime-acceptance/selftest.ts
+      - name: Check disposable runner capacity
+        run: |
+          set -euo pipefail
+          [[ "$(docker info --format '{{.OSType}}')" == linux ]]
+          [[ "$(df --output=avail -B1 /var/lib/docker | tail -1)" -ge 12884901888 ]]
+          mkdir -p generated
+      - name: Build pinned runtime and fresh official signatures
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          timeout --signal=TERM --kill-after=30s 1140s bash pipelines/process-photo/container/build.sh "$RUNNER_TEMP/moth-photo-runtime-build"
+      - name: Execute real CLI and independently verify synthetic results
+        timeout-minutes: 10
+        run: bash scripts/photo-runtime-acceptance/run.sh "$RUNNER_TEMP/moth-photo-runtime-build/image-id.txt" generated/photo-runtime-acceptance
+      - name: Collect reproducibility facts only
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p generated/photo-runtime-acceptance
+          for name in image-id.txt engine-image-id.txt provenance.json build-cleanup.json; do
+            if [[ -f "$RUNNER_TEMP/moth-photo-runtime-build/$name" ]]; then
+              cp -- "$RUNNER_TEMP/moth-photo-runtime-build/$name" "generated/photo-runtime-acceptance/build-$name"
+            fi
+          done
+          if [[ -f "$RUNNER_TEMP/moth-photo-runtime-build/signatures/signature-lock.json" ]]; then
+            cp -- "$RUNNER_TEMP/moth-photo-runtime-build/signatures/signature-lock.json" generated/photo-runtime-acceptance/build-signature-lock.json
+          fi
+          if [[ -f generated/photo-runtime-acceptance/acceptance.json ]]; then
+            echo 'Synthetic JPEG processed by the real isolated Linux CLI; output hashes, geometry, metadata removal, official AV signatures and harmless AV self-test verified. This is not production executor, DB/R2, registration or publication acceptance.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'No successful runtime acceptance receipt. Check this run’s failing step. Production photo intake remains disabled.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: synthetic-photo-runtime-evidence
+          path: |
+            generated/photo-runtime-acceptance/
+            !generated/photo-runtime-acceptance/acceptance-candidate.json
+          if-no-files-found: warn
+          retention-days: 7
